@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="loupe.jpg" />
+    <None Remove="searchIcone.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="loupe.jpg" />
+    <Resource Include="searchIcone.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="img\searchIcone.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
