@@ -16,10 +16,4 @@
     <Resource Include="searchIcone.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="img\searchIcone.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

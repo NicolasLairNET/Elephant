@@ -1,4 +1,4 @@
-﻿<Window x:Class="Elephant_wpf.MainWindow"
+﻿<Window x:Class="Elephant.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,19 +24,19 @@
             </Border>
 
             <Border  BorderBrush="White" Height="34" Width="auto" Margin="5" CornerRadius="6" Background="White">
-                <Button x:Name="btnSearch" Width="30" Height="auto" Background="Transparent" FontFamily="Calibri Light" BorderBrush="{x:Null}">
+                <Button x:Name="btnSearch" Width="30" Click="SearchTag_Click" Height="auto" Background="Transparent" FontFamily="Calibri Light" BorderBrush="{x:Null}">
                     <Image Margin="0"  Height="auto" Width="auto" Source="/loupe.jpg"/>
                 </Button>
             </Border>
 
         </StackPanel>
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto">
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" x:Name="DGridResult" DataContext="{Binding Source=Point}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Nom du point" Width="auto"/>
-                <DataGridTextColumn Header="Paramètres" Width="auto"/>
-                <DataGridHyperlinkColumn Header="Valeur" Width="auto"/>
-                <DataGridCheckBoxColumn Header="Origine" Width="auto"/>
+                <DataGridTextColumn Header="Nom du point" Width="150" Binding="{Binding Path=Name}"/>
+                <DataGridTextColumn Header="Paramètres" Width="150" Binding="{Binding Path=Parameter}"/>
+                <DataGridTextColumn Header="Valeur" Width="150" Binding="{Binding Path=Value}"/>
+                <DataGridTextColumn Header="Origine" Width="150" Binding="{Binding Path=Origin}"/>
             </DataGrid.Columns>
         </DataGrid>
         
