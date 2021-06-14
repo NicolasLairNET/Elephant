@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ElephantLibrary
 {
-    public class Point
+    public class TDCTag
     {
         public string Name { get; set; }
         public string Parameter { get; set; }

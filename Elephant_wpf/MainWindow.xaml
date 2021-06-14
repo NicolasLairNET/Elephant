@@ -30,7 +30,7 @@
             </Border>
         </StackPanel>
 
-        <Button x:Name="btnUpdateData" Grid.Column="2" Margin="30" Click="btnUpdateData_Click" > Maj data</Button>
+        <Button x:Name="btnUpdateData" Grid.Column="2" Margin="30" Click="BtnUpdateData_Click" > Maj data</Button>
 
         <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" x:Name="DGridResult" DataContext="{Binding Source=Point}">
             <DataGrid.Columns>
