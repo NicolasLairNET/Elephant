@@ -1,16 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace ElephantLibrary
 {
     internal class EBFile : ITDCFile
     {
-        public List<TDCTag> Read(string[] lines)
+
+        public readonly string FilePath;
+
+        public EBFile(string filePath)
+        {
+            FilePath = filePath;
+        }
+
+        public List<TDCTag> Read()
         {
             List<TDCTag> pointList = new();
             string point = null;
-            string parameter = null;
             string value = null;
-            string origin = null;
+
+            string[] lines = File.ReadAllLines(FilePath);
 
             foreach (string l in lines)
             {

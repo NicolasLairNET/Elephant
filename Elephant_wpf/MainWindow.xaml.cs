@@ -22,19 +22,7 @@ namespace Elephant
 
         private void BtnUpdateData_Click(object sender, RoutedEventArgs e)
         {
-            using OpenFileDialog openFileDialog = new();
-
-            openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Filter = "EB files (*.EB)|*.EB|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 2;
-            openFileDialog.Multiselect = true;
-            openFileDialog.RestoreDirectory = true;
-
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                DataFile.CreateDataFile(openFileDialog.FileNames);
-            }
-            System.Windows.MessageBox.Show("Import terminé");
+            DataFile.UpdateData();
         }
     }
 }
