@@ -9,9 +9,9 @@ namespace ElephantLibrary
     {
         private static string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
 
-        private static void Create(string[] fileList)
+        private static bool Create(string[] fileList)
         {
-            List<TDCTag> pointList = new();
+            List<TDCTag> tagList = new();
 
             foreach (string fileName in fileList)
             {
@@ -22,11 +22,12 @@ namespace ElephantLibrary
                     _ => null
                 };
 
-                List<TDCTag> EBList = tdcFile.Read();
-                pointList.AddRange(EBList);
+                tagList.AddRange(tdcFile.Read());
             }
-            string pointListSerialized = JsonSerializer.Serialize(pointList);
-            File.WriteAllText(DataFilePath, pointListSerialized);
+            string tagListSerialized = JsonSerializer.Serialize(tagList);
+            File.WriteAllText(DataFilePath, tagListSerialized);
+
+            return true;
         }
 
 
@@ -57,10 +58,15 @@ namespace ElephantLibrary
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Create(openFileDialog.FileNames);
+                if (Create(openFileDialog.FileNames))
+                {
+                    System.Windows.MessageBox.Show("Import terminé");
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Erreur: echec de l'import");
+                }
             }
-
-            System.Windows.MessageBox.Show("Import terminé");
         }
 
     }

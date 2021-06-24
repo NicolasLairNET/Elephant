@@ -34,6 +34,14 @@ namespace ElephantLibrary
                     point = line[15..line.IndexOf('(')];
                     continue;
                 }
+                else if (line.Substring(0, 2) == "NN")
+                {
+                    string[] parameters = line.Split("  ");
+                    foreach (string parameter in parameters)
+                    {
+                        pointList.Add(ReadParameter(parameter, point));
+                    }
+                }
                 else if (line.Substring(0, 2) == "&T")
                 {
                     value = line[3..];
@@ -48,19 +56,25 @@ namespace ElephantLibrary
                 }
                 else
                 {
-                    string[] element = line.Split("=");
-                    TDCTag tag = new()
-                    {
-                        Name = point,
-                        Parameter = element[0].Trim(),
-                        Value = element[1].Replace("\"", "").Trim(),
-                        Origin = "EB"
-                    };
-                    pointList.Add(tag);
+                    pointList.Add(ReadParameter(line, point));
                 }
             }
 
             return pointList;
+        }
+
+        private TDCTag ReadParameter(string line, string point)
+        {
+            string[] element = line.Split("=");
+            TDCTag tag = new()
+            {
+                Name = point,
+                Parameter = element[0].Trim(),
+                Value = element[1].Replace("\"", "").Trim(),
+                Origin = "EB"
+            };
+
+            return tag;
         }
     }
 }
