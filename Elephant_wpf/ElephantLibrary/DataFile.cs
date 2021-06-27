@@ -9,16 +9,19 @@ namespace ElephantLibrary
     {
         private static string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
 
-        private static bool Create(string[] fileList)
+        private static bool Create(string[] filePathList)
         {
             List<TDCTag> tagList = new();
 
-            foreach (string fileName in fileList)
+            foreach (string filePath in filePathList)
             {
-                string fileExtension = Path.GetExtension(fileName);
+                string fileExtension = Path.GetExtension(filePath);
+                string fileName = Path.GetFileName(filePath);
+
                 ITDCFile tdcFile = fileExtension switch
                 {
-                    ".EB" => new EBFile(fileName),
+                    ".EB" => new EBFile(filePath, fileName),
+                    ".XX" => new XXFile(filePath, fileName),
                     _ => null
                 };
 
@@ -51,7 +54,7 @@ namespace ElephantLibrary
             using OpenFileDialog openFileDialog = new();
 
             openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Filter = "EB files (*.EB)|*.EB|All files (*.*)|*.*";
+            openFileDialog.Filter = "EB files (*.EB)|*.EB|XX files (*.XX)|*.XX|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 2;
             openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;

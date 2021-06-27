@@ -7,10 +7,12 @@ namespace ElephantLibrary
     {
 
         public readonly string FilePath;
+        public readonly string FileName;
 
-        public EBFile(string filePath)
+        public EBFile(string filePath, string fileName)
         {
             FilePath = filePath;
+            FileName = fileName;
         }
 
         public List<TDCTag> Read()
@@ -24,7 +26,7 @@ namespace ElephantLibrary
             foreach (string l in lines)
             {
                 string line = l.Trim();
-                if (line.Substring(0, 2) == "&N")
+                if (line[0..2] == "&N")
                 {
                     continue;
                 }
@@ -34,7 +36,7 @@ namespace ElephantLibrary
                     point = line[15..line.IndexOf('(')];
                     continue;
                 }
-                else if (line.Substring(0, 2) == "NN")
+                else if (line[0..2] == "NN")
                 {
                     string[] parameters = line.Split("  ");
                     foreach (string parameter in parameters)
@@ -42,7 +44,7 @@ namespace ElephantLibrary
                         pointList.Add(ReadParameter(parameter, point));
                     }
                 }
-                else if (line.Substring(0, 2) == "&T")
+                else if (line[0..2] == "&T")
                 {
                     value = line[3..];
                     TDCTag tag = new()

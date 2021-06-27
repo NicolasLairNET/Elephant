@@ -32,10 +32,9 @@
 
         <Button x:Name="btnUpdateData" Grid.Column="2" Margin="30" Click="BtnUpdateData_Click" > Maj data</Button>
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" x:Name="DGridResult" DataContext="{Binding Source=Point}">
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" x:Name="DGridResult" DataContext="{Binding Source=Point}" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom du point" Width="150" Binding="{Binding Path=Name}"/>
-                
                 <DataGridTextColumn Header="Paramètres" Width="150" Binding="{Binding Path=Parameter}"/>
                 <DataGridTextColumn Header="Valeur" Width="150" Binding="{Binding Path=Value}"/>
                 <DataGridTextColumn Header="Origine" Width="150" Binding="{Binding Path=Origin}"/>
