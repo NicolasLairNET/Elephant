@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ElephantLibrary
 {
@@ -21,37 +18,49 @@ namespace ElephantLibrary
         public List<TDCTag> Read()
         {
             List<TDCTag> pointList = new();
-
-            if (FileName[0..3] == "UCN")
-            {
-                pointList = ReadUCN();
-            }
-
-            return pointList;
-        }
-
-        private List<TDCTag> ReadUCN()
-        {
-            List<TDCTag> pointList = new();
             string[] lines = File.ReadAllLines(FilePath);
+            TDCTag tag = null;
 
             foreach (string line in lines)
             {
                 if (line.Length > 3 && line[0..3] == "NET")
                 {
-                    TDCTag tag = new()
+                    if (FileName[0..3] == "UCN")
                     {
-                        Name = line[39..71].Trim(),
-                        Parameter = "ENT_REF",
-                        Value = line[72..104].Trim(),
-                        Origin = "UCN"
-                    };
-
+                        tag = CreateUCNTag(line);
+                    }
+                    else if (FileName[0..3] == "CLA")
+                    {
+                        tag = CreateCLAMTag(line);
+                    }
                     pointList.Add(tag);
                 }
             }
+            
 
             return pointList;
+        }
+
+        private TDCTag CreateUCNTag(string line)
+        {
+            return new TDCTag()
+            {
+                Name = line[39..71].Trim(),
+                Parameter = "ENT_REF",
+                Value = line[72..104].Trim(),
+                Origin = "UCN"
+            };
+        }
+
+        private TDCTag CreateCLAMTag(string line)
+        {
+            return new TDCTag()
+            {
+                Name = line[17..35].Trim(),
+                Parameter = "CL",
+                Value = line[53..8].Trim(),
+                Origin = "CL AM"
+            };
         }
     }
 }

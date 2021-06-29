@@ -65,7 +65,7 @@ namespace ElephantLibrary
             return pointList;
         }
 
-        private TDCTag ReadParameter(string line, string point)
+        private static TDCTag ReadParameter(string line, string point)
         {
             string[] element = line.Split("=");
             TDCTag tag = new()
