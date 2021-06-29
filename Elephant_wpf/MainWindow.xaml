@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Elephant_wpf"
         mc:Ignorable="d"
-        Title="Elephant" Height="400" Width="600" ResizeMode="NoResize">
+        Title="Elephant" Height="600" Width="800" ResizeMode="CanResize" MinHeight="400" MinWidth="400">
     <Grid Background="#FF174489">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="300"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -18,29 +19,36 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Orientation="Horizontal">
-            <Border  BorderBrush="White" Margin="5,0,0,0" Height="34" Width="auto" CornerRadius="6" Background="White">
-                <TextBox x:Name="txtName" Width="225" Height="34" FontSize="20" BorderBrush="{x:Null}" Background="Transparent" VerticalAlignment="Center"/>
-            </Border>
+        <StackPanel Grid.Row="0" Grid.Column="1">
 
-            <Border  BorderBrush="White" Height="34" Width="auto" Margin="5" CornerRadius="6" Background="White">
-                <Button x:Name="btnSearch" Width="30" Click="SearchTag_Click" Height="auto" Background="Transparent" FontFamily="Calibri Light" BorderBrush="{x:Null}">
-                    <Image Margin="0"  Height="auto" Width="auto" Source="/loupe.jpg"/>
-                </Button>
+            <StackPanel Orientation="Horizontal">
+                <Border  BorderBrush="White"  Height="34" Margin="5,20,5,10" Width="150" CornerRadius="6" Background="White">
+                    <TextBox x:Name="txtName" Width="225" Height="34" FontSize="20" BorderBrush="{x:Null}" Background="Transparent" VerticalAlignment="Center"/>
+                </Border>
+
+                <Border  BorderBrush="White" Height="34" Width="45" Margin="0,20,0,10" CornerRadius="6" Background="White">
+                    <Button x:Name="btnSearch" Width="auto" Click="SearchTag_Click" Height="auto" Background="Transparent" FontFamily="Calibri Light" BorderBrush="{x:Null}">
+                        <Image Margin="0"  Height="auto" Width="auto" Source="/loupe.jpg"/>
+                    </Button>
+                </Border>
+            </StackPanel>
+
+            <Border  BorderBrush="White" Height="34" Width="200" Margin="5,0,0,0" CornerRadius="6" Background="White">
+                <Button x:Name="btnUpdateData" Click="BtnUpdateData_Click" Background="Transparent" FontFamily="Calibri Light" BorderBrush="{x:Null}">Mise à jour des données</Button>
             </Border>
         </StackPanel>
 
-        <Button x:Name="btnUpdateData" Grid.Column="2" Margin="30" Click="BtnUpdateData_Click" > Maj data</Button>
+        
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" x:Name="DGridResult" DataContext="{Binding Source=Point}" IsReadOnly="True">
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="20" x:Name="DGridResult" DataContext="{Binding Source=Point}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Nom du point" Width="150" Binding="{Binding Path=Name}"/>
-                <DataGridTextColumn Header="Paramètres" Width="150" Binding="{Binding Path=Parameter}"/>
-                <DataGridTextColumn Header="Valeur" Width="150" Binding="{Binding Path=Value}"/>
-                <DataGridTextColumn Header="Origine" Width="150" Binding="{Binding Path=Origin}"/>
+                <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Path=Name}"/>
+                <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Path=Parameter}"/>
+                <DataGridTextColumn Header="Valeur" Width="*" Binding="{Binding Path=Value}"/>
+                <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Path=Origin}"/>
             </DataGrid.Columns>
         </DataGrid>
-        
+
 
     </Grid>
 </Window>
