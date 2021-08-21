@@ -40,12 +40,12 @@
 
         
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="20" x:Name="DGridResult" DataContext="{Binding Source=Point}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="20" x:Name="DGridResult" ItemsSource="{Binding TagsList}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Path=Name}"/>
-                <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Path=Parameter}"/>
-                <DataGridTextColumn Header="Valeur" Width="*" Binding="{Binding Path=Value}"/>
-                <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Path=Origin}"/>
+                <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Parameter}"/>
+                <DataGridTextColumn Header="Valeur" Width="*" Binding="{Binding Value}"/>
+                <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Origin}"/>
             </DataGrid.Columns>
         </DataGrid>
 

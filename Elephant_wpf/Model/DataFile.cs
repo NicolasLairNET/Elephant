@@ -1,15 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Forms;
 
 namespace ElephantLibrary
 {
-    public static class DataFile
+    public class DataFile
     {
-        private static string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
+        private string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
 
-        private static bool Create(string[] filePathList)
+        public ObservableCollection<TDCTag> Tags { get; set; }
+
+        public DataFile()
+        {
+            string data = File.ReadAllText(DataFilePath);
+            Tags = JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(data);
+        }
+
+
+        private bool Create(string[] filePathList)
         {
             List<TDCTag> tagList = new();
 
@@ -34,7 +44,7 @@ namespace ElephantLibrary
         }
 
 
-        public static List<TDCTag> Search(string tagName)
+        public List<TDCTag> Search(string tagName)
         {
             string data = File.ReadAllText(DataFilePath);
             List<TDCTag> pointList = JsonSerializer.Deserialize<List<TDCTag>>(data);
@@ -49,7 +59,7 @@ namespace ElephantLibrary
             return result;
         }
 
-        public static void UpdateData()
+        public void UpdateData()
         {
             using OpenFileDialog openFileDialog = new();
 
