@@ -1,6 +1,6 @@
 ﻿
 
-namespace ElephantLibrary
+namespace Elephant.Model
 {
     public class TDCTag
     {

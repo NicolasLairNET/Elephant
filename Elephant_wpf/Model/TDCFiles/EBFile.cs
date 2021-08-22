@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace ElephantLibrary
+namespace Elephant.Model
 {
     internal class EBFile : ITDCFile
     {

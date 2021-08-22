@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using ElephantLibrary;
 using System.Linq;
+using Elephant.Model;
 
-namespace Elephant_wpf.ViewModel
+namespace Elephant.VM
 {
     class ViewModel : INotifyPropertyChanged
     {

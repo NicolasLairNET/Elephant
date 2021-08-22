@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows.Forms;
 
-namespace ElephantLibrary
+namespace Elephant.Model
 {
     public class DataFile
     {
@@ -40,13 +40,16 @@ namespace ElephantLibrary
             {
                 string fileExtension = Path.GetExtension(filePath);
                 string fileName = Path.GetFileName(filePath);
+                ITDCFile tdcFile;
 
-                ITDCFile tdcFile = fileExtension switch
+                if (fileExtension == ".EB")
                 {
-                    ".EB" => new EBFile(filePath, fileName),
-                    ".XX" => new XXFile(filePath, fileName),
-                    _ => null
-                };
+                    tdcFile = new EBFile(filePath, fileName);
+                }
+                else if (fileExtension == ".XX")
+                {
+                    tdcFile = new XXFile(filePath, fileName);
+                }
 
                 tagList.AddRange(tdcFile.Read());
             }
