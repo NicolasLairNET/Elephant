@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ElephantLibrary;
 using System.Linq;
-using System.Text;
-
-
-using System.Threading.Tasks;
 
 namespace Elephant_wpf.ViewModel
 {
     class ViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -33,6 +28,28 @@ namespace Elephant_wpf.ViewModel
                 _tagsList = value;
                 OnPropertyChanged(nameof(TagsList));
             }
+        }
+
+        public void Update()
+        {
+            DataFile.UpdateData();
+            TagsList = new DataFile().Tags;
+        }
+
+        public void Search(string tagName)
+        {
+            ObservableCollection<TDCTag> data = new DataFile().Tags;
+
+            if (tagName != "")
+            {
+                TagsList = new ObservableCollection<TDCTag>(
+                from TDCTag in data
+                where TDCTag.Name == tagName
+                select TDCTag);
+                return;
+            }
+
+            TagsList = data;
         }
     }
 }

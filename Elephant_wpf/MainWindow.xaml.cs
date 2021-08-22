@@ -17,18 +17,19 @@ namespace Elephant
         public MainWindow()
         {
             DataContext = new ViewModel();
-            //Data = new DataFile();
-            //DGridResult.ItemsSource = Data.Tags;
         }
 
         private void SearchTag_Click(object sender, RoutedEventArgs e)
         {
-            DGridResult.ItemsSource = Data.Search(txtName.Text);
+            ViewModel vm = (ViewModel)DataContext;
+            vm.Search(txtName.Text);
         }
 
         private void BtnUpdateData_Click(object sender, RoutedEventArgs e)
         {
-            Data.UpdateData();
+            ViewModel vm = (ViewModel)DataContext;
+            vm.Update();
+            //Data.UpdateData();
         }
     }
 }

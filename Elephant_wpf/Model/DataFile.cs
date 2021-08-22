@@ -8,18 +8,31 @@ namespace ElephantLibrary
 {
     public class DataFile
     {
-        private string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
+        private static string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
 
         public ObservableCollection<TDCTag> Tags { get; set; }
 
         public DataFile()
         {
-            string data = File.ReadAllText(DataFilePath);
-            Tags = JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(data);
+            string data = Read();
+            if (data != "")
+            {
+                Tags = JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(data);
+            }
+        }
+
+        private string Read()
+        {
+            if (!File.Exists(DataFilePath))
+            {
+                File.Create(DataFilePath).Close();
+            }
+
+            return File.ReadAllText(DataFilePath);
         }
 
 
-        private bool Create(string[] filePathList)
+        private static bool Create(string[] filePathList)
         {
             List<TDCTag> tagList = new();
 
@@ -44,22 +57,7 @@ namespace ElephantLibrary
         }
 
 
-        public List<TDCTag> Search(string tagName)
-        {
-            string data = File.ReadAllText(DataFilePath);
-            List<TDCTag> pointList = JsonSerializer.Deserialize<List<TDCTag>>(data);
-
-            List<TDCTag> result = pointList.FindAll(
-                delegate (TDCTag p)
-                {
-                    return p.Name == tagName || p.Value == tagName;
-                }
-            );
-
-            return result;
-        }
-
-        public void UpdateData()
+        public static void UpdateData()
         {
             using OpenFileDialog openFileDialog = new();
 
@@ -81,6 +79,5 @@ namespace ElephantLibrary
                 }
             }
         }
-
     }
 }
