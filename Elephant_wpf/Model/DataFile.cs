@@ -41,7 +41,6 @@ namespace Elephant.Model
                 string fileExtension = Path.GetExtension(filePath);
                 string fileName = Path.GetFileName(filePath);
                 ITDCFile tdcFile;
-
                 if (fileExtension == ".EB")
                 {
                     tdcFile = new EBFile(filePath, fileName);
@@ -49,6 +48,10 @@ namespace Elephant.Model
                 else if (fileExtension == ".XX")
                 {
                     tdcFile = new XXFile(filePath, fileName);
+                }
+                else
+                {
+                    continue;
                 }
 
                 tagList.AddRange(tdcFile.Read());
