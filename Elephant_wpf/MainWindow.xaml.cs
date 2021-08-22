@@ -1,9 +1,5 @@
-﻿
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Forms;
-using ElephantLibrary;
-using Elephant_wpf.ViewModel;
+﻿using System.Windows;
+using Elephant.VM;
 
 namespace Elephant
 {
@@ -12,8 +8,6 @@ namespace Elephant
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DataFile Data;
-
         public MainWindow()
         {
             DataContext = new ViewModel();
@@ -29,7 +23,6 @@ namespace Elephant
         {
             ViewModel vm = (ViewModel)DataContext;
             vm.Update();
-            //Data.UpdateData();
         }
     }
 }

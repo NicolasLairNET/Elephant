@@ -1,7 +1,6 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace ElephantLibrary
+namespace Elephant.Model
 {
     internal interface ITDCFile
     {
