@@ -1,11 +1,9 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using Elephant.VM;
 
 namespace Elephant
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -23,6 +21,15 @@ namespace Elephant
         {
             ViewModel vm = (ViewModel)DataContext;
             vm.Update();
+        }
+
+        private void SearchTag_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ViewModel vm = (ViewModel)DataContext;
+                vm.Search(txtName.Text);
+            }
         }
     }
 }
