@@ -8,12 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="loupe.jpg" />
     <None Remove="searchIcone.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="loupe.jpg" />
     <Resource Include="searchIcone.png" />
   </ItemGroup>
 
