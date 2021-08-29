@@ -7,12 +7,4 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="searchIcone.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="searchIcone.png" />
-  </ItemGroup>
-
 </Project>
