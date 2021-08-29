@@ -15,9 +15,4 @@
     <Resource Include="searchIcone.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Core\" />
-    <Folder Include="View\" />
-  </ItemGroup>
-
 </Project>
