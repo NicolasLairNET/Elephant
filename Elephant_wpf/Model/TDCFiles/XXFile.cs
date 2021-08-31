@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace Elephant.Model
 {
-    class XXFile : ITDCFile
+    public class XXFile : ITDCFile
     {
         public readonly string FilePath;
         public readonly string FileName;
@@ -33,21 +32,24 @@ namespace Elephant.Model
                     {
                         tag = CreateCLAMTag(line);
                     }
+                    else if(FileName[0..5] == "HIWAY")
+                    {
+                        tag = CreateHWYTag(line);
+                    }
                     pointList.Add(tag);
                 }
             }
             
-
             return pointList;
         }
 
-        private TDCTag CreateUCNTag(string line)
+        public TDCTag CreateUCNTag(string line)
         {
             return new TDCTag()
             {
                 Name = line[39..71].Trim(),
                 Parameter = "ENT_REF",
-                Value = line[72..104].Trim(),
+                Value = line[74..106].Trim(),
                 Origin = "UCN"
             };
         }
@@ -58,8 +60,19 @@ namespace Elephant.Model
             {
                 Name = line[17..35].Trim(),
                 Parameter = "CL",
-                Value = line[53..8].Trim(),
+                Value = line[53..61].Trim(),
                 Origin = "CL AM"
+            };
+        }
+
+        private TDCTag CreateHWYTag(string line)
+        {
+            return new TDCTag()
+            {
+                Name = line[17..35].Trim(),
+                Parameter = "ENT_REF",
+                Value = line[53..38].Trim(),
+                Origin = "HIWAY"
             };
         }
     }

@@ -16,7 +16,7 @@ namespace Elephant.VM
 
         public ViewModel()
         {
-            TagsList = new DataFile().Tags;
+            TagsList = DataFile.Read();
         }
 
         private ObservableCollection<TDCTag> _tagsList;
@@ -32,13 +32,12 @@ namespace Elephant.VM
 
         public void Update()
         {
-            DataFile.UpdateData();
-            TagsList = new DataFile().Tags;
+            TagsList = DataFile.UpdateData();
         }
 
         public void Search(string tagName)
         {
-            ObservableCollection<TDCTag> data = new DataFile().Tags;
+            ObservableCollection<TDCTag> data = DataFile.Read();
 
             if (tagName != "")
             {

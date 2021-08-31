@@ -6,29 +6,25 @@ using System.Windows.Forms;
 
 namespace Elephant.Model
 {
-    public class DataFile
+    public static class DataFile
     {
         private static string DataFilePath => $"{Directory.GetCurrentDirectory()}\\DATA.json";
+        public static ObservableCollection<TDCTag> Tags { get; set; }
 
-        public ObservableCollection<TDCTag> Tags { get; set; }
-
-        public DataFile()
-        {
-            string data = Read();
-            if (data != "")
-            {
-                Tags = JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(data);
-            }
-        }
-
-        private string Read()
+        public static ObservableCollection<TDCTag> Read()
         {
             if (!File.Exists(DataFilePath))
             {
                 File.Create(DataFilePath).Close();
             }
 
-            return File.ReadAllText(DataFilePath);
+            string data = File.ReadAllText(DataFilePath);
+            if (data != "")
+            {
+                Tags = JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(data);
+            }
+
+            return Tags;
         }
 
 
@@ -63,7 +59,7 @@ namespace Elephant.Model
         }
 
 
-        public static void UpdateData()
+        public static ObservableCollection<TDCTag> UpdateData()
         {
             using OpenFileDialog openFileDialog = new();
 
@@ -84,6 +80,8 @@ namespace Elephant.Model
                     System.Windows.MessageBox.Show("Erreur: echec de l'import");
                 }
             }
+
+            return Read();
         }
     }
 }
