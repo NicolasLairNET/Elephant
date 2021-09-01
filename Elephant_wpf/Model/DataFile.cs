@@ -31,6 +31,11 @@ namespace Elephant.Model
 
         private static bool Create(string[] filePathList)
         {
+            if (filePathList == null)
+            {
+                return false;
+            }
+
             List<TDCTag> tagList = new();
 
             foreach (string filePath in filePathList)
@@ -53,33 +58,29 @@ namespace Elephant.Model
 
                 tagList.AddRange(tdcFile.Read());
             }
+
+            if (!tagList.Any())
+            {
+                return false;
+            }
+
             string tagListSerialized = JsonSerializer.Serialize(tagList);
             File.WriteAllText(DataFilePath, tagListSerialized);
 
             return true;
         }
 
-
         public static ObservableCollection<TDCTag> Update()
         {
-            using OpenFileDialog openFileDialog = new();
+            string[] filePathList = GetPathList();
 
-            openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Filter = "EB files (*.EB)|*.EB|XX files (*.XX)|*.XX|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 2;
-            openFileDialog.Multiselect = true;
-            openFileDialog.RestoreDirectory = true;
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (Create(filePathList))
             {
-                if (Create(openFileDialog.FileNames))
-                {
-                    System.Windows.MessageBox.Show("Import terminé");
-                }
-                else
-                {
-                    System.Windows.MessageBox.Show("Erreur: echec de l'import");
-                }
+                System.Windows.MessageBox.Show("Import terminé");
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("Aucun fichier importé");
             }
 
             return Read();
@@ -98,6 +99,27 @@ namespace Elephant.Model
             }
 
             return Tags;
+        }
+
+        /// <summary>
+        /// Open a fileDialog for import TDC Files
+        /// </summary>
+        /// <returns>List of TDC Files's path</returns>
+        private static string[] GetPathList()
+        {
+            OpenFileDialog openFileDialog = new()
+            {
+                InitialDirectory = "c:\\",
+                RestoreDirectory = true,
+                Multiselect = true
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                return openFileDialog.FileNames;
+            }
+
+            return null;
         }
     }
 }
