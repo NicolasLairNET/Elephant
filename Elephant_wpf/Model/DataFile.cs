@@ -31,7 +31,7 @@ namespace Elephant.Model
 
         private static bool Create(string[] filePathList)
         {
-            if (filePathList == null)
+            if (!filePathList.Any())
             {
                 return false;
             }
@@ -107,6 +107,7 @@ namespace Elephant.Model
         /// <returns>List of TDC Files's path</returns>
         private static string[] GetPathList()
         {
+            string[] pathList = new string[0];
             OpenFileDialog openFileDialog = new()
             {
                 InitialDirectory = "c:\\",
@@ -116,10 +117,10 @@ namespace Elephant.Model
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                return openFileDialog.FileNames;
+                pathList = openFileDialog.FileNames;
             }
 
-            return null;
+            return pathList;
         }
     }
 }

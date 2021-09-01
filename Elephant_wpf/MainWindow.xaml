@@ -106,7 +106,7 @@
                 <TextBox Name="txtName" 
                          Style="{StaticResource TextboxStyle}"
                          Margin="0, 0, 0, 5"
-                         KeyDown="SearchTag_KeyDown"/>
+                         KeyDown="SearchTag_KeyDown" CharacterCasing="Upper"/>
 
                 <Button x:Name="btnSearch"
                         Style="{StaticResource ButtonStyle}"
@@ -121,7 +121,7 @@
 
         
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="10" Name="DGridResult" ItemsSource="{Binding TagsList}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="20, 0, 20, 20" Name="DGridResult" ItemsSource="{Binding TagsList}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Parameter}"/>
