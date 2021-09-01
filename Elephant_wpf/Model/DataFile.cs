@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Elephant.Model
@@ -59,7 +60,7 @@ namespace Elephant.Model
         }
 
 
-        public static ObservableCollection<TDCTag> UpdateData()
+        public static ObservableCollection<TDCTag> Update()
         {
             using OpenFileDialog openFileDialog = new();
 
@@ -82,6 +83,21 @@ namespace Elephant.Model
             }
 
             return Read();
+        }
+
+        public static ObservableCollection<TDCTag> Search(string tagName)
+        {
+            ObservableCollection<TDCTag> data = DataFile.Read();
+
+            if (tagName != "")
+            {
+                Tags = new ObservableCollection<TDCTag>(
+                from TDCTag in data
+                where TDCTag.Name == tagName
+                select TDCTag);
+            }
+
+            return Tags;
         }
     }
 }

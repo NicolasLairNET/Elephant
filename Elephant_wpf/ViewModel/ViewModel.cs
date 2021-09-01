@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using Elephant.Model;
 
 namespace Elephant.VM
@@ -19,6 +18,16 @@ namespace Elephant.VM
             TagsList = DataFile.Read();
         }
 
+        public void Update()
+        {
+            TagsList = DataFile.Update();
+        }
+
+        public void Search(string tagName)
+        {
+            TagsList = DataFile.Search(tagName);
+        }
+
         private ObservableCollection<TDCTag> _tagsList;
         public ObservableCollection<TDCTag> TagsList
         {
@@ -28,27 +37,6 @@ namespace Elephant.VM
                 _tagsList = value;
                 OnPropertyChanged(nameof(TagsList));
             }
-        }
-
-        public void Update()
-        {
-            TagsList = DataFile.UpdateData();
-        }
-
-        public void Search(string tagName)
-        {
-            ObservableCollection<TDCTag> data = DataFile.Read();
-
-            if (tagName != "")
-            {
-                TagsList = new ObservableCollection<TDCTag>(
-                from TDCTag in data
-                where TDCTag.Name == tagName
-                select TDCTag);
-                return;
-            }
-
-            TagsList = data;
         }
     }
 }
