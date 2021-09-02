@@ -5,22 +5,21 @@ namespace Elephant.Model
 {
     public class XXFile : ITDCFile
     {
-        public readonly string FilePath;
         public readonly string FileName;
+        public readonly string[] FileContent;
 
-        public XXFile(string filePath, string fileName)
+        public XXFile(string filePath)
         {
-            FilePath = filePath;
-            FileName = fileName;
+            FileName = Path.GetFileName(filePath);
+            FileContent = File.ReadAllLines(filePath);
         }
 
         public List<TDCTag> Read()
         {
             List<TDCTag> pointList = new();
-            string[] lines = File.ReadAllLines(FilePath);
             TDCTag tag = null;
 
-            foreach (string line in lines)
+            foreach (string line in FileContent)
             {
                 if (line.Length > 3 && line[0..3] == "NET")
                 {
@@ -43,7 +42,7 @@ namespace Elephant.Model
             return pointList;
         }
 
-        public TDCTag CreateUCNTag(string line)
+        private TDCTag CreateUCNTag(string line)
         {
             return new TDCTag()
             {

@@ -45,11 +45,11 @@ namespace Elephant.Model
                 ITDCFile tdcFile;
                 if (fileExtension == ".EB")
                 {
-                    tdcFile = new EBFile(filePath, fileName);
+                    tdcFile = new EBFile(filePath);
                 }
                 else if (fileExtension == ".XX")
                 {
-                    tdcFile = new XXFile(filePath, fileName);
+                    tdcFile = new XXFile(filePath);
                 }
                 else
                 {

@@ -5,14 +5,13 @@ namespace Elephant.Model
 {
     internal class EBFile : ITDCFile
     {
-
-        public readonly string FilePath;
         public readonly string FileName;
+        public readonly string[] FileContent;
 
-        public EBFile(string filePath, string fileName)
+        public EBFile(string filePath)
         {
-            FilePath = filePath;
-            FileName = fileName;
+            FileName = Path.GetFileName(filePath);
+            FileContent = File.ReadAllLines(filePath);
         }
 
         public List<TDCTag> Read()
@@ -21,9 +20,7 @@ namespace Elephant.Model
             string point = null;
             string value = null;
 
-            string[] lines = File.ReadAllLines(FilePath);
-
-            foreach (string l in lines)
+            foreach (string l in FileContent)
             {
                 string line = l.Trim();
                 if (line[0..2] == "&N")
