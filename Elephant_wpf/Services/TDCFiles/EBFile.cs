@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Elephant.Model;
+using System.Collections.Generic;
 using System.IO;
 
-namespace Elephant.Model
+namespace Elephant.Services
 {
     internal class EBFile : ITDCFile
     {

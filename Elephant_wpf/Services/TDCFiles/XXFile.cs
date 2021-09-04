@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Elephant.Model;
+using System.Collections.Generic;
 using System.IO;
 
-namespace Elephant.Model
+namespace Elephant.Services
 {
     public class XXFile : ITDCFile
     {
@@ -31,14 +32,14 @@ namespace Elephant.Model
                     {
                         tag = CreateCLAMTag(line);
                     }
-                    else if(FileName[0..5] == "HIWAY")
+                    else if (FileName[0..5] == "HIWAY")
                     {
                         tag = CreateHWYTag(line);
                     }
                     pointList.Add(tag);
                 }
             }
-            
+
             return pointList;
         }
 

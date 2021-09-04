@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Elephant.Model;
+using System;
 using System.Collections.Generic;
 
-namespace Elephant.Model
+namespace Elephant.Services
 {
     class ECFile : ITDCFile
     {

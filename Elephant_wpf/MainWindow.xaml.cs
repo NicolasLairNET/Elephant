@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using Elephant.ViewModel;
+using System.Windows;
 using System.Windows.Input;
-using Elephant.VM;
 
 namespace Elephant
 {
@@ -8,18 +8,18 @@ namespace Elephant
     {
         public MainWindow()
         {
-            DataContext = new ViewModel();
+            DataContext = new TDCTagViewModel();
         }
 
         private void SearchTag_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel vm = (ViewModel)DataContext;
+            TDCTagViewModel vm = (TDCTagViewModel)DataContext;
             vm.Search(txtName.Text);
         }
 
         private void BtnUpdateData_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel vm = (ViewModel)DataContext;
+            TDCTagViewModel vm = (TDCTagViewModel)DataContext;
             vm.Update();
         }
 
@@ -27,7 +27,7 @@ namespace Elephant
         {
             if (e.Key == Key.Enter)
             {
-                ViewModel vm = (ViewModel)DataContext;
+                TDCTagViewModel vm = (TDCTagViewModel)DataContext;
                 vm.Search(txtName.Text);
             }
         }

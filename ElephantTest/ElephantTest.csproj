@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Elephant_wpf\Elephant_wpf.csproj" />
+    <ProjectReference Include="..\Elephant_wpf\Elephant.csproj" />
   </ItemGroup>
 
 </Project>

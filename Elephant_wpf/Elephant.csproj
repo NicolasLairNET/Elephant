@@ -11,7 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="View\" />
+    <Compile Remove="View\**" />
+    <EmbeddedResource Remove="View\**" />
+    <None Remove="View\**" />
+    <Page Remove="View\**" />
   </ItemGroup>
 
 </Project>

@@ -1,31 +1,34 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Elephant.Model;
+using Elephant.Services;
 
-namespace Elephant.VM
+namespace Elephant.ViewModel
 {
-    class ViewModel : INotifyPropertyChanged
+    class TDCTagViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        public JsonFileTDCTagService JsonFileTDCTagService;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public ViewModel()
+        public TDCTagViewModel()
         {
-            TagsList = DataFile.Read();
+            JsonFileTDCTagService = new JsonFileTDCTagService();
+            TagsList = JsonFileTDCTagService.GetProducts();
         }
 
         public void Update()
         {
-            TagsList = DataFile.Update();
+            TagsList = JsonFileTDCTagService.Update();
         }
 
         public void Search(string tagName)
         {
-            TagsList = DataFile.Search(tagName);
+            TagsList = JsonFileTDCTagService.Search(tagName);
         }
 
         private ObservableCollection<TDCTag> _tagsList;
