@@ -6,8 +6,8 @@ namespace Elephant.Services
 {
     internal class EBFile : ITDCFile
     {
-        public readonly string FileName;
-        public readonly string[] FileContent;
+        public string FileName { get; }
+        public string[] FileContent { get; }
 
         public EBFile(string filePath)
         {
@@ -15,9 +15,9 @@ namespace Elephant.Services
             FileContent = File.ReadAllLines(filePath);
         }
 
-        public List<TDCTag> Read()
+        public List<TDCTag> GetTagsList()
         {
-            List<TDCTag> pointList = new();
+            List<TDCTag> tagsList = new();
             string point = null;
             string value = null;
 
@@ -39,7 +39,7 @@ namespace Elephant.Services
                     string[] parameters = line.Split("  ");
                     foreach (string parameter in parameters)
                     {
-                        pointList.Add(ReadParameter(parameter, point));
+                        tagsList.Add(ReadParameter(parameter, point));
                     }
                 }
                 else if (line[0..2] == "&T")
@@ -52,18 +52,18 @@ namespace Elephant.Services
                         Value = value,
                         Origin = "EB"
                     };
-                    pointList.Add(tag);
+                    tagsList.Add(tag);
                 }
                 else
                 {
-                    pointList.Add(ReadParameter(line, point));
+                    tagsList.Add(ReadParameter(line, point));
                 }
             }
 
-            return pointList;
+            return tagsList;
         }
 
-        private static TDCTag ReadParameter(string line, string point)
+        private TDCTag ReadParameter(string line, string point)
         {
             string[] element = line.Split("=");
             TDCTag tag = new()

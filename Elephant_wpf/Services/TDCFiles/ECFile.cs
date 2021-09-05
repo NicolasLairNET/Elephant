@@ -6,7 +6,7 @@ namespace Elephant.Services
 {
     class ECFile : ITDCFile
     {
-        public List<TDCTag> Read()
+        public List<TDCTag> GetTagsList()
         {
             throw new NotImplementedException();
         }

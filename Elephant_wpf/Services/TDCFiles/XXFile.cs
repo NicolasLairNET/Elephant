@@ -15,7 +15,7 @@ namespace Elephant.Services
             FileContent = File.ReadAllLines(filePath);
         }
 
-        public List<TDCTag> Read()
+        public List<TDCTag> GetTagsList()
         {
             List<TDCTag> pointList = new();
             TDCTag tag = null;

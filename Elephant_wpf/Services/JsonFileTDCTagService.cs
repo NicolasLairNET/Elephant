@@ -52,7 +52,7 @@ namespace Elephant.Services
         {
             string[] filePathList = GetPathList();
 
-            if (Create(filePathList))
+            if (CreateJsonFile(filePathList))
             {
                 MessageBox.Show("Import terminé");
             }
@@ -79,7 +79,7 @@ namespace Elephant.Services
             return data;
         }
 
-        private bool Create(string[] filePathList)
+        private bool CreateJsonFile(string[] filePathList)
         {
             if (!filePathList.Any())
             {
@@ -106,7 +106,7 @@ namespace Elephant.Services
                     continue;
                 }
 
-                tagList.AddRange(tdcFile.Read());
+                tagList.AddRange(tdcFile.GetTagsList());
             }
 
             if (!tagList.Any())

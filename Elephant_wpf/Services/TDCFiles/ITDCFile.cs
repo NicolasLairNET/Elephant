@@ -5,6 +5,6 @@ namespace Elephant.Services
 {
     internal interface ITDCFile
     {
-        public List<TDCTag> Read();
+        public List<TDCTag> GetTagsList();
     }
 }

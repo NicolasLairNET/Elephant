@@ -22,23 +22,10 @@ namespace ElephantTest.ModelTest
             // actual
             string filePath = "..\\..\\..\\FilesTest\\UCN.XX";
             XXFile xXFile = new(filePath);
-            List<TDCTag> actual = xXFile.Read();
+            List<TDCTag> actual = xXFile.GetTagsList();
 
             // assert
-            Assert.Equal(expected[0].Name, actual[0].Name);
-            Assert.Equal(expected[0].Origin, actual[0].Origin);
-            Assert.Equal(expected[0].Parameter, actual[0].Parameter);
-            Assert.Equal(expected[0].Value, actual[0].Value);
-
-            Assert.Equal(expected[1].Name, actual[1].Name);
-            Assert.Equal(expected[1].Origin, actual[1].Origin);
-            Assert.Equal(expected[1].Parameter, actual[1].Parameter);
-            Assert.Equal(expected[1].Value, actual[1].Value);
-
-            Assert.Equal(expected[2].Name, actual[2].Name);
-            Assert.Equal(expected[2].Origin, actual[2].Origin);
-            Assert.Equal(expected[2].Parameter, actual[2].Parameter);
-            Assert.Equal(expected[2].Value, actual[2].Value);
+            Assert.Equal(expected.ToString(), actual.ToString());
         }
     }
 }
