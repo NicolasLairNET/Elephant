@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Forms;
+using System;
 
 namespace Elephant.Services
 {
@@ -27,15 +28,24 @@ namespace Elephant.Services
 
         public ObservableCollection<TDCTag> GetProducts()
         {
-            using (var jsonFileReader = File.OpenText(JsonFileName))
+            try
             {
-                return JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(
-                    jsonFileReader.ReadToEnd(),
-                    new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                using (var jsonFileReader = File.OpenText(JsonFileName))
+                {
+                    return JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(
+                        jsonFileReader.ReadToEnd(),
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                }
             }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Le fichier de données à été supprimé, relancez l'application.");
+                return null;
+            }
+
         }
 
         public ObservableCollection<TDCTag> Update()
@@ -44,11 +54,11 @@ namespace Elephant.Services
 
             if (Create(filePathList))
             {
-                System.Windows.MessageBox.Show("Import terminé");
+                MessageBox.Show("Import terminé");
             }
             else
             {
-                System.Windows.MessageBox.Show("Aucun fichier importé");
+                MessageBox.Show("Aucun fichier importé");
             }
 
             return GetProducts();
