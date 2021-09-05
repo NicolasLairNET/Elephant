@@ -67,11 +67,12 @@ namespace Elephant.Services
 
         private TDCTag CreateHWYTag(string line)
         {
+            
             return new TDCTag()
             {
-                Name = line[17..35].Trim(),
+                Name = line[16..51].Trim(),
                 Parameter = "ENT_REF",
-                Value = line[53..38].Trim(),
+                Value = line[52..line.Length].Trim(),
                 Origin = "HIWAY"
             };
         }
