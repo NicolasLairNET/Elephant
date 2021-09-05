@@ -1,0 +1,8 @@
+{SYSTEM ENTITY PP308( )                                                        }
+&T ANINNIM                                                                      
+&N PP308                                                                        
+NODETYP  = HPM         
+PNTFORM  = FULL        
+PTDESC   ="PRESSION TETE T306      "
+EUDESC   ="BAR     "
+KEYWORD  ="T306    "  \

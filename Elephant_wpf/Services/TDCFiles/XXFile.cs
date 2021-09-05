@@ -49,7 +49,7 @@ namespace Elephant.Services
             {
                 Name = line[39..71].Trim(),
                 Parameter = "ENT_REF",
-                Value = line[74..106].Trim(),
+                Value = line[72..104].Trim(),
                 Origin = "UCN"
             };
         }
@@ -58,9 +58,9 @@ namespace Elephant.Services
         {
             return new TDCTag()
             {
-                Name = line[17..35].Trim(),
+                Name = line[16..51].Trim(),
                 Parameter = "CL",
-                Value = line[53..61].Trim(),
+                Value = line[52..60].Trim(),
                 Origin = "CL AM"
             };
         }

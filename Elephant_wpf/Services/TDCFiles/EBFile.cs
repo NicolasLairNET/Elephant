@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Elephant.Services
 {
-    internal class EBFile : ITDCFile
+    class EBFile : ITDCFile
     {
         public string FileName { get; }
         public string[] FileContent { get; }

@@ -3,7 +3,7 @@ using Xunit;
 using Elephant.Model;
 using Elephant.Services;
 
-namespace ElephantTest.ModelTest
+namespace ElephantTest.Services
 {
     public class XXFileUnitTest
     {
