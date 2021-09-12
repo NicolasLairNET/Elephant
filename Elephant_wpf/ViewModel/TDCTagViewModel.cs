@@ -18,7 +18,7 @@ namespace Elephant.ViewModel
         public TDCTagViewModel()
         {
             JsonFileTDCTagService = new JsonFileTDCTagService();
-            TagsList = JsonFileTDCTagService.GetProducts();
+            TagsList = JsonFileTDCTagService.GetTDCTags();
         }
 
         public void Update()

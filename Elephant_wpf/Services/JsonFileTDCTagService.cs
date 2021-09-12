@@ -26,7 +26,7 @@ namespace Elephant.Services
             }
         }
 
-        public ObservableCollection<TDCTag> GetProducts()
+        public ObservableCollection<TDCTag> GetTDCTags()
         {
             try
             {
@@ -61,12 +61,12 @@ namespace Elephant.Services
                 MessageBox.Show("Aucun fichier importé");
             }
 
-            return GetProducts();
+            return GetTDCTags();
         }
 
         public ObservableCollection<TDCTag> Search(string tagName)
         {
-            ObservableCollection<TDCTag> data = GetProducts();
+            ObservableCollection<TDCTag> data = GetTDCTags();
 
             if (tagName != "")
             {
