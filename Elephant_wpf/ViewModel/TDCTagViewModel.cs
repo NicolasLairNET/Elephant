@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Controls;
 using Elephant.Model;
 using Elephant.Services;
 
@@ -9,6 +10,7 @@ namespace Elephant.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public JsonFileTDCTagService JsonFileTDCTagService;
+        public ExcelService ExcelService;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -18,6 +20,7 @@ namespace Elephant.ViewModel
         public TDCTagViewModel()
         {
             JsonFileTDCTagService = new JsonFileTDCTagService();
+            ExcelService = new ExcelService();
             TagsList = JsonFileTDCTagService.GetTDCTags();
         }
 
@@ -31,8 +34,9 @@ namespace Elephant.ViewModel
             TagsList = JsonFileTDCTagService.Search(tagName);
         }
 
-        public void Export()
+        public void Export(DataGrid data)
         {
+            ExcelService.Export(data);
         }
 
         private ObservableCollection<TDCTag> _tagsList;
