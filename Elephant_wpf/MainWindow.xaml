@@ -198,13 +198,13 @@
 
             <Button  x:Name="btnExportData" 
                      Style="{StaticResource ButtonExportStyle}" 
-                     Click="BtnUpdateData_Click">Export</Button>
+                     Click="BtnExportData_Click">Export</Button>
         </StackPanel>
 
 
 
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="20, 0, 20, 20" Name="DGridResult" ItemsSource="{Binding TagsList}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
+        <DataGrid  Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="20, 0, 20, 20" Name="DGridResult" ItemsSource="{Binding TagsList}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Parameter}"/>

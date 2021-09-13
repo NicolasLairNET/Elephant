@@ -31,6 +31,10 @@ namespace Elephant.ViewModel
             TagsList = JsonFileTDCTagService.Search(tagName);
         }
 
+        public void Export()
+        {
+        }
+
         private ObservableCollection<TDCTag> _tagsList;
         public ObservableCollection<TDCTag> TagsList
         {

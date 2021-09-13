@@ -11,23 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="View\**" />
-    <EmbeddedResource Remove="View\**" />
-    <None Remove="View\**" />
-    <Page Remove="View\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ElephantLogo.png" />
-    <None Remove="Fichier 1.png" />
-    <None Remove="Fichier 10.png" />
-    <None Remove="Fichier 11.png" />
-    <None Remove="Fichier 12%404x.png" />
-    <None Remove="Fichier 13.png" />
-    <None Remove="Fichier 14.png" />
-    <None Remove="Fichier 7.png" />
-    <None Remove="Fichier 9.png" />
-    <None Remove="LogoElephant.png" />
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>9</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>00020813-0000-0000-c000-000000000046</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
 
   <ItemGroup>
