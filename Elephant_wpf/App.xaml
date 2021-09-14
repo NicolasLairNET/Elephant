@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:Elephant_wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/ColorsTheme.xaml"/>
+                <ResourceDictionary Source="Themes/SearchButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/ImportButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/ExportButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/TextBoxTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
