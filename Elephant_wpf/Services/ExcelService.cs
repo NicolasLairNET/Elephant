@@ -3,21 +3,13 @@ using System.IO;
 using System.Windows.Controls;
 using System.Reflection;
 using System.Windows.Input;
-using System.Windows;
-using Elephant.Model;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Windows.Forms;
 
 namespace Elephant.Services
 {
     class ExcelService
     {
-        private string ExportPath { get; }
-
-        public ExcelService(string exportPath = "Downloads")
-        {
-            ExportPath = exportPath;
-        }
-
         public void Export(DataGrid data)
         {
             string[] dataArray = ConvertDatagridToStringArray(data);
@@ -25,7 +17,7 @@ namespace Elephant.Services
 
             if (excel == null)
             {
-                MessageBox.Show("Impossible d'exporter, Excel n'est pas installé");
+                System.Windows.MessageBox.Show("Impossible d'exporter, Excel n'est pas installé");
                 return;
             }
 
@@ -53,12 +45,13 @@ namespace Elephant.Services
                 excelWorksheet.Cells[line, colomn] = dataArray[i];
             }
 
-            string path = Path.Combine("\\", ExportPath, $"export{DateTime.Now:ddMMyyyyHmmss}.xlsx");
+            string path = Path.Combine(SelectExportFolder(), $"export{DateTime.Now:ddMMyyyyHmmss}.xlsx");
+
             excelWorkbook.SaveAs(path);
             excelWorkbook.Close(true);
             excel.Quit();
 
-            MessageBox.Show($"Export terminé dans {path}");
+            System.Windows.MessageBox.Show($"Export terminé dans {path}");
         }
 
         /// <summary>
@@ -79,9 +72,21 @@ namespace Elephant.Services
             ApplicationCommands.Copy.Execute(null, data);
             data.UnselectAllCells();
 
-            string dataGridContent = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+            string dataGridContent = (string)System.Windows.Clipboard.GetData(System.Windows.DataFormats.CommaSeparatedValue);
 
             return dataGridContent.Replace(Environment.NewLine, ",").Split(",");
+        }
+
+        private string SelectExportFolder()
+        {
+            string exportFolder = Directory.GetCurrentDirectory();
+            FolderBrowserDialog folderBrowserDialog = new();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                exportFolder = folderBrowserDialog.SelectedPath;
+            }
+
+            return exportFolder;
         }
     }
 }
