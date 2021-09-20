@@ -29,7 +29,13 @@
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="20, 20, 0, 30">
             <TextBox x:Name="txtName" 
                      Style="{StaticResource TextboxTheme}"
-                     CharacterCasing="Upper"/>
+                     CharacterCasing="Upper">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" 
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding ElementName=txtName, Path=Text}"/>
+                </TextBox.InputBindings>
+            </TextBox>
 
             <Button x:Name="btnSearch"
                     Style="{StaticResource SearchButtonTheme}"
