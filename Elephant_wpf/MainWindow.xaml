@@ -27,26 +27,32 @@
                HorizontalAlignment="Left"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="20, 20, 0, 30">
-            <TextBox Name="txtName" 
-                         Style="{StaticResource TextboxTheme}"
-                         KeyDown="SearchTag_KeyDown" CharacterCasing="Upper"/>
+            <TextBox x:Name="txtName" 
+                     Style="{StaticResource TextboxTheme}"
+                     CharacterCasing="Upper"/>
 
             <Button x:Name="btnSearch"
-                        Style="{StaticResource SearchButtonTheme}"
-                        Click="SearchTag_Click">Rechercher</Button>
+                    Style="{StaticResource SearchButtonTheme}"
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding ElementName=txtName, Path=Text}">Rechercher</Button>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Margin="0, 20, 30, 30">
-            <Button  x:Name="btnUpdateData" 
-                     Style="{StaticResource ImportButtonTheme}" 
-                     Click="BtnUpdateData_Click">Import</Button>
+            <Button  x:Name="btnImportData" 
+                     Style="{StaticResource ImportButtonTheme}"
+                     Command="{Binding ImportCommand}">Import</Button>
 
             <Button  x:Name="btnExportData" 
-                     Style="{StaticResource ExportButtonTheme}" 
-                     Click="BtnExportData_Click">Export</Button>
+                     Style="{StaticResource ExportButtonTheme}"
+                     Command="{Binding ExportCommand}"
+                     CommandParameter="{Binding ElementName=DGridResult}">Export</Button>
         </StackPanel>
 
-        <DataGrid  Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" Height="auto" Margin="30, 0, 30, 30" Name="DGridResult" ItemsSource="{Binding TagsList}" IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
+        <DataGrid  x:Name="DGridResult" 
+                   Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
+                   Height="auto" Margin="30, 0, 30, 30" 
+                   ItemsSource="{Binding TagsList}" 
+                   IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Parameter}"/>

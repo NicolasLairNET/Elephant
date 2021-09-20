@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using Elephant.Model;
 using Elephant.Services;
+using Elephant.ViewModel.Commands;
 
 namespace Elephant.ViewModel
 {
@@ -11,6 +12,9 @@ namespace Elephant.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         public JsonFileTDCTagService JsonFileTDCTagService;
         public ExcelService ExcelService;
+        public SearchCommand SearchCommand { get; private set; }
+        public ImportCommand ImportCommand { get; private set; }
+        public ExportCommand ExportCommand { get; private set; }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -21,6 +25,9 @@ namespace Elephant.ViewModel
         {
             JsonFileTDCTagService = new JsonFileTDCTagService();
             ExcelService = new ExcelService();
+            ImportCommand = new ImportCommand(Update);
+            SearchCommand = new SearchCommand(Search);
+            ExportCommand = new ExportCommand(Export);
             TagsList = JsonFileTDCTagService.GetTDCTags();
         }
 
