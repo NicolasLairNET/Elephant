@@ -36,6 +36,10 @@ namespace Elephant.Services
                     {
                         tag = CreateHWYTag(line);
                     }
+                    else
+                    {
+                        continue;
+                    }
                     pointList.Add(tag);
                 }
             }
