@@ -114,11 +114,16 @@ namespace Elephant.Services
                 return false;
             }
 
+            // delete similar tags
+            tagList = tagList.Distinct(new TDCTagComparer()).ToList();
+
             string tagListSerialized = JsonSerializer.Serialize(tagList);
             File.WriteAllText(JsonFileName, tagListSerialized);
 
             return true;
         }
+
+
 
         /// <summary>
         /// Open a fileDialog for import TDC Files
