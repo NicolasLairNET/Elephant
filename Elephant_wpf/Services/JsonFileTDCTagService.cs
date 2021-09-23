@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System;
 
 namespace Elephant.Services
 {
@@ -15,6 +15,7 @@ namespace Elephant.Services
         {
             get => Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
         }
+        public object Regex { get; private set; }
 
         public JsonFileTDCTagService()
         {
@@ -64,15 +65,23 @@ namespace Elephant.Services
             return GetTDCTags();
         }
 
-        public ObservableCollection<TDCTag> Search(string tagName)
+        private static string StringToRegex(string value)
+        {
+            return '^' + value.Replace('_', '.').Replace("*", ".*") + "$";
+        }
+
+        public ObservableCollection<TDCTag> Search(string value)
         {
             ObservableCollection<TDCTag> data = GetTDCTags();
+            Regex regex = new (StringToRegex(value));   
 
-            if (tagName != "")
+            if (value != "")
             {
                 return new ObservableCollection<TDCTag>(
                 from TDCTag in data
-                where TDCTag.Name == tagName
+                let matchName = regex.Matches(TDCTag.Name)
+                let matchValue = regex.Matches(TDCTag.Value)
+                where matchName.Count > 0 || matchValue.Count > 0
                 select TDCTag);
             }
 

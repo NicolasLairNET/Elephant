@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Elephant.Model;
 using Elephant.Services;
 using Elephant.ViewModel.Commands;
+using System.Linq;
 
 namespace Elephant.ViewModel
 {
