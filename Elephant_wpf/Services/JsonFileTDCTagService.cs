@@ -11,11 +11,7 @@ namespace Elephant.Services
 {
     class JsonFileTDCTagService
     {
-        private string JsonFileName
-        {
-            get => Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
-        }
-        public object Regex { get; private set; }
+        private static string JsonFileName => Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
 
         public JsonFileTDCTagService()
         {
@@ -31,22 +27,19 @@ namespace Elephant.Services
         {
             try
             {
-                using (var jsonFileReader = File.OpenText(JsonFileName))
-                {
-                    return JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(
-                        jsonFileReader.ReadToEnd(),
-                        new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
-                }
+                using StreamReader jsonFileReader = File.OpenText(JsonFileName);
+                return JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(
+                    jsonFileReader.ReadToEnd(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
             }
             catch (FileNotFoundException)
             {
                 MessageBox.Show("Le fichier de données à été supprimé, relancez l'application.");
                 return null;
             }
-
         }
 
         public ObservableCollection<TDCTag> Import()
@@ -65,27 +58,24 @@ namespace Elephant.Services
             return GetTDCTags();
         }
 
-        private static string StringToRegex(string value)
-        {
-            return '^' + value.Replace('_', '.').Replace("*", ".*") + "$";
-        }
-
         public ObservableCollection<TDCTag> Search(string value)
         {
             ObservableCollection<TDCTag> data = GetTDCTags();
             Regex regex = new(StringToRegex(value));
 
-            if (value != "")
-            {
-                return new ObservableCollection<TDCTag>(
+            return value != ""
+                ? new ObservableCollection<TDCTag>(
                 from TDCTag in data
                 let matchName = regex.Matches(TDCTag.Name)
                 let matchValue = regex.Matches(TDCTag.Value)
                 where matchName.Count > 0 || matchValue.Count > 0
-                select TDCTag);
-            }
+                select TDCTag)
+                : data;
+        }
 
-            return data;
+        private static string StringToRegex(string value)
+        {
+            return '^' + value.Replace('?', '.').Replace("*", ".*") + "$";
         }
 
         private bool CreateJsonFile(string[] filePathList)
@@ -100,7 +90,6 @@ namespace Elephant.Services
             foreach (string filePath in filePathList)
             {
                 string fileExtension = Path.GetExtension(filePath);
-                string fileName = Path.GetFileName(filePath);
                 ITDCFile tdcFile;
                 if (fileExtension == ".EB")
                 {
@@ -132,8 +121,6 @@ namespace Elephant.Services
             return true;
         }
 
-
-
         /// <summary>
         /// Open a fileDialog for import TDC Files
         /// </summary>
@@ -155,7 +142,5 @@ namespace Elephant.Services
 
             return pathList;
         }
-
-
     }
 }
