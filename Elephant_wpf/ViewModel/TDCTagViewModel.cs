@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using Elephant.Model;
 using Elephant.Services;
 using Elephant.ViewModel.Commands;
-using System.Linq;
 
 namespace Elephant.ViewModel
 {
@@ -12,7 +11,7 @@ namespace Elephant.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public JsonFileTDCTagService JsonFileTDCTagService;
-        public ExcelService ExcelService;
+        public ExportDataGridService ExportDataGridService;
         public SearchCommand SearchCommand { get; private set; }
         public ImportCommand ImportCommand { get; private set; }
         public ExportCommand ExportCommand { get; private set; }
@@ -25,16 +24,16 @@ namespace Elephant.ViewModel
         public TDCTagViewModel()
         {
             JsonFileTDCTagService = new JsonFileTDCTagService();
-            ExcelService = new ExcelService();
-            ImportCommand = new ImportCommand(Update);
+            ExportDataGridService = new ExportDataGridService();
+            ImportCommand = new ImportCommand(Import);
             SearchCommand = new SearchCommand(Search);
             ExportCommand = new ExportCommand(Export);
             TagsList = JsonFileTDCTagService.GetTDCTags();
         }
 
-        public void Update()
+        public void Import()
         {
-            TagsList = JsonFileTDCTagService.Update();
+            TagsList = JsonFileTDCTagService.Import();
         }
 
         public void Search(string tagName)
@@ -44,7 +43,7 @@ namespace Elephant.ViewModel
 
         public void Export(DataGrid data)
         {
-            ExcelService.Export(data);
+            ExportDataGridService.Export(data);
         }
 
         private ObservableCollection<TDCTag> _tagsList;

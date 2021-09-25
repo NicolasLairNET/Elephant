@@ -49,7 +49,7 @@ namespace Elephant.Services
 
         }
 
-        public ObservableCollection<TDCTag> Update()
+        public ObservableCollection<TDCTag> Import()
         {
             string[] filePathList = GetPathList();
 
@@ -73,7 +73,7 @@ namespace Elephant.Services
         public ObservableCollection<TDCTag> Search(string value)
         {
             ObservableCollection<TDCTag> data = GetTDCTags();
-            Regex regex = new (StringToRegex(value));   
+            Regex regex = new(StringToRegex(value));
 
             if (value != "")
             {
