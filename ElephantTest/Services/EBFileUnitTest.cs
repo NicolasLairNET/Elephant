@@ -29,7 +29,7 @@ namespace ElephantTest.Services
 
             // actual
             string filePath = "..\\..\\..\\FilesTest\\FICHIER.EB";
-            XXFile xXFile = new(filePath);
+            UCNFile xXFile = new(filePath);
             List<TDCTag> actual = xXFile.GetTagsList();
 
             // assert

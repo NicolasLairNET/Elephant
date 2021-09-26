@@ -6,12 +6,10 @@ namespace Elephant.Services
 {
     class EBFile : ITDCFile
     {
-        public string FileName { get; }
         public string[] FileContent { get; }
 
         public EBFile(string filePath)
         {
-            FileName = Path.GetFileName(filePath);
             FileContent = File.ReadAllLines(filePath);
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Elephant.Services
 {
-    internal interface ITDCFile
+    public interface ITDCFile
     {
         public List<TDCTag> GetTagsList();
     }

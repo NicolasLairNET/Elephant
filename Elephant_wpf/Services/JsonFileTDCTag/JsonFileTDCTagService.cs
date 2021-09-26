@@ -1,4 +1,5 @@
 ﻿using Elephant.Model;
+using Elephant.Services.TDCFiles;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -89,22 +90,11 @@ namespace Elephant.Services
 
             foreach (string filePath in filePathList)
             {
-                string fileExtension = Path.GetExtension(filePath);
-                ITDCFile tdcFile;
-                if (fileExtension == ".EB")
+                ITDCFile tdcFile = new TDCFileFactory(filePath).Create();
+                if (tdcFile != null)
                 {
-                    tdcFile = new EBFile(filePath);
+                    tagList.AddRange(tdcFile.GetTagsList());
                 }
-                else if (fileExtension == ".XX")
-                {
-                    tdcFile = new XXFile(filePath);
-                }
-                else
-                {
-                    continue;
-                }
-
-                tagList.AddRange(tdcFile.GetTagsList());
             }
 
             if (!tagList.Any())

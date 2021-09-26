@@ -21,7 +21,7 @@ namespace ElephantTest.Services
 
             // actual
             string filePath = "..\\..\\..\\FilesTest\\UCN.XX";
-            XXFile xXFile = new(filePath);
+            UCNFile xXFile = new(filePath);
             List<TDCTag> actual = xXFile.GetTagsList();
 
             // assert
@@ -46,7 +46,7 @@ namespace ElephantTest.Services
 
             // actual
             string filePath = "..\\..\\..\\FilesTest\\CLAMABCD.XX";
-            XXFile xXFile = new(filePath);
+            UCNFile xXFile = new(filePath);
             List<TDCTag> actual = xXFile.GetTagsList();
 
             // assert
@@ -69,7 +69,7 @@ namespace ElephantTest.Services
 
             // actual
             string filePath = "..\\..\\..\\FilesTest\\HIWAY.XX";
-            XXFile xXFile = new(filePath);
+            UCNFile xXFile = new(filePath);
             List<TDCTag> actual = xXFile.GetTagsList();
 
             // assert
