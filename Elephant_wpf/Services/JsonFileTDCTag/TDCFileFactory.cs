@@ -19,6 +19,7 @@
                     _ when FileName.Contains("UCN") => new UCNFile(FilePath),
                     _ when FileName.Contains("HIWAY") => new HWYFile(FilePath),
                     _ when FileName.Contains("CLAM") => new CLAMFile(FilePath),
+                    _ when FileName.Contains("CLHPM") => new CLHPMFile(FilePath),
                     _ => null
                 };
             }
