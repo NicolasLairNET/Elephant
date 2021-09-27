@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Elephant.Services
+namespace Elephant.Services.JsonFileTDCTag
 {
     class ECFile : ITDCFile
     {

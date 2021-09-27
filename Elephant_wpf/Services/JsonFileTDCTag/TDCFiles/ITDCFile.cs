@@ -1,7 +1,7 @@
 ﻿using Elephant.Model;
 using System.Collections.Generic;
 
-namespace Elephant.Services
+namespace Elephant.Services.JsonFileTDCTag
 {
     public interface ITDCFile
     {

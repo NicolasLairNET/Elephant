@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Elephant.Services
+namespace Elephant.Services.JsonFileTDCTag
 {
-    public class UCNFile : ITDCFile
+    public class UCNFile : XXFile , ITDCFile
     {
         public string[] FileContent { get; set; }
 
@@ -15,24 +15,17 @@ namespace Elephant.Services
 
         public List<TDCTag> GetTagsList()
         {
-            List<TDCTag> tagList = new();
-            TDCTag tag = null;
-            foreach (string line in FileContent)
-            {
-                if (line.Length > 3 && line[0..3] == "NET")
-                {
-                    tag = new()
-                    {
-                        Name = line[39..71].Trim(),
-                        Parameter = "ENT_REF",
-                        Value = line[72..104].Trim(),
-                        Origin = "UCN"
-                    };
-                    tagList.Add(tag);
-                }
-            }
+            int[] namePosition = new int[2] { 39, 71 };
+            string parameter = "ENT_REF";
+            int[] valuePosition = new int[2] { 72, 104 };
+            string origin = "UCN";
 
-            return tagList;
+            return CreateTagsList(
+                FileContent, 
+                namePosition, 
+                parameter, 
+                valuePosition, 
+                origin);
         }
     }
 }

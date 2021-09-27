@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Elephant.Services.TDCFiles
+namespace Elephant.Services.JsonFileTDCTag
 {
-    public class HWYFile : ITDCFile
+    public class HWYFile : XXFile, ITDCFile
     {
         public string[] FileContent { get; set; }
 
@@ -15,24 +15,17 @@ namespace Elephant.Services.TDCFiles
 
         public List<TDCTag> GetTagsList()
         {
-            List<TDCTag> tagList = new();
-            TDCTag tag = null;
-            foreach (string line in FileContent)
-            {
-                if (line.Length > 3 && line[0..3] == "NET")
-                {
-                    tag = new()
-                    {
-                        Name = line[16..51].Trim(),
-                        Parameter = "ENT_REF",
-                        Value = line[52..line.Length].Trim(),
-                        Origin = "HIWAY"
-                    };
-                    tagList.Add(tag);
-                }
-            }
+            int[] namePosition = new int[2] { 16, 51 };
+            string parameter = "ENT_REF";
+            int[] valuePosition = new int[2] { 52, 90 };
+            string origin = "HIWAY";
 
-            return tagList;
+            return CreateTagsList(
+                FileContent,
+                namePosition,
+                parameter,
+                valuePosition,
+                origin);
         }
     }
 }

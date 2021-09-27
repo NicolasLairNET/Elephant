@@ -1,5 +1,4 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TDCFiles;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Elephant.Services
+namespace Elephant.Services.JsonFileTDCTag
 {
     class JsonFileTDCTagService
     {
@@ -94,6 +93,10 @@ namespace Elephant.Services
                 if (tdcFile != null)
                 {
                     tagList.AddRange(tdcFile.GetTagsList());
+                }
+                else
+                {
+                    MessageBox.Show($"Le fichier : {Path.GetFileName(filePath)} n'est pas pris en charge par Elephant");
                 }
             }
 

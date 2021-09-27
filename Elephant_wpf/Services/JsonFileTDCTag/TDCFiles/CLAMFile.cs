@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Elephant.Services.TDCFiles
+namespace Elephant.Services.JsonFileTDCTag
 {
-    public class CLAMFile : ITDCFile
+    public class CLAMFile : XXFile, ITDCFile
     {
         public string[] FileContent { get; set; }
 
@@ -15,24 +15,18 @@ namespace Elephant.Services.TDCFiles
 
         public List<TDCTag> GetTagsList()
         {
-            List<TDCTag> tagList = new();
-            TDCTag tag = null;
-            foreach (string line in FileContent)
-            {
-                if (line.Length > 3 && line[0..3] == "NET")
-                {
-                    tag = new()
-                    {
-                        Name = line[16..51].Trim(),
-                        Parameter = "CL",
-                        Value = line[52..60].Trim(),
-                        Origin = "CL AM"
-                    };
-                    tagList.Add(tag);
-                }
-            }
 
-            return tagList;
+            int[] namePosition = new int[2] { 16, 51 };
+            string parameter = "CL";
+            int[] valuePosition = new int[2] { 52, 60 };
+            string origin = "CL AM";
+
+            return CreateTagsList(
+                FileContent, 
+                namePosition, 
+                parameter, 
+                valuePosition, 
+                origin);
         }
     }
 }

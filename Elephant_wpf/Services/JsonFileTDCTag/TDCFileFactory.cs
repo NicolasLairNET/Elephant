@@ -1,4 +1,4 @@
-﻿namespace Elephant.Services.TDCFiles
+﻿namespace Elephant.Services.JsonFileTDCTag
 {
     public class TDCFileFactory : Factory
     {

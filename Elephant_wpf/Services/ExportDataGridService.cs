@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Forms;
 using System.Text;
 
-namespace Elephant.Services
+namespace Elephant.Services.ExportDataGrid
 {
     class ExportDataGridService
     {
