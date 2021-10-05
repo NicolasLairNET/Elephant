@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Elephant.Model
@@ -12,5 +14,7 @@ namespace Elephant.Model
         public string Origin { get; set; }
 
         public override string ToString() => JsonSerializer.Serialize<TDCTag>(this);
+
+        public List<string> ToList() => new() { Name, Parameter, Value, Origin, Environment.NewLine };
     }
 }

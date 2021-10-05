@@ -50,8 +50,7 @@
 
             <Button  x:Name="btnExportData" 
                      Style="{StaticResource ExportButtonTheme}"
-                     Command="{Binding ExportCommand}"
-                     CommandParameter="{Binding ElementName=DGridResult}">Export</Button>
+                     Command="{Binding ExportCommand}">Export</Button>
         </StackPanel>
 
         <DataGrid  x:Name="DGridResult" 

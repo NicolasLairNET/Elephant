@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Elephant.Services.JsonFileTDCTag
+namespace Elephant.Services
 {
     class JsonFileTDCTagService
     {

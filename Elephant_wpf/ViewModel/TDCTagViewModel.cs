@@ -1,9 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Controls;
 using Elephant.Model;
-using Elephant.Services.ExportDataGrid;
-using Elephant.Services.JsonFileTDCTag;
+using Elephant.Services;
 using Elephant.ViewModel.Commands;
 
 namespace Elephant.ViewModel
@@ -12,7 +11,7 @@ namespace Elephant.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public JsonFileTDCTagService JsonFileTDCTagService;
-        public ExportDataGridService ExportDataGridService;
+        public ExportService ExportService;
         public SearchCommand SearchCommand { get; private set; }
         public ImportCommand ImportCommand { get; private set; }
         public ExportCommand ExportCommand { get; private set; }
@@ -25,7 +24,7 @@ namespace Elephant.ViewModel
         public TDCTagViewModel()
         {
             JsonFileTDCTagService = new JsonFileTDCTagService();
-            ExportDataGridService = new ExportDataGridService();
+            ExportService = new ExportService();
             ImportCommand = new ImportCommand(Import);
             SearchCommand = new SearchCommand(Search);
             ExportCommand = new ExportCommand(Export);
@@ -42,9 +41,10 @@ namespace Elephant.ViewModel
             TagsList = JsonFileTDCTagService.Search(tagName);
         }
 
-        public void Export(DataGrid data)
+        public void Export()
         {
-            ExportDataGridService.Export(data);
+            var tags = new List<TDCTag>(TagsList);
+            ExportService.Export(tags);
         }
 
         private ObservableCollection<TDCTag> _tagsList;
