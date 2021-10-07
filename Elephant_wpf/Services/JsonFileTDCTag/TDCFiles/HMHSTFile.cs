@@ -4,27 +4,27 @@ using System.IO;
 
 namespace Elephant.Services
 {
-    public class PEFile : XXFile , ITDCFile
+    public class HMHSTFile : XXFile, ITDCFile
     {
         public string[] FileContent { get; set; }
 
-        public PEFile(string filePath)
+        public HMHSTFile(string filePath)
         {
             FileContent = File.ReadAllLines(filePath);
         }
 
         public List<TDCTag> GetTagsList()
         {
-            int[] namePosition = new int[2] { 19, 57 };
+            int[] namePosition = new int[2] { 22, 60 };
             string parameter = "ENT_REF";
-            int[] valuePosition = new int[2] { 10, 18 };
-            string origin = "PE";
+            int[] valuePosition = new int[2] { 16, 21 };
+            string origin = "HM HST";
 
             return CreateTagsList(
-                FileContent, 
-                namePosition, 
-                parameter, 
-                valuePosition, 
+                FileContent,
+                namePosition,
+                parameter,
+                valuePosition,
                 origin);
         }
     }
