@@ -8,13 +8,10 @@
 
         public override ITDCFile Create()
         {
-            if (FileExtension == ".EB")
+            return FileExtension switch
             {
-                return new EBFile(FilePath);
-            }
-            else if (FileExtension == ".XX")
-            {
-                return FileName switch
+                ".EB" => new EBFile(FilePath),
+                ".XX" => FileName switch
                 {
                     _ when FileName.Contains("UCN") => new UCNFile(FilePath),
                     _ when FileName.Contains("HIWAY") => new HWYFile(FilePath),
@@ -25,14 +22,9 @@
                     _ when FileName.Contains("HMGRP") => new HMGRPFile(FilePath),
                     _ when FileName.Contains("HMHST") => new HMHSTFile(FilePath),
                     _ => null
-                };
-            }
-            else
-            {
-                return null;
-            }
+                },
+                _ => null
+            };
         }
     }
-
-
 }

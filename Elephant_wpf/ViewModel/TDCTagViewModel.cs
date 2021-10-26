@@ -10,10 +10,10 @@ namespace Elephant.ViewModel
     class TDCTagViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public JsonFileTDCTagService JsonFileTDCTagService;
-        public ExportService ExportService;
+        private readonly JsonFileTdcTagService _jsonFileTdcTagService;
+        private readonly ExportService _exportService;
         public SearchCommand SearchCommand { get; private set; }
-        public ImportCommand ImportCommand { get; private set; }
+        public  ImportCommand ImportCommand { get; private set;  }
         public ExportCommand ExportCommand { get; private set; }
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -23,28 +23,28 @@ namespace Elephant.ViewModel
 
         public TDCTagViewModel()
         {
-            JsonFileTDCTagService = new JsonFileTDCTagService();
-            ExportService = new ExportService();
+            _jsonFileTdcTagService = new JsonFileTdcTagService();
+            _exportService = new ExportService();
             ImportCommand = new ImportCommand(Import);
             SearchCommand = new SearchCommand(Search);
             ExportCommand = new ExportCommand(Export);
-            TagsList = JsonFileTDCTagService.GetTDCTags();
+            TagsList = _jsonFileTdcTagService.GetTDCTags();
         }
 
-        public void Import()
+        private void Import()
         {
-            TagsList = JsonFileTDCTagService.Import();
+            TagsList = _jsonFileTdcTagService.Import();
         }
 
-        public void Search(string tagName)
+        private void Search(string tagName)
         {
-            TagsList = JsonFileTDCTagService.Search(tagName);
+            TagsList = _jsonFileTdcTagService.Search(tagName);
         }
 
-        public void Export()
+        private void Export()
         {
             var tags = new List<TDCTag>(TagsList);
-            ExportService.Export(tags);
+            _exportService.Export(tags);
         }
 
         private ObservableCollection<TDCTag> _tagsList;

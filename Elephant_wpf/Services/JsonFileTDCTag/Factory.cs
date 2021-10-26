@@ -4,11 +4,11 @@ namespace Elephant.Services
 {
     public abstract class Factory
     {
-        public string FileName { get; set; }
-        public string FileExtension { get; set; }
-        public string FilePath { get; set; }
+        protected string FileName { get; set; }
+        protected string FileExtension { get; set; }
+        protected string FilePath { get; set; }
 
-        public Factory(string filePath)
+        protected Factory(string filePath)
         {
             FileName = Path.GetFileName(filePath);
             FileExtension = Path.GetExtension(filePath);

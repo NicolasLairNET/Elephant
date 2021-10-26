@@ -1,4 +1,5 @@
-﻿using Elephant.Model;
+﻿using System;
+using Elephant.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -9,25 +10,23 @@ using System.Windows.Forms;
 
 namespace Elephant.Services
 {
-    class JsonFileTDCTagService
+    internal class JsonFileTdcTagService
     {
         private static string JsonFileName => Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
 
-        public JsonFileTDCTagService()
+        public JsonFileTdcTagService()
         {
-            if (!File.Exists(JsonFileName))
-            {
-                StreamWriter sw = new(JsonFileName);
-                sw.WriteLine("[]");
-                sw.Close();
-            }
+            if (File.Exists(JsonFileName)) return;
+            StreamWriter sw = new(JsonFileName);
+            sw.WriteLine("[]");
+            sw.Close();
         }
 
         public ObservableCollection<TDCTag> GetTDCTags()
         {
             try
             {
-                using StreamReader jsonFileReader = File.OpenText(JsonFileName);
+                using var jsonFileReader = File.OpenText(JsonFileName);
                 return JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(
                     jsonFileReader.ReadToEnd(),
                     new JsonSerializerOptions
@@ -44,32 +43,25 @@ namespace Elephant.Services
 
         public ObservableCollection<TDCTag> Import()
         {
-            string[] filePathList = GetPathList();
+            var filePathList = GetPathList();
 
-            if (CreateJsonFile(filePathList))
-            {
-                MessageBox.Show("Import terminé");
-            }
-            else
-            {
-                MessageBox.Show("Aucun fichier importé");
-            }
+            MessageBox.Show(CreateJsonFile(filePathList) ? "Import terminé" : "Aucun fichier importé");
 
             return GetTDCTags();
         }
 
         public ObservableCollection<TDCTag> Search(string value)
         {
-            ObservableCollection<TDCTag> data = GetTDCTags();
+            var data = GetTDCTags();
             Regex regex = new(StringToRegex(value));
 
             return value != ""
                 ? new ObservableCollection<TDCTag>(
-                from TDCTag in data
-                let matchName = regex.Matches(TDCTag.Name)
-                let matchValue = regex.Matches(TDCTag.Value)
+                from tdcTag in data
+                let matchName = regex.Matches(tdcTag.Name)
+                let matchValue = regex.Matches(tdcTag.Value)
                 where matchName.Count > 0 || matchValue.Count > 0
-                select TDCTag)
+                select tdcTag)
                 : data;
         }
 
@@ -87,10 +79,10 @@ namespace Elephant.Services
 
             List<TDCTag> tagList = new();
 
-            foreach (string filePath in filePathList)
+            foreach (var filePath in filePathList)
             {
-                ITDCFile tdcFile = new TDCFileFactory(filePath).Create();
-                if (tdcFile != null)
+                var tdcFile = new TDCFileFactory(filePath).Create();
+                if (IsTdcFile(tdcFile))
                 {
                     tagList.AddRange(tdcFile.GetTagsList());
                 }
@@ -108,10 +100,15 @@ namespace Elephant.Services
             // delete similar tags
             tagList = tagList.Distinct(new TDCTagComparer()).ToList();
 
-            string tagListSerialized = JsonSerializer.Serialize(tagList);
+            var tagListSerialized = JsonSerializer.Serialize(tagList);
             File.WriteAllText(JsonFileName, tagListSerialized);
 
             return true;
+        }
+
+        private static bool IsTdcFile(ITDCFile file)
+        {
+            return file != null;
         }
 
         /// <summary>
@@ -120,7 +117,7 @@ namespace Elephant.Services
         /// <returns>List of TDC Files's path</returns>
         private string[] GetPathList()
         {
-            string[] pathList = new string[0];
+            var pathList = Array.Empty<string>();
             OpenFileDialog openFileDialog = new()
             {
                 InitialDirectory = "c:\\",
