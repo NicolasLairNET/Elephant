@@ -1,30 +1,28 @@
 ﻿using Elephant.DTOs;
 using Elephant.Model;
-using System.Collections.Generic;
-using System.IO;
 
-namespace Elephant.Services
+namespace Elephant.Services;
+
+public class HWYFile : XXFile, ITDCFile
 {
-    public class HWYFile : XXFile, ITDCFile
+    public string[] FileContent { get; set; }
+
+    public HWYFile(string filePath)
     {
-        public string[] FileContent { get; set; }
+        FileContent = File.ReadAllLines(filePath);
+    }
 
-        public HWYFile(string filePath)
+    public List<TDCTag> GetTagsList()
+    {
+        var tagDto = new TagDto()
         {
-            FileContent = File.ReadAllLines(filePath);
-        }
+            NamePosition = new int[2] { 16, 51 },
+            Parameter = "ENT_REF",
+            ValuePosition = new int[2] { 52, 90 },
+            Origin = "HIWAY"
+        };
 
-        public List<TDCTag> GetTagsList()
-        {
-            var tagDto = new TagDto() 
-            { 
-                NamePosition = new int[2] { 16, 51},
-                Parameter = "ENT_REF",
-                ValuePosition = new int[2] { 52, 90 },
-                Origin = "HIWAY"
-            };
-
-            return CreateTagsList(FileContent, tagDto);
-        }
+        return CreateTagsList(FileContent, tagDto);
     }
 }
+

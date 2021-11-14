@@ -1,14 +1,12 @@
 ﻿using Elephant.Model;
-using System;
-using System.Collections.Generic;
 
-namespace Elephant.Services
+namespace Elephant.Services;
+
+class ECFile : ITDCFile
 {
-    class ECFile : ITDCFile
+    public List<TDCTag> GetTagsList()
     {
-        public List<TDCTag> GetTagsList()
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }
+

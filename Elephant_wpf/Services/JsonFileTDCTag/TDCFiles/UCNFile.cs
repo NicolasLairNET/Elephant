@@ -1,30 +1,28 @@
 ﻿using Elephant.DTOs;
 using Elephant.Model;
-using System.Collections.Generic;
-using System.IO;
 
-namespace Elephant.Services
+namespace Elephant.Services;
+
+public class PEFile : XXFile, ITDCFile
 {
-    public class PEFile : XXFile, ITDCFile
+    public string[] FileContent { get; set; }
+
+    public PEFile(string filePath)
     {
-        public string[] FileContent { get; set; }
+        FileContent = File.ReadAllLines(filePath);
+    }
 
-        public PEFile(string filePath)
+    public List<TDCTag> GetTagsList()
+    {
+        var tagDto = new TagDto()
         {
-            FileContent = File.ReadAllLines(filePath);
-        }
+            NamePosition = new int[2] { 19, 57 },
+            Parameter = "ENT_REF",
+            ValuePosition = new int[2] { 10, 18 },
+            Origin = "PE"
+        };
 
-        public List<TDCTag> GetTagsList()
-        {
-            var tagDto = new TagDto()
-            {
-                NamePosition = new int[2] { 19, 57 },
-                Parameter = "ENT_REF",
-                ValuePosition = new int[2] { 10, 18 },
-                Origin = "PE"
-            };
-
-            return CreateTagsList(FileContent, tagDto);
-        }
+        return CreateTagsList(FileContent, tagDto);
     }
 }
+

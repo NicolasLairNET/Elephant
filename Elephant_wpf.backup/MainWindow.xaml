@@ -1,0 +1,69 @@
+﻿<Window x:Class="Elephant.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Elephant_wpf"
+        mc:Ignorable="d"
+        Title="Elephant" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
+
+    <Grid Background="{StaticResource Application.Background}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Image Source="/LogoElephant.png" 
+               Width="200"
+               Height="100"
+               Margin="30,20,0,20"
+               HorizontalAlignment="Left"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="20, 20, 0, 30">
+            <TextBox x:Name="txtName" 
+                     Style="{StaticResource TextboxTheme}"
+                     CharacterCasing="Upper">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" 
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding ElementName=txtName, Path=Text}"/>
+                </TextBox.InputBindings>
+            </TextBox>
+
+            <Button x:Name="btnSearch"
+                    Style="{StaticResource SearchButtonTheme}"
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding ElementName=txtName, Path=Text}">Rechercher</Button>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Margin="0, 20, 30, 30">
+            <Button  x:Name="btnImportData" 
+                     Style="{StaticResource ImportButtonTheme}"
+                     Command="{Binding ImportCommand}">Import</Button>
+
+            <Button  x:Name="btnExportData" 
+                     Style="{StaticResource ExportButtonTheme}"
+                     Command="{Binding ExportCommand}">Export</Button>
+        </StackPanel>
+
+        <DataGrid  x:Name="DGridResult" 
+                   Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
+                   Height="auto" Margin="30, 0, 30, 30" 
+                   ItemsSource="{Binding TagsList}" 
+                   IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Parameter}"/>
+                <DataGridTextColumn Header="Valeur" Width="*" Binding="{Binding Value}"/>
+                <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Origin}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

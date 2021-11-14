@@ -1,21 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
     <StartupObject>Elephant_wpf.App</StartupObject>
     <MinimumPlatformVersion>10.0.17763.0</MinimumPlatformVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="icone.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="LogoElephant.png" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.255803">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+  </ItemGroup>
 </Project>
