@@ -1,4 +1,5 @@
-﻿using Elephant.Model;
+﻿using Elephant.DTOs;
+using Elephant.Model;
 using System.Collections.Generic;
 
 namespace Elephant.Services
@@ -9,16 +10,9 @@ namespace Elephant.Services
         /// Create a TDCTag list with the content of the file.
         /// </summary>
         /// <param name="fileContent">Content of the file</param>
-        /// <param name="namePosition">Position of the name in the line. index 0 represents the beginning position of the name and index 1 the end.</param>
-        /// <param name="parameter">Parameter name</param>
-        /// <param name="valuePosition">Position of the value in the line. index 0 represents the beginning position of the value and index 1 the end.</param>
-        /// <param name="origin">Origin name</param>
+        /// <param name="tagDto"></param>
         /// <returns>The list of TDCTags in the file </returns>
-        public List<TDCTag> CreateTagsList(string[] fileContent,
-            int[] namePosition, 
-            string parameter, 
-            int[] valuePosition, 
-            string origin)
+        public List<TDCTag> CreateTagsList(string[] fileContent,TagDto tagDto)
         {
             List<TDCTag> tagList = new();
             TDCTag tag = null;
@@ -28,10 +22,10 @@ namespace Elephant.Services
                 {
                     tag = new()
                     {
-                        Name = line[namePosition[0]..namePosition[1]].Trim(),
-                        Parameter = parameter,
-                        Value = line[valuePosition[0]..valuePosition[1]].Trim(),
-                        Origin = origin
+                        Name = line[tagDto.NamePosition[0]..tagDto.NamePosition[1]].Trim(),
+                        Parameter = tagDto.Parameter,
+                        Value = line[tagDto.ValuePosition[0]..tagDto.ValuePosition[1]].Trim(),
+                        Origin = tagDto.Origin
                     };
                     tagList.Add(tag);
                 }

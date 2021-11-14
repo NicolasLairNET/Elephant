@@ -1,10 +1,11 @@
-﻿using Elephant.Model;
+﻿using Elephant.DTOs;
+using Elephant.Model;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Elephant.Services
 {
-    public class UCNFile : XXFile , ITDCFile
+    public class UCNFile : XXFile, ITDCFile
     {
         public string[] FileContent { get; set; }
 
@@ -15,17 +16,15 @@ namespace Elephant.Services
 
         public List<TDCTag> GetTagsList()
         {
-            int[] namePosition = new int[2] { 39, 71 };
-            string parameter = "ENT_REF";
-            int[] valuePosition = new int[2] { 72, 104 };
-            string origin = "UCN";
+            var tagDto = new TagDto()
+            {
+                NamePosition = new int[2] { 39, 71 },
+                Parameter = "ENT_REF",
+                ValuePosition = new int[2] { 72, 104 },
+                Origin = "UCN",
+            };
 
-            return CreateTagsList(
-                FileContent, 
-                namePosition, 
-                parameter, 
-                valuePosition, 
-                origin);
+            return CreateTagsList(FileContent, tagDto);
         }
     }
 }

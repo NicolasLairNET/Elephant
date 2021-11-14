@@ -1,4 +1,5 @@
-﻿using Elephant.Model;
+﻿using Elephant.DTOs;
+using Elephant.Model;
 using System.Collections.Generic;
 using System.IO;
 
@@ -15,17 +16,15 @@ namespace Elephant.Services
 
         public List<TDCTag> GetTagsList()
         {
-            int[] namePosition = new int[2] { 52, 90 };
-            string parameter = "ENT_REF";
-            int[] valuePosition = new int[2] { 16, 51 };
-            string origin = "HM GRP";
+            var tagDto = new TagDto()
+            {
+                NamePosition = new int[2] { 52, 90 },
+                Parameter = "ENT_REF",
+                ValuePosition = new int[2] { 16, 51 },
+                Origin = "HM GRP"
+            };
 
-            return CreateTagsList(
-                FileContent,
-                namePosition,
-                parameter,
-                valuePosition,
-                origin);
+            return CreateTagsList(FileContent, tagDto);
         }
     }
 }
