@@ -6,7 +6,7 @@ using Elephant.ViewModel.Commands;
 
 namespace Elephant.ViewModel;
 
-class TDCTagViewModel : INotifyPropertyChanged
+class TdcTagViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
     private readonly JsonFileTdcTagService _jsonFileTdcTagService;
@@ -20,7 +20,7 @@ class TDCTagViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public TDCTagViewModel()
+    public TdcTagViewModel()
     {
         _jsonFileTdcTagService = new JsonFileTdcTagService();
         _exportService = new ExportService();

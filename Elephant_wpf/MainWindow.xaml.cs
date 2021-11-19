@@ -1,15 +1,12 @@
-﻿using Elephant.Services.ExportService;
-using Elephant.ViewModel;
+﻿using Elephant.ViewModel;
 using System.Windows;
 
 
-namespace Elephant
+namespace Elephant;
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            DataContext = new TDCTagViewModel();
-        }
+        InitializeComponent();
     }
 }
