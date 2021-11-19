@@ -1,13 +1,13 @@
 ﻿using Elephant.Model;
 using System.Windows.Forms;
 
-namespace Elephant.Services;
-internal class ExportService
+namespace Elephant.Services.ExportService;
+internal class ExportService : IExportService
 {
-    public async void Export(List<TDCTag> tagList)
+    public async Task Export(List<TDCTag> tagList)
     {
         var path = SelectPathExport();
-        if (path == null) return;
+        if (path is null) return;
 
         var csvString = await GenerateCsvString(tagList).ConfigureAwait(false);
         await File.AppendAllTextAsync(path, csvString, Encoding.UTF8).ConfigureAwait(false);
@@ -19,8 +19,8 @@ internal class ExportService
     {
         return await Task.Run(() =>
         {
-                // create tags list with heading
-                List<string> tags = new() { "Name", "Parameter", "Value", "Origin", Environment.NewLine };
+            // create tags list with heading
+            List<string> tags = new() { "Name", "Parameter", "Value", "Origin", Environment.NewLine };
             foreach (var tag in tagList)
             {
                 tags.AddRange(tag.ToList());

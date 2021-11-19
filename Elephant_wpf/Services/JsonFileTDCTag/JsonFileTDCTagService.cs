@@ -75,7 +75,7 @@ internal class JsonFileTdcTagService
         foreach (var filePath in filePathList)
         {
             var tdcFile = new TDCFileFactory(filePath).Create();
-            if (IsTdcFile(tdcFile))
+            if (tdcFile is not null)
             {
                 tagList.AddRange(tdcFile.GetTagsList());
             }
@@ -97,11 +97,6 @@ internal class JsonFileTdcTagService
         File.WriteAllText(JsonFileName, tagListSerialized);
 
         return true;
-    }
-
-    private static bool IsTdcFile(ITDCFile file)
-    {
-        return file != null;
     }
 
     /// <summary>

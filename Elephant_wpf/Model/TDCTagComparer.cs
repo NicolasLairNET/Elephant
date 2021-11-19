@@ -11,7 +11,6 @@ class TDCTagComparer : IEqualityComparer<TDCTag>
 
     public int GetHashCode(TDCTag tag)
     {
-        int hash = string.Concat(tag.Name, tag.Parameter, tag.Origin, tag.Value).GetHashCode();
-        return hash;
+        return string.Concat(tag.Name, tag.Parameter, tag.Origin, tag.Value).GetHashCode();
     }
 }
