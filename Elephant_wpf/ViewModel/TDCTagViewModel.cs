@@ -2,51 +2,26 @@
 using Elephant.Model;
 using Elephant.Services;
 using Elephant.Services.ExportService;
-using Elephant.ViewModel.Commands;
 
 namespace Elephant.ViewModel;
 
 class TdcTagViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
+
     private readonly JsonFileTdcTagService _jsonFileTdcTagService;
     private readonly ExportService _exportService;
-    public SearchCommand SearchCommand { get; private set; }
-    public ImportCommand ImportCommand { get; private set; }
-    public ExportCommand ExportCommand { get; private set; }
+    private string _tagToSearch;
+    private ObservableCollection<TDCTag> _tagsList;
 
+    public Command SearchCommand { get; init; }
+    public Command ImportCommand { get; init; }
+    public Command ExportCommand { get; init; }
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public TdcTagViewModel()
-    {
-        _jsonFileTdcTagService = new JsonFileTdcTagService();
-        _exportService = new ExportService();
-        ImportCommand = new ImportCommand(Import);
-        SearchCommand = new SearchCommand(Search);
-        ExportCommand = new ExportCommand(Export);
-        TagsList = _jsonFileTdcTagService.GetTDCTags();
-    }
-
-    private void Import()
-    {
-        TagsList = _jsonFileTdcTagService.Import();
-    }
-
-    private void Search(string tagName)
-    {
-        TagsList = _jsonFileTdcTagService.Search(tagName);
-    }
-
-    private void Export()
-    {
-        var tags = new List<TDCTag>(TagsList);
-        _exportService.Export(tags);
-    }
-
-    private ObservableCollection<TDCTag> _tagsList;
     public ObservableCollection<TDCTag> TagsList
     {
         get => _tagsList;
@@ -55,6 +30,42 @@ class TdcTagViewModel : INotifyPropertyChanged
             _tagsList = value;
             OnPropertyChanged(nameof(TagsList));
         }
+    }
+
+    public string TagToSearch
+    {
+        get => _tagToSearch;
+        set
+        {
+            _tagToSearch = value;
+            SearchCommand.RaiseCanExecuteChanged();
+        }
+    }
+
+    public TdcTagViewModel()
+    {
+        _jsonFileTdcTagService = new JsonFileTdcTagService();
+        _exportService = new ExportService();
+        ImportCommand = new Command(Import);
+        SearchCommand = new Command(Search);
+        ExportCommand = new Command(Export);
+        TagsList = _jsonFileTdcTagService.GetTDCTags();
+    }
+
+    private void Import()
+    {
+        TagsList = _jsonFileTdcTagService.Import();
+    }
+
+    private void Search()
+    {
+        TagsList = _jsonFileTdcTagService.Search(TagToSearch);
+    }
+
+    private void Export()
+    {
+        var tags = new List<TDCTag>(TagsList);
+        _exportService.Export(tags);
     }
 }
 

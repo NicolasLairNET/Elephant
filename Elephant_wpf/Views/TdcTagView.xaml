@@ -27,18 +27,16 @@
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="20, 20, 0, 30">
             <TextBox x:Name="txtName" 
                      Style="{StaticResource TextboxTheme}"
-                     CharacterCasing="Upper">
+                     CharacterCasing="Upper"
+                     Text="{Binding TagToSearch, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InputBindings>
-                    <KeyBinding Key="Enter" 
-                                Command="{Binding SearchCommand}"
-                                CommandParameter="{Binding ElementName=txtName, Path=Text}"/>
+                    <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
                 </TextBox.InputBindings>
             </TextBox>
 
             <Button x:Name="btnSearch"
                     Style="{StaticResource SearchButtonTheme}"
-                    Command="{Binding SearchCommand}"
-                    CommandParameter="{Binding ElementName=txtName, Path=Text}">Rechercher</Button>
+                    Command="{Binding SearchCommand}">Rechercher</Button>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Margin="0, 20, 30, 30">
@@ -57,10 +55,10 @@
                    ItemsSource="{Binding TagsList}" 
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Parameter}"/>
-                <DataGridTextColumn Header="Valeur" Width="*" Binding="{Binding Value}"/>
-                <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Origin}"/>
+                <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Path=Name}"/>
+                <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Path=Parameter}"/>
+                <DataGridTextColumn Header="Valeur" Width="*" Binding="{Binding Path=Value}"/>
+                <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Path=Origin}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

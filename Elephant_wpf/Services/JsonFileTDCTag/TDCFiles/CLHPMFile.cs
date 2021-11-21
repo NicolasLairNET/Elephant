@@ -1,7 +1,7 @@
 ﻿using Elephant.DTOs;
 using Elephant.Model;
 
-namespace Elephant.Services;
+namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
 
 public class CLHPMFile : XXFile, ITDCFile
 {

@@ -1,10 +1,10 @@
 ﻿namespace Elephant.Model;
-public class TDCTag
+public record TDCTag
 {
-    public string Name { get; set; }
-    public string Parameter { get; set; }
-    public string Value { get; set; }
-    public string Origin { get; set; }
+    public string Name { get; init; }
+    public string Parameter { get; init; }
+    public string Value { get; init; }
+    public string Origin { get; init; }
 
     public override string ToString() => JsonSerializer.Serialize<TDCTag>(this);
 
