@@ -38,7 +38,7 @@ class TdcTagViewModel : INotifyPropertyChanged
         set
         {
             _tagToSearch = value;
-            SearchCommand.RaiseCanExecuteChanged();
+            Search();
         }
     }
 

@@ -14,7 +14,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border x:Name="border"
-                            CornerRadius="8, 0, 0, 8"
+                            CornerRadius="8"
                             Background="{StaticResource Control.Background}"
 >
                         <ScrollViewer x:Name="PART_ContentHost"

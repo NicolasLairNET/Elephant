@@ -1,5 +1,6 @@
-﻿using Elephant.Model;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Elephant.Model;
+using Elephant.Services.JsonFileTDCTag.Helpers;
 
 namespace Elephant.Services;
 
@@ -46,7 +47,7 @@ internal class JsonFileTdcTagService
     public ObservableCollection<TDCTag> Search(string value)
     {
         var data = GetTDCTags();
-        Regex regex = new(StringToRegex(value));
+        Regex regex = new(value.RegexFormat());
 
         return value != ""
             ? new ObservableCollection<TDCTag>(
@@ -56,11 +57,6 @@ internal class JsonFileTdcTagService
             where matchName.Count > 0 || matchValue.Count > 0
             select tdcTag)
             : data;
-    }
-
-    private static string StringToRegex(string value)
-    {
-        return '^' + value.Replace('?', '.').Replace("*", ".*") + "$";
     }
 
     private bool CreateJsonFile(string[] filePathList)
