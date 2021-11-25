@@ -10,10 +10,7 @@ internal class JsonFileTdcTagService
 
     public JsonFileTdcTagService()
     {
-        if (File.Exists(JsonFileName)) return;
-        StreamWriter sw = new(JsonFileName);
-        sw.WriteLine("[]");
-        sw.Close();
+        InitializeJsonFile();
     }
 
     public ObservableCollection<TDCTag> GetTDCTags()
@@ -57,6 +54,14 @@ internal class JsonFileTdcTagService
             where matchName.Count > 0 || matchValue.Count > 0
             select tdcTag)
             : data;
+    }
+
+    private void InitializeJsonFile()
+    {
+        if (File.Exists(JsonFileName)) return;
+        StreamWriter sw = new(JsonFileName);
+        sw.WriteLine("[]");
+        sw.Close();
     }
 
     private bool CreateJsonFile(string[] filePathList)
