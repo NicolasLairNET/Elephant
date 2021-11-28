@@ -14,9 +14,8 @@ class TdcTagViewModel : INotifyPropertyChanged
     private string _tagToSearch;
     private ObservableCollection<TDCTag> _tagsList;
 
-    public Command SearchCommand { get; init; }
     public Command ImportCommand { get; init; }
-    public Command ExportCommand { get; init; }
+    public Command ExportCommand { get;  init; }
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -47,7 +46,6 @@ class TdcTagViewModel : INotifyPropertyChanged
         _jsonFileTdcTagService = new JsonFileTdcTagService();
         _exportService = new ExportService();
         ImportCommand = new Command(Import);
-        SearchCommand = new Command(Search);
         ExportCommand = new Command(Export);
         TagsList = _jsonFileTdcTagService.GetTDCTags();
     }
@@ -62,10 +60,10 @@ class TdcTagViewModel : INotifyPropertyChanged
         TagsList = _jsonFileTdcTagService.Search(TagToSearch);
     }
 
-    private void Export()
+    private async void Export()
     {
         var tags = new List<TDCTag>(TagsList);
-        _exportService.Export(tags);
+        await _exportService.Export(tags).ConfigureAwait(false);
     }
 }
 

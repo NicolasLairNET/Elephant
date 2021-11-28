@@ -14,12 +14,15 @@ public class Command : ICommand
         _targetCanExecuteMethod = canExecuteMethod;
     }
 
+    public event EventHandler CanExecuteChanged;
+
     public void RaiseCanExecuteChanged()
     {
-        CanExecuteChanged(this, EventArgs.Empty);
+        if (CanExecuteChanged is not null)
+        {
+            CanExecuteChanged(this, EventArgs.Empty);
+        }
     }
-
-    public event EventHandler CanExecuteChanged = delegate { };
 
     public bool CanExecute(object parameter)
     {
