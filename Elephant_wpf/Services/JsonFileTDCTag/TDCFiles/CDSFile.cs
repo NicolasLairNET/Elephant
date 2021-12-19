@@ -1,5 +1,5 @@
-﻿using Elephant.DTOs;
-using Elephant.Model;
+﻿using Elephant.Model;
+using Elephant.Services.JsonFileTDCTag.DTOs;
 
 namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
 public class CDSFile : XXFile, ITDCFile

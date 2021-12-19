@@ -1,5 +1,5 @@
-﻿using Elephant.DTOs;
-using Elephant.Model;
+﻿using Elephant.Model;
+using Elephant.Services.JsonFileTDCTag.DTOs;
 using Elephant.Services.JsonFileTDCTag.TDCFiles;
 
 namespace Elephant.Services;

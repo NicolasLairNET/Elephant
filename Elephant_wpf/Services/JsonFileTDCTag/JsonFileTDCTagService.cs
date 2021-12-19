@@ -4,7 +4,7 @@ using Elephant.Services.JsonFileTDCTag.Helpers;
 
 namespace Elephant.Services;
 
-internal class JsonFileTdcTagService
+internal class JsonFileTdcTagService : IJsonTdcTagService
 {
     private static string JsonFileName => Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
 

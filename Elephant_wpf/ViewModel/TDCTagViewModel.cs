@@ -1,16 +1,15 @@
 ﻿using System.Windows.Input;
 using Elephant.Model;
 using Elephant.Services;
-using Elephant.Services.ExportService;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Elephant.ViewModel;
 
-class TdcTagViewModel : ObservableObject
+internal class TdcTagViewModel : ObservableObject
 {
-    private readonly JsonFileTdcTagService jsonFileTdcTagService;
-    private readonly ExportService exportService;
+    private readonly IJsonTdcTagService JsonService;
+    private readonly IExportService ExportService;
     private string tagToSearch;
     private ObservableCollection<TDCTag> tagsList;
 
@@ -22,13 +21,14 @@ class TdcTagViewModel : ObservableObject
         get => tagsList;
         set => SetProperty(ref tagsList, value);
     }
-    public TdcTagViewModel()
+
+    public TdcTagViewModel(IExportService exportService, IJsonTdcTagService jsonService)
     {
-        jsonFileTdcTagService = new JsonFileTdcTagService();
-        exportService = new ExportService();
+        JsonService = jsonService;
+        ExportService = exportService;
         ImportCommand = new RelayCommand(Import);
         ExportCommand = new RelayCommand(Export);
-        TagsList = jsonFileTdcTagService.GetTDCTags();
+        TagsList = JsonService.GetTDCTags();
     }
 
     public string TagToSearch
@@ -43,18 +43,18 @@ class TdcTagViewModel : ObservableObject
 
     private void Import()
     {
-        TagsList = jsonFileTdcTagService.Import();
+        TagsList = JsonService.Import();
     }
 
     private void Search()
     {
-        TagsList = jsonFileTdcTagService.Search(TagToSearch);
+        TagsList = JsonService.Search(TagToSearch);
     }
 
     private async void Export()
     {
         var tags = new List<TDCTag>(TagsList);
-        await exportService.Export(tags).ConfigureAwait(false);
+        await ExportService.Export(tags).ConfigureAwait(false);
     }
 }
 

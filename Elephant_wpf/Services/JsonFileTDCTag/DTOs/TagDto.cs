@@ -1,4 +1,4 @@
-﻿namespace Elephant.DTOs;
+﻿namespace Elephant.Services.JsonFileTDCTag.DTOs;
 public record TagDto
 {
     public int[] NamePosition { get; init; }
