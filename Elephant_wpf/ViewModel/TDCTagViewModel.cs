@@ -1,69 +1,60 @@
-﻿using System.ComponentModel;
+﻿using System.Windows.Input;
 using Elephant.Model;
 using Elephant.Services;
 using Elephant.Services.ExportService;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Elephant.ViewModel;
 
-class TdcTagViewModel : INotifyPropertyChanged
+class TdcTagViewModel : ObservableObject
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    private readonly JsonFileTdcTagService jsonFileTdcTagService;
+    private readonly ExportService exportService;
+    private string tagToSearch;
+    private ObservableCollection<TDCTag> tagsList;
 
-    private readonly JsonFileTdcTagService _jsonFileTdcTagService;
-    private readonly ExportService _exportService;
-    private string _tagToSearch;
-    private ObservableCollection<TDCTag> _tagsList;
-
-    public Command ImportCommand { get; init; }
-    public Command ExportCommand { get;  init; }
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    public ICommand ImportCommand { get; }
+    public ICommand ExportCommand { get; }
 
     public ObservableCollection<TDCTag> TagsList
     {
-        get => _tagsList;
-        set
-        {
-            _tagsList = value;
-            OnPropertyChanged(nameof(TagsList));
-        }
+        get => tagsList;
+        set => SetProperty(ref tagsList, value);
+    }
+    public TdcTagViewModel()
+    {
+        jsonFileTdcTagService = new JsonFileTdcTagService();
+        exportService = new ExportService();
+        ImportCommand = new RelayCommand(Import);
+        ExportCommand = new RelayCommand(Export);
+        TagsList = jsonFileTdcTagService.GetTDCTags();
     }
 
     public string TagToSearch
     {
-        get => _tagToSearch;
+        get => tagToSearch;
         set
         {
-            _tagToSearch = value;
+            tagToSearch = value;
             Search();
         }
     }
 
-    public TdcTagViewModel()
-    {
-        _jsonFileTdcTagService = new JsonFileTdcTagService();
-        _exportService = new ExportService();
-        ImportCommand = new Command(Import);
-        ExportCommand = new Command(Export);
-        TagsList = _jsonFileTdcTagService.GetTDCTags();
-    }
-
     private void Import()
     {
-        TagsList = _jsonFileTdcTagService.Import();
+        TagsList = jsonFileTdcTagService.Import();
     }
 
     private void Search()
     {
-        TagsList = _jsonFileTdcTagService.Search(TagToSearch);
+        TagsList = jsonFileTdcTagService.Search(TagToSearch);
     }
 
     private async void Export()
     {
         var tags = new List<TDCTag>(TagsList);
-        await _exportService.Export(tags).ConfigureAwait(false);
+        await exportService.Export(tags).ConfigureAwait(false);
     }
 }
 
