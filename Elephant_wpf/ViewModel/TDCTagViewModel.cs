@@ -11,12 +11,12 @@ internal class TdcTagViewModel : ObservableObject
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;
     private string tagToSearch;
-    private ObservableCollection<TDCTag> tagsList;
+    private List<TDCTag> tagsList;
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
 
-    public ObservableCollection<TDCTag> TagsList
+    public List<TDCTag> TagsList
     {
         get => tagsList;
         set => SetProperty(ref tagsList, value);

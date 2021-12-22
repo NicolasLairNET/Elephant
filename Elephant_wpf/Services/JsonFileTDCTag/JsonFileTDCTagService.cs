@@ -13,12 +13,12 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
         InitializeJsonFile();
     }
 
-    public ObservableCollection<TDCTag> GetTDCTags()
+    public List<TDCTag> GetTDCTags()
     {
         try
         {
             using var jsonFileReader = File.OpenText(JsonFileName);
-            return JsonSerializer.Deserialize<ObservableCollection<TDCTag>>(
+            return JsonSerializer.Deserialize<List<TDCTag>>(
                 jsonFileReader.ReadToEnd(),
                 new JsonSerializerOptions
                 {
@@ -32,7 +32,7 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
         }
     }
 
-    public ObservableCollection<TDCTag> Import()
+    public List<TDCTag> Import()
     {
         var filePathList = GetPathList();
 
@@ -41,13 +41,13 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
         return GetTDCTags();
     }
 
-    public ObservableCollection<TDCTag> Search(string value)
+    public List<TDCTag> Search(string value)
     {
         var data = GetTDCTags();
         Regex regex = new(value.RegexFormat());
 
         return value != ""
-            ? new ObservableCollection<TDCTag>(
+            ? new List<TDCTag>(
             from tdcTag in data
             let matchName = regex.Matches(tdcTag.Name)
             let matchValue = regex.Matches(tdcTag.Value)
