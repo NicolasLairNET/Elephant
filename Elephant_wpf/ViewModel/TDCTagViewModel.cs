@@ -53,8 +53,7 @@ internal class TdcTagViewModel : ObservableObject
 
     private async void Export()
     {
-        var tags = new List<TDCTag>(TagsList);
-        await ExportService.Export(tags).ConfigureAwait(false);
+        await ExportService.Export(TagsList).ConfigureAwait(false);
     }
 }
 

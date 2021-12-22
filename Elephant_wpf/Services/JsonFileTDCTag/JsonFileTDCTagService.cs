@@ -1,6 +1,6 @@
-﻿using System.Windows.Forms;
-using Elephant.Model;
+﻿using Elephant.Model;
 using Elephant.Services.JsonFileTDCTag.Helpers;
+using System.Windows.Forms;
 
 namespace Elephant.Services;
 
@@ -66,7 +66,7 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
 
     private bool CreateJsonFile(string[] filePathList)
     {
-        if (!filePathList.Any())
+        if (filePathList.Length == 0)
         {
             return false;
         }
@@ -86,7 +86,7 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
             }
         }
 
-        if (!tagList.Any())
+        if (tagList.Count == 0)
         {
             return false;
         }

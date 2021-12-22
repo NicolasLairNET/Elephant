@@ -1,4 +1,5 @@
 ﻿using Elephant.Model;
+using System.Linq;
 
 namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
 
@@ -20,7 +21,7 @@ class EBFile : ITDCFile
         foreach (string l in FileContent)
         {
             string line = l.Trim();
-            if (line[0..2] == "&N")
+            if (line == "" || line[0..2] == "&N")
             {
                 continue;
             }
@@ -35,7 +36,8 @@ class EBFile : ITDCFile
                 string[] parameters = line.Split("  ");
                 foreach (string parameter in parameters)
                 {
-                    tagsList.Add(ReadParameter(parameter, point));
+                    var tag = ReadParameter(parameter, point);
+                    tagsList.Add(tag);
                 }
             }
             else if (line[0..2] == "&T")
@@ -52,7 +54,8 @@ class EBFile : ITDCFile
             }
             else
             {
-                tagsList.Add(ReadParameter(line, point));
+                var tag = ReadParameter(line, point);
+                tagsList.Add(tag);
             }
         }
 
@@ -61,16 +64,23 @@ class EBFile : ITDCFile
 
     private TDCTag ReadParameter(string line, string point)
     {
-        string[] element = line.Split("=");
-        TDCTag tag = new()
+        try
         {
-            Name = point,
-            Parameter = element[0].Trim(),
-            Value = element[1].Replace("\"", "").Trim(),
-            Origin = "EB"
-        };
+            string[] element = line.Split("=");
+            TDCTag tag = new()
+            {
+                Name = point,
+                Parameter = element[0].Trim(),
+                Value = element[1].Replace("\"", "").Trim(),
+                Origin = "EB"
+            };
 
-        return tag;
+            return tag;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }
 
