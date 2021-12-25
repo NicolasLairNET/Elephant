@@ -2,9 +2,7 @@
 
 namespace Elephant.Services;
 
-internal interface IJsonTdcTagService
+public interface IJsonTdcTagService
 {
-    public List<TDCTag> GetTDCTags();
-    public List<TDCTag> Import();
-    public List<TDCTag> Search(string value);
+    public bool Import(string fileDestination);
 }

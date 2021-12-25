@@ -10,13 +10,14 @@ internal class TdcTagViewModel : ObservableObject
 {
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;
-    private string tagToSearch;
-    private List<TDCTag> tagsList;
+    private readonly TagJSONRepository _repository;
+    private IEnumerable<TDCTag> tagsList;
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
+    public ICommand SearchCommand { get; }
 
-    public List<TDCTag> TagsList
+    public IEnumerable<TDCTag> TagsList
     {
         get => tagsList;
         set => SetProperty(ref tagsList, value);
@@ -28,32 +29,28 @@ internal class TdcTagViewModel : ObservableObject
         ExportService = exportService;
         ImportCommand = new RelayCommand(Import);
         ExportCommand = new RelayCommand(Export);
-        TagsList = JsonService.GetTDCTags();
+        SearchCommand = new RelayCommand(Search);
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
+        _repository = new TagJSONRepository(path);
+        TagsList = _repository.GetAllListTag();
     }
 
-    public string TagToSearch
-    {
-        get => tagToSearch;
-        set
-        {
-            tagToSearch = value;
-            Search();
-        }
-    }
+    public string TagToSearch { get; set; }
 
     private void Import()
     {
-        TagsList = JsonService.Import();
+        JsonService.Import(_repository.SavedFile);
+        TagsList = _repository.GetAllListTag();
     }
 
-    private void Search()
+    private async void Search()
     {
-        TagsList = JsonService.Search(TagToSearch);
+        TagsList = await _repository.Search(TagToSearch).ConfigureAwait(false);
     }
 
     private async void Export()
     {
-        await ExportService.Export(TagsList).ConfigureAwait(false);
+        await ExportService.Export(TagsList.ToList()).ConfigureAwait(false);
     }
 }
 

@@ -1,5 +1,4 @@
 ﻿using Elephant.Model;
-using System.Linq;
 
 namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
 
@@ -21,7 +20,7 @@ class EBFile : ITDCFile
         foreach (string l in FileContent)
         {
             string line = l.Trim();
-            if (line == "" || line[0..2] == "&N")
+            if (line?.Length == 0 || line[0..2] == "&N")
             {
                 continue;
             }

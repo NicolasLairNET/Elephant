@@ -1,71 +1,14 @@
 ﻿using Elephant.Model;
-using Elephant.Services.JsonFileTDCTag.Helpers;
 using System.Windows.Forms;
 
 namespace Elephant.Services;
 
-internal class JsonFileTdcTagService : IJsonTdcTagService
+public class JsonFileTdcTagService : IJsonTdcTagService
 {
-    private static string JsonFileName => Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
-
-    public JsonFileTdcTagService()
-    {
-        InitializeJsonFile();
-    }
-
-    public List<TDCTag> GetTDCTags()
-    {
-        try
-        {
-            using var jsonFileReader = File.OpenText(JsonFileName);
-            return JsonSerializer.Deserialize<List<TDCTag>>(
-                jsonFileReader.ReadToEnd(),
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-        }
-        catch (FileNotFoundException)
-        {
-            MessageBox.Show("Le fichier de données à été supprimé, relancez l'application.");
-            return null;
-        }
-    }
-
-    public List<TDCTag> Import()
+    public bool Import(string fileDestination)
     {
         var filePathList = GetPathList();
 
-        MessageBox.Show(CreateJsonFile(filePathList) ? "Import terminé" : "Aucun fichier importé");
-
-        return GetTDCTags();
-    }
-
-    public List<TDCTag> Search(string value)
-    {
-        var data = GetTDCTags();
-        Regex regex = new(value.RegexFormat());
-
-        return value != ""
-            ? new List<TDCTag>(
-            from tdcTag in data
-            let matchName = regex.Matches(tdcTag.Name)
-            let matchValue = regex.Matches(tdcTag.Value)
-            where matchName.Count > 0 || matchValue.Count > 0
-            select tdcTag)
-            : data;
-    }
-
-    private void InitializeJsonFile()
-    {
-        if (File.Exists(JsonFileName)) return;
-        StreamWriter sw = new(JsonFileName);
-        sw.WriteLine("[]");
-        sw.Close();
-    }
-
-    private bool CreateJsonFile(string[] filePathList)
-    {
         if (filePathList.Length == 0)
         {
             return false;
@@ -95,7 +38,8 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
         tagList = tagList.Distinct(new TDCTagComparer()).ToList();
 
         var tagListSerialized = JsonSerializer.Serialize(tagList);
-        File.WriteAllText(JsonFileName, tagListSerialized);
+        using StreamWriter writer = new StreamWriter(fileDestination);
+        writer.WriteAsync(tagListSerialized);
 
         return true;
     }
@@ -104,7 +48,7 @@ internal class JsonFileTdcTagService : IJsonTdcTagService
     /// Open a fileDialog for import TDC Files
     /// </summary>
     /// <returns>List of TDC Files's path</returns>
-    private string[] GetPathList()
+    private static string[] GetPathList()
     {
         var pathList = Array.Empty<string>();
         OpenFileDialog openFileDialog = new()

@@ -29,8 +29,13 @@
                      Style="{StaticResource TextboxTheme}"
                      CharacterCasing="Upper"
                      Text="{Binding TagToSearch, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                </TextBox.InputBindings>
             </TextBox>
-
+            <Button x:Name="btnSearch"
+                    Style="{StaticResource SearchButtonTheme}"
+                    Command="{Binding SearchCommand}">Rechercher</Button>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Margin="0, 20, 30, 30">
