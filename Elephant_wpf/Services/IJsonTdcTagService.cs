@@ -4,5 +4,5 @@ namespace Elephant.Services;
 
 public interface IJsonTdcTagService
 {
-    public bool Import(string fileDestination);
+    public void Import(string fileDestination);
 }

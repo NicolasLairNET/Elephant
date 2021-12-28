@@ -1,4 +1,4 @@
-﻿using Elephant.Services.JsonFileTDCTag.Helpers;
+﻿using Elephant.Helpers;
 
 namespace Elephant.Model;
 
@@ -29,7 +29,7 @@ public class TagJSONRepository
 
     public async Task<IEnumerable<TDCTag>> Search(string value)
     {
-            return await Task.Run(() =>
+            return  await Task.Run(() =>
             {
                 Regex regex = new(value.RegexFormat());
                 var newResult = GetAllListTag();
@@ -51,7 +51,7 @@ public class TagJSONRepository
     {
         if (File.Exists(SavedFile)) return;
 
-        using StreamWriter writter = new(SavedFile);
-        writter.WriteLine("[]");
+        using StreamWriter writer = new(SavedFile);
+        writer.WriteLine("[]");
     }
 }

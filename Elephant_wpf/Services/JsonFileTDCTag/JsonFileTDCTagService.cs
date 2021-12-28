@@ -5,43 +5,49 @@ namespace Elephant.Services;
 
 public class JsonFileTdcTagService : IJsonTdcTagService
 {
-    public bool Import(string fileDestination)
+    /// <summary>
+    /// Import the selected files into the json file
+    /// </summary>
+    /// <param name="fileDestination">Destination JSON File</param>
+    public void Import(string fileDestination)
     {
         var filePathList = GetPathList();
 
-        if (filePathList.Length == 0)
-        {
-            return false;
-        }
+        if (filePathList.Length == 0) return;
 
         List<TDCTag> tagList = new();
 
-        foreach (var filePath in filePathList)
+        foreach (string filePath in filePathList)
         {
-            var tdcFile = new TDCFileFactory(filePath).Create();
-            if (tdcFile is not null)
+            var list = ConvertFileToTagList(filePath);
+            if (list.Any())
             {
-                tagList.AddRange(tdcFile.GetTagsList());
-            }
-            else
-            {
-                MessageBox.Show($"Le fichier : {Path.GetFileName(filePath)} n'est pas pris en charge par Elephant");
+                tagList.AddRange(list);
             }
         }
 
-        if (tagList.Count == 0)
-        {
-            return false;
-        }
+        if (tagList.Count == 0) return;
 
         // delete similar tags
         tagList = tagList.Distinct(new TDCTagComparer()).ToList();
+        using StreamWriter writer = new(fileDestination);
+        writer.Write(SerializeTagsList(tagList));
+    }
 
-        var tagListSerialized = JsonSerializer.Serialize(tagList);
-        using StreamWriter writer = new StreamWriter(fileDestination);
-        writer.WriteAsync(tagListSerialized);
+    public static IEnumerable<TDCTag> ConvertFileToTagList(string file)
+    {
+        List<TDCTag> list = new();
 
-        return true;
+        var tdcFile = new TDCFileFactory(file).Create();
+
+        list = tdcFile.GetTagsList();
+
+        return list;
+    }
+
+    public static string SerializeTagsList(IEnumerable<TDCTag> list)
+    {
+        return JsonSerializer.Serialize(list);
     }
 
     /// <summary>
