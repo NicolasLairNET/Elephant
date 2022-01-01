@@ -1,8 +1,8 @@
-﻿using System.Windows.Input;
-using Elephant.Model;
+﻿using Elephant.Model;
 using Elephant.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using System.Windows.Input;
 
 namespace Elephant.ViewModel;
 
@@ -12,6 +12,7 @@ internal class TdcTagViewModel : ObservableObject
     private readonly IExportService ExportService;
     private IEnumerable<TDCTag> tagsList;
     private string progressBarVisible = "Hidden";
+    private string tagToSearch;
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
@@ -35,7 +36,15 @@ internal class TdcTagViewModel : ObservableObject
         TagsList = JsonService.TDCTags;
     }
 
-    public string TagToSearch { get; set; }
+    public string TagToSearch
+    {
+        get => tagToSearch;
+        set
+        {
+            tagToSearch = value;
+            Search();
+        }
+    }
     public string ProgressBarVisible
     {
         get => progressBarVisible;

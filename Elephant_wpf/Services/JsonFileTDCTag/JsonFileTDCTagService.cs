@@ -96,18 +96,17 @@ public class JsonFileTdcTagService : IJsonTdcTagService
         return await Task.Run(() =>
         {
             Regex regex = new(value.RegexFormat());
-            var newResult = GetAllListTag();
 
             if (value != "")
             {
-                newResult = (from tdcTag in newResult.AsParallel()
-                             let matchName = regex.Matches(tdcTag.Name)
-                             let matchValue = regex.Matches(tdcTag.Value)
-                             where matchName.Count > 0 || matchValue.Count > 0
-                             select tdcTag);
+                return (from tdcTag in TDCTags.AsParallel()
+                        let matchName = regex.Matches(tdcTag.Name)
+                        let matchValue = regex.Matches(tdcTag.Value)
+                        where matchName.Count > 0 || matchValue.Count > 0
+                        select tdcTag).ToList();
             }
 
-            return newResult;
+            return TDCTags;
         }).ConfigureAwait(false);
     }
 
