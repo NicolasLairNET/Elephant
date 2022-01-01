@@ -1,48 +1,58 @@
 ﻿using Elephant.Model;
+using Elephant.Services.JsonFileTDCTag.Helpers;
 using System.Windows.Forms;
 
 namespace Elephant.Services;
 
 public class JsonFileTdcTagService : IJsonTdcTagService
 {
+    public string SavedFile { get; set; }
+    public List<TDCTag> TDCTags { get; set; }
+
+
     /// <summary>
     /// Import the selected files into the json file
     /// </summary>
     /// <param name="fileDestination">Destination JSON File</param>
-    public void Import(string fileDestination)
+    public async Task<IEnumerable<TDCTag>> Import()
     {
         var filePathList = GetPathList();
 
-        if (filePathList.Length == 0) return;
-
         List<TDCTag> tagList = new();
 
-        foreach (string filePath in filePathList)
-        {
-            var list = ConvertFileToTagList(filePath);
-            if (list.Any())
-            {
-                tagList.AddRange(list);
-            }
-        }
+        if (filePathList.Length == 0) return tagList;
 
-        if (tagList.Count == 0) return;
+        tagList = (await ConvertFileToTagList(filePathList)).ToList();
 
         // delete similar tags
         tagList = tagList.Distinct(new TDCTagComparer()).ToList();
-        using StreamWriter writer = new(fileDestination);
+        using StreamWriter writer = new(SavedFile);
         writer.Write(SerializeTagsList(tagList));
+
+        TDCTags = tagList;
+
+        return TDCTags;
     }
 
-    public static IEnumerable<TDCTag> ConvertFileToTagList(string file)
+    public async Task<IEnumerable<TDCTag>> ConvertFileToTagList(string[] filePathList)
     {
-        List<TDCTag> list = new();
+        return await Task.Run(() =>
+        {
+            List<TDCTag> tagList = new();
+            foreach (var filePath in filePathList)
+            {
+                List<TDCTag> list = new();
+                var tdcFile = new TDCFileFactory(filePath).Create();
+                list = tdcFile.GetTagsList();
 
-        var tdcFile = new TDCFileFactory(file).Create();
+                if (list.Count > 0)
+                {
+                    tagList.AddRange(list);
+                }
+            }
 
-        list = tdcFile.GetTagsList();
-
-        return list;
+            return tagList;
+        }).ConfigureAwait(false);
     }
 
     public static string SerializeTagsList(IEnumerable<TDCTag> list)
@@ -70,6 +80,49 @@ public class JsonFileTdcTagService : IJsonTdcTagService
         }
 
         return pathList;
+    }
+
+    public IEnumerable<TDCTag> GetAllListTag()
+    {
+        using StreamReader reader = new(SavedFile);
+
+        var tags = JsonSerializer.Deserialize<List<TDCTag>>(reader.ReadToEnd());
+
+        return tags;
+    }
+
+    public async Task<IEnumerable<TDCTag>> Search(string value)
+    {
+        return await Task.Run(() =>
+        {
+            Regex regex = new(value.RegexFormat());
+            var newResult = GetAllListTag();
+
+            if (value != "")
+            {
+                newResult = (from tdcTag in newResult.AsParallel()
+                             let matchName = regex.Matches(tdcTag.Name)
+                             let matchValue = regex.Matches(tdcTag.Value)
+                             where matchName.Count > 0 || matchValue.Count > 0
+                             select tdcTag);
+            }
+
+            return newResult;
+        }).ConfigureAwait(false);
+    }
+
+    public void InitializeJsonFile(string fileName)
+    {
+        SavedFile = fileName;
+        if (File.Exists(SavedFile))
+        {
+            TDCTags = GetAllListTag().ToList();
+        }
+        else
+        {
+            using StreamWriter writer = new(SavedFile);
+            writer.WriteLine("[]");
+        }
     }
 }
 

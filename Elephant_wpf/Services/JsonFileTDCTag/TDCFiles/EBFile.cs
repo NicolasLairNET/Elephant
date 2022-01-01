@@ -36,25 +36,34 @@ class EBFile : ITDCFile
                 foreach (string parameter in parameters)
                 {
                     var tag = ReadParameter(parameter, point);
-                    tagsList.Add(tag);
+                    if (tag != null)
+                    {
+                        tagsList.Add(tag);
+                    }
                 }
             }
             else if (line[0..2] == "&T")
             {
                 value = line[3..];
-                TDCTag tag = new()
+                if (point != "" && value != "")
                 {
-                    Name = point,
-                    Parameter = "PNTTYPE",
-                    Value = value,
-                    Origin = "EB"
-                };
-                tagsList.Add(tag);
+                    TDCTag tag = new()
+                    {
+                        Name = point,
+                        Parameter = "PNTTYPE",
+                        Value = value,
+                        Origin = "EB"
+                    };
+                    tagsList.Add(tag);
+                }
             }
             else
             {
                 var tag = ReadParameter(line, point);
-                tagsList.Add(tag);
+                if (tag != null)
+                {
+                    tagsList.Add(tag);
+                }
             }
         }
 
@@ -63,7 +72,7 @@ class EBFile : ITDCFile
 
     private TDCTag ReadParameter(string line, string point)
     {
-        try
+        if (point != "" && line.Contains('='))
         {
             string[] element = line.Split("=");
             TDCTag tag = new()
@@ -76,10 +85,7 @@ class EBFile : ITDCFile
 
             return tag;
         }
-        catch (Exception)
-        {
-            return null;
-        }
+        return null;
     }
 }
 

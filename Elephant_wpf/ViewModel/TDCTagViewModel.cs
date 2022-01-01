@@ -10,8 +10,8 @@ internal class TdcTagViewModel : ObservableObject
 {
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;
-    private readonly TagJSONRepository _repository;
     private IEnumerable<TDCTag> tagsList;
+    private string progressBarVisible = "Hidden";
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
@@ -31,21 +31,27 @@ internal class TdcTagViewModel : ObservableObject
         ExportCommand = new RelayCommand(Export);
         SearchCommand = new RelayCommand(Search);
         string path = Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
-        _repository = new TagJSONRepository(path);
-        TagsList = _repository.GetAllListTag();
+        JsonService.InitializeJsonFile(path);
+        TagsList = JsonService.TDCTags;
     }
 
     public string TagToSearch { get; set; }
-
-    private void Import()
+    public string ProgressBarVisible
     {
-        JsonService.Import(_repository.SavedFile);
-        TagsList = _repository.GetAllListTag();
+        get => progressBarVisible;
+        set => SetProperty(ref progressBarVisible, value);
+    }
+
+    private async void Import()
+    {
+        ProgressBarVisible = "Visible";
+        TagsList = await JsonService.Import();
+        ProgressBarVisible = "Hidden";
     }
 
     private async void Search()
     {
-        TagsList = await _repository.Search(TagToSearch).ConfigureAwait(false);
+        TagsList = await JsonService.Search(TagToSearch);
     }
 
     private async void Export()

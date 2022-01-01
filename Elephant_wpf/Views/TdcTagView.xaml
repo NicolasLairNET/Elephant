@@ -47,7 +47,7 @@
                      Style="{StaticResource ExportButtonTheme}"
                      Command="{Binding ExportCommand}">Export</Button>
         </StackPanel>
-
+        <ProgressBar IsIndeterminate="True" Height="50" Margin="20" x:Name="progress"  Visibility="{Binding ProgressBarVisible}"></ProgressBar>
         <DataGrid  x:Name="DGridResult" 
                    Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
                    Height="auto" Margin="30, 0, 30, 30" 
