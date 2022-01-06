@@ -22,7 +22,7 @@ public class JsonFileTdcTagService : IJsonTdcTagService
 
         if (filePathList.Length == 0) return tagList;
 
-        tagList = (await ConvertFileToTagList(filePathList)).ToList();
+        tagList = await ConvertFileToTagList(filePathList);
 
         // delete similar tags
         tagList = tagList.Distinct(new TDCTagComparer()).ToList();
@@ -34,25 +34,33 @@ public class JsonFileTdcTagService : IJsonTdcTagService
         return TDCTags;
     }
 
-    public async Task<IEnumerable<TDCTag>> ConvertFileToTagList(string[] filePathList)
+    /// <summary>
+    /// Converted a file list to tag list
+    /// </summary>
+    /// <param name="filePathList">List of files to convert</param>
+    /// <returns></returns>
+    public async Task<List<TDCTag>> ConvertFileToTagList(string[] filePathList)
     {
-        return await Task.Run(() =>
+        var dico = new Dictionary<string, Task<List<TDCTag>>>();
+
+        foreach (string filePath in filePathList)
         {
-            List<TDCTag> tagList = new();
-            foreach (var filePath in filePathList)
+            dico.Add(filePath, Task.Run(() =>
             {
-                List<TDCTag> list = new();
                 var tdcFile = new TDCFileFactory(filePath).Create();
-                list = tdcFile.GetTagsList();
+                return tdcFile.GetTagsList();
+            }));
+        }
 
-                if (list.Count > 0)
-                {
-                    tagList.AddRange(list);
-                }
-            }
+        await Task.WhenAll(dico.Values).ConfigureAwait(false);
 
-            return tagList;
-        }).ConfigureAwait(false);
+        var tagList = new List<TDCTag>();
+        foreach (var item in dico)
+        {
+            tagList.AddRange(item.Value.Result);
+        }
+
+        return tagList;
     }
 
     public static string SerializeTagsList(IEnumerable<TDCTag> list)
