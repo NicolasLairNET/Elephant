@@ -15,6 +15,6 @@ public abstract class Factory
         FilePath = filePath;
     }
 
-    public abstract ITDCFile Create();
+    public abstract ITDCFile? Create();
 }
 

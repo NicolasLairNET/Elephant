@@ -8,7 +8,7 @@ public class TDCFileFactory : Factory
     {
     }
 
-    public override ITDCFile Create()
+    public override ITDCFile? Create()
     {
         return FileExtension switch
         {

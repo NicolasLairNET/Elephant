@@ -14,7 +14,7 @@ public abstract class XXFile
     public List<TDCTag> CreateTagsList(string[] fileContent, TagDto tagDto)
     {
         List<TDCTag> tagList = new();
-        TDCTag tag = null;
+        TDCTag tag = new();
         foreach (string line in fileContent)
         {
             if (line.Length > 3 && line[0..3] == "NET")

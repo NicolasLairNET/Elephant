@@ -33,7 +33,8 @@ internal class TdcTagViewModel : ObservableObject
         SearchCommand = new RelayCommand(Search);
         string path = Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
         JsonService.InitializeJsonFile(path);
-        TagsList = JsonService.TDCTags;
+        tagsList = JsonService.TDCTags;
+        tagToSearch = "";
     }
 
     public string TagToSearch
@@ -60,7 +61,7 @@ internal class TdcTagViewModel : ObservableObject
 
     private async void Search()
     {
-        TagsList = await JsonService.Search(TagToSearch);
+        TagsList = await JsonService.Search(TagToSearch).ConfigureAwait(false);
     }
 
     private async void Export()

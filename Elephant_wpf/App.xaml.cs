@@ -12,7 +12,7 @@ namespace Elephant_wpf
     public partial class App : Application
     {
         public IServiceProvider Services { get; }
-        public new static App Current => Application.Current as App;
+        public new static App? Current => Application.Current as App;
 
         public App()
         {

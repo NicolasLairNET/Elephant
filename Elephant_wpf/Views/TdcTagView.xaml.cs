@@ -10,7 +10,6 @@ public partial class TdcTagView : UserControl
     public TdcTagView()
     {
         InitializeComponent();
-        DataContext = App.Current.Services.GetService<TdcTagViewModel>();
+        DataContext = App.Current!.Services.GetService<TdcTagViewModel>();
     }
 }
-

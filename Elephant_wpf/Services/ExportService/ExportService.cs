@@ -35,7 +35,7 @@ internal class ExportService : IExportService
         return string.Join(",", list.ToArray()).Replace(Environment.NewLine + ",", Environment.NewLine);
     }
 
-    private string SelectPathExport()
+    private string? SelectPathExport()
     {
         var defaultFileName = $"export{DateTime.Now:ddMMyyyyHmmss}.csv";
         var defaultPath = Path.Combine(Directory.GetCurrentDirectory());

@@ -9,6 +9,11 @@ public class JsonFileTdcTagService : IJsonTdcTagService
     public string SavedFile { get; set; }
     public List<TDCTag> TDCTags { get; set; }
 
+    public JsonFileTdcTagService()
+    {
+        SavedFile = "";
+        TDCTags = new List<TDCTag>();
+    }
 
     /// <summary>
     /// Import the selected files into the json file
@@ -48,6 +53,11 @@ public class JsonFileTdcTagService : IJsonTdcTagService
             dico.Add(filePath, Task.Run(() =>
             {
                 var tdcFile = new TDCFileFactory(filePath).Create();
+
+                if (tdcFile is null)
+                {
+                    return new List<TDCTag>();
+                }
                 return tdcFile.GetTagsList();
             }));
         }
@@ -93,8 +103,12 @@ public class JsonFileTdcTagService : IJsonTdcTagService
     public IEnumerable<TDCTag> GetAllListTag()
     {
         using StreamReader reader = new(SavedFile);
-
         var tags = JsonSerializer.Deserialize<List<TDCTag>>(reader.ReadToEnd());
+
+        if (tags is null)
+        {
+            return new List<TDCTag>();
+        }
 
         return tags;
     }

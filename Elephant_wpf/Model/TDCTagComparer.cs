@@ -1,8 +1,10 @@
 ﻿namespace Elephant.Model;
 class TDCTagComparer : IEqualityComparer<TDCTag>
 {
-    public bool Equals(TDCTag x, TDCTag y)
+    public bool Equals(TDCTag? x, TDCTag? y)
     {
+        if (x is null || y is null) return false;
+
         return x.Name == y.Name
             && x.Parameter == y.Parameter
             && x.Origin == y.Origin

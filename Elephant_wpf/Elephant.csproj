@@ -1,21 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>icone.ico</ApplicationIcon>
-    <StartupObject>Elephant_wpf.App</StartupObject>
-    <MinimumPlatformVersion>10.0.17763.0</MinimumPlatformVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include="icone.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="LogoElephant.png" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ApplicationIcon>icone.ico</ApplicationIcon>
+		<StartupObject>Elephant_wpf.App</StartupObject>
+		<MinimumPlatformVersion>10.0.17763.0</MinimumPlatformVersion>
+		<Nullable>Enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="icone.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="LogoElephant.png" />
+	</ItemGroup>
 </Project>

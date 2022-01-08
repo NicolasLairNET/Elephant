@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" >
-    
+
     <Grid Background="{StaticResource Application.Background}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -21,7 +22,7 @@
         <Image Source="/LogoElephant.png" 
                Width="200"
                Height="100"
-               Margin="30,20,0,20"
+               Margin="35,20,0,20"
                HorizontalAlignment="Left"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="20, 20, 0, 30">
@@ -41,9 +42,19 @@
                      Style="{StaticResource ExportButtonTheme}"
                      Command="{Binding ExportCommand}">Export</Button>
         </StackPanel>
-        <ProgressBar IsIndeterminate="True" Height="50" Margin="20" x:Name="progress"  Visibility="{Binding ProgressBarVisible}"></ProgressBar>
+
+        <ProgressBar 
+            x:Name="progress"
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Height="10" Margin="30, 0, 30, 5"
+            IsIndeterminate="True"
+            Foreground="#60A3D9"
+            Visibility="{Binding ProgressBarVisible}">
+        </ProgressBar>
+
         <DataGrid  x:Name="DGridResult" 
-                   Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
+                   Grid.Row="2" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
                    Height="auto" Margin="30, 0, 30, 30" 
                    ItemsSource="{Binding TagsList}" 
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
