@@ -6,13 +6,13 @@ using System.Windows.Input;
 
 namespace Elephant.ViewModel;
 
-internal class TdcTagViewModel : ObservableObject
+public class TdcTagViewModel : ObservableObject
 {
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;
     private IEnumerable<TDCTag> tagsList;
-    private string progressBarVisible = "Hidden";
     private string tagToSearch;
+    private bool isLoading;
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
@@ -46,17 +46,19 @@ internal class TdcTagViewModel : ObservableObject
             Search();
         }
     }
-    public string ProgressBarVisible
+
+    public bool IsLoading
     {
-        get => progressBarVisible;
-        set => SetProperty(ref progressBarVisible, value);
+        get => isLoading;
+        set
+        {
+            SetProperty(ref isLoading, value);
+        }
     }
 
     private async void Import()
     {
-        ProgressBarVisible = "Visible";
-        TagsList = await JsonService.Import();
-        ProgressBarVisible = "Hidden";
+        TagsList = await JsonService.Import(this);
     }
 
     private async void Search()

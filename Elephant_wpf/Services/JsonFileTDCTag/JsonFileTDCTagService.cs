@@ -1,5 +1,6 @@
 ﻿using Elephant.Model;
 using Elephant.Services.JsonFileTDCTag.Helpers;
+using Elephant.ViewModel;
 using System.Windows.Forms;
 
 namespace Elephant.Services;
@@ -19,9 +20,10 @@ public class JsonFileTdcTagService : IJsonTdcTagService
     /// Import the selected files into the json file
     /// </summary>
     /// <param name="fileDestination">Destination JSON File</param>
-    public async Task<IEnumerable<TDCTag>> Import()
+    public async Task<IEnumerable<TDCTag>> Import(TdcTagViewModel tdcTagViewModel)
     {
         var filePathList = GetPathList();
+        tdcTagViewModel.IsLoading = true;
 
         List<TDCTag> tagList = new();
 
@@ -35,7 +37,7 @@ public class JsonFileTdcTagService : IJsonTdcTagService
         writer.Write(SerializeTagsList(tagList));
 
         TDCTags = tagList;
-
+        tdcTagViewModel.IsLoading = false;
         return TDCTags;
     }
 
@@ -47,7 +49,6 @@ public class JsonFileTdcTagService : IJsonTdcTagService
     public async Task<List<TDCTag>> ConvertFileToTagList(string[] filePathList)
     {
         var dico = new Dictionary<string, Task<List<TDCTag>>>();
-
         foreach (string filePath in filePathList)
         {
             dico.Add(filePath, Task.Run(() =>

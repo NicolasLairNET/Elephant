@@ -2,15 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
              mc:Ignorable="d" >
 
     <Grid Background="{StaticResource Application.Background}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -43,21 +41,23 @@
                      Command="{Binding ExportCommand}">Export</Button>
         </StackPanel>
 
-        <ProgressBar 
-            x:Name="progress"
-            Grid.Row="1"
-            Grid.ColumnSpan="3"
-            Height="10" Margin="30, 0, 30, 5"
-            IsIndeterminate="True"
-            Foreground="#60A3D9"
-            Visibility="{Binding ProgressBarVisible}">
-        </ProgressBar>
-
         <DataGrid  x:Name="DGridResult" 
-                   Grid.Row="2" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
+                   Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
                    Height="auto" Margin="30, 0, 30, 30" 
-                   ItemsSource="{Binding TagsList}" 
+                   ItemsSource="{Binding TagsList}"
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
+            
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+            
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Path=Name}"/>
                 <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Path=Parameter}"/>
@@ -65,5 +65,24 @@
                 <DataGridTextColumn Header="Origine" Width="*" Binding="{Binding Path=Origin}"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <custom:LoadingSpinner Grid.Row="0" IsLoading="{Binding IsLoading}" Thickness="6" Color="White"/>
+            <TextBlock Grid.Row="1" Text="Import en cours ..." HorizontalAlignment="Center" FontSize="20" Margin="0 10" Foreground="white"/>
+        </Grid>
     </Grid>
 </UserControl>
