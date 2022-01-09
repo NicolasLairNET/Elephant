@@ -8,7 +8,7 @@ namespace Elephant.ViewModel;
 
 public class TdcTagViewModel : ObservableObject
 {
-    private readonly IJsonTdcTagService JsonService;
+    private readonly IJsonTdcTagService? JsonService;
     private readonly IExportService ExportService;
     private IEnumerable<TDCTag> tagsList;
     private string tagToSearch;
@@ -58,12 +58,12 @@ public class TdcTagViewModel : ObservableObject
 
     private async void Import()
     {
-        TagsList = await JsonService.Import(this);
+        TagsList = await JsonService!.Import(this).ConfigureAwait(false);
     }
 
     private async void Search()
     {
-        TagsList = await JsonService.Search(TagToSearch).ConfigureAwait(false);
+        TagsList = await JsonService!.Search(TagToSearch).ConfigureAwait(false);
     }
 
     private async void Export()

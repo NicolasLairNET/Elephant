@@ -5,21 +5,41 @@ using System.Windows.Forms;
 
 namespace Elephant.Services;
 
-public class JsonFileTdcTagService : IJsonTdcTagService
+public sealed class JsonFileTdcTagService : IJsonTdcTagService
 {
     public string SavedFile { get; set; }
     public List<TDCTag> TDCTags { get; set; }
 
-    public JsonFileTdcTagService()
+    private static JsonFileTdcTagService? instance;
+    private static readonly object instanceLock = new();
+
+    private JsonFileTdcTagService()
     {
         SavedFile = "";
         TDCTags = new List<TDCTag>();
     }
 
+    public static JsonFileTdcTagService Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (instanceLock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new JsonFileTdcTagService();
+                    }
+                }
+            }
+            return instance;
+        }
+    }
+
     /// <summary>
     /// Import the selected files into the json file
     /// </summary>
-    /// <param name="fileDestination">Destination JSON File</param>
     public async Task<IEnumerable<TDCTag>> Import(TdcTagViewModel tdcTagViewModel)
     {
         var filePathList = GetPathList();
