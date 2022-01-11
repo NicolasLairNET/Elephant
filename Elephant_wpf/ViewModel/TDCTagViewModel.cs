@@ -12,8 +12,6 @@ public class TdcTagViewModel : ObservableObject
     private readonly IExportService ExportService;
     private IEnumerable<TDCTag> tagsList;
     private string tagToSearch;
-    private bool isLoading;
-
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
     public ICommand SearchCommand { get; }
@@ -28,9 +26,9 @@ public class TdcTagViewModel : ObservableObject
     {
         JsonService = jsonService;
         ExportService = exportService;
-        ImportCommand = new RelayCommand(Import);
-        ExportCommand = new RelayCommand(Export);
-        SearchCommand = new RelayCommand(Search);
+        ImportCommand = new AsyncRelayCommand(Import);
+        ExportCommand = new AsyncRelayCommand(Export);
+        SearchCommand = new AsyncRelayCommand(Search);
         string path = Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
         JsonService.InitializeJsonFile(path);
         tagsList = JsonService.TDCTags;
@@ -43,30 +41,21 @@ public class TdcTagViewModel : ObservableObject
         set
         {
             tagToSearch = value;
-            Search();
+            SearchCommand.Execute(null);
         }
     }
 
-    public bool IsLoading
+    private async Task Import()
     {
-        get => isLoading;
-        set
-        {
-            SetProperty(ref isLoading, value);
-        }
+        TagsList = await JsonService!.Import().ConfigureAwait(false);
     }
 
-    private async void Import()
-    {
-        TagsList = await JsonService!.Import(this).ConfigureAwait(false);
-    }
-
-    private async void Search()
+    private async Task Search()
     {
         TagsList = await JsonService!.Search(TagToSearch).ConfigureAwait(false);
     }
 
-    private async void Export()
+    private async Task Export()
     {
         await ExportService.Export(TagsList.ToList()).ConfigureAwait(false);
     }

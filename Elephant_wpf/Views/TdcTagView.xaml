@@ -27,7 +27,8 @@
             <TextBox x:Name="txtName" 
                      Style="{StaticResource TextboxTheme}"
                      CharacterCasing="Upper"
-                     Text="{Binding TagToSearch, UpdateSourceTrigger=PropertyChanged}">
+                Text="{Binding TagToSearch, UpdateSourceTrigger=PropertyChanged}">
+
             </TextBox>
         </StackPanel>
 
@@ -46,18 +47,18 @@
                    Height="auto" Margin="30, 0, 30, 30" 
                    ItemsSource="{Binding TagsList}"
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
-            
+
             <DataGrid.Style>
                 <Style TargetType="DataGrid">
                     <Setter Property="Visibility" Value="Visible"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                        <DataTrigger Binding="{Binding ImportCommand.IsRunning}" Value="True">
                             <Setter Property="Visibility" Value="Hidden"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.Style>
-            
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Point" Width="*" Binding="{Binding Path=Name}"/>
                 <DataGridTextColumn Header="Paramètres" Width="*" Binding="{Binding Path=Parameter}"/>
@@ -71,17 +72,18 @@
                 <Style TargetType="Grid">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                        <DataTrigger Binding="{Binding ImportCommand.IsRunning}" Value="True">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <custom:LoadingSpinner Grid.Row="0" IsLoading="{Binding IsLoading}" Thickness="6" Color="White"/>
+            <custom:LoadingSpinner Grid.Row="0" IsLoading="True" Thickness="6" Color="White"/>
             <TextBlock Grid.Row="1" Text="Import en cours ..." HorizontalAlignment="Center" FontSize="20" Margin="0 10" Foreground="white"/>
         </Grid>
     </Grid>

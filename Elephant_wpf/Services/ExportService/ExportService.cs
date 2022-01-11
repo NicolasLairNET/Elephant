@@ -24,10 +24,8 @@ public class ExportService : IExportService
         }
     }
 
-    private ExportService()
-    {
-            
-    }
+    private ExportService() {}
+
     public async Task Export(List<TDCTag> tagList)
     {
         var path = SelectPathExport();
@@ -59,7 +57,7 @@ public class ExportService : IExportService
         return string.Join(",", list.ToArray()).Replace(Environment.NewLine + ",", Environment.NewLine);
     }
 
-    private string? SelectPathExport()
+    private static string? SelectPathExport()
     {
         var defaultFileName = $"export{DateTime.Now:ddMMyyyyHmmss}.csv";
         var defaultPath = Path.Combine(Directory.GetCurrentDirectory());
