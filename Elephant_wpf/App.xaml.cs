@@ -23,8 +23,8 @@ namespace Elephant_wpf
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-            services.AddSingleton<IExportService, ExportService>(_ => ExportService.Instance);
-            services.AddSingleton<IJsonTdcTagService, JsonFileTdcTagService>(_ => JsonFileTdcTagService.Instance);
+            services.AddSingleton<IExportService, ExportService>();
+            services.AddSingleton<IJsonTdcTagService, JsonFileTdcTagService>();
 
             services.AddTransient<TdcTagViewModel>();
 

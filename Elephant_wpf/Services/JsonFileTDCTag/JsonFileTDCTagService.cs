@@ -1,6 +1,5 @@
 ﻿using Elephant.Model;
 using Elephant.Services.JsonFileTDCTag.Helpers;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 using System.Windows.Forms;
 
 namespace Elephant.Services
@@ -10,31 +9,10 @@ namespace Elephant.Services
         public string SavedFile { get; set; }
         public List<TDCTag> TDCTags { get; set; }
 
-        private static JsonFileTdcTagService? instance;
-        private static readonly object instanceLock = new();
-
-        private JsonFileTdcTagService()
+        public JsonFileTdcTagService()
         {
             SavedFile = "";
             TDCTags = new List<TDCTag>();
-        }
-
-        public static JsonFileTdcTagService Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (instanceLock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new JsonFileTdcTagService();
-                        }
-                    }
-                }
-                return instance;
-            }
         }
 
         /// <summary>
@@ -48,8 +26,6 @@ namespace Elephant.Services
 
             tagList = await ConvertFileToTagList(filePathList);
 
-            // delete similar tags
-            tagList = tagList.Distinct(new TDCTagComparer()).ToList();
             using StreamWriter writer = new(SavedFile);
             writer.Write(SerializeTagsList(tagList));
 
@@ -65,6 +41,7 @@ namespace Elephant.Services
         public async Task<List<TDCTag>> ConvertFileToTagList(string[] filePathList)
         {
             var dico = new Dictionary<string, Task<List<TDCTag>>>();
+
             foreach (string filePath in filePathList)
             {
                 dico.Add(filePath, Task.Run(() =>
@@ -87,7 +64,7 @@ namespace Elephant.Services
                 tagList.AddRange(item.Value.Result);
             }
 
-            return tagList;
+            return tagList.Distinct(new TDCTagComparer()).ToList();
         }
 
         public static string SerializeTagsList(IEnumerable<TDCTag> list)
@@ -161,14 +138,6 @@ namespace Elephant.Services
                 using StreamWriter writer = new(SavedFile);
                 writer.WriteLine("[]");
             }
-        }
-    }
-
-    public sealed class LoadChangesMessage : ValueChangedMessage<bool>
-    {
-        public LoadChangesMessage(bool value) : base(value)
-        {
-
         }
     }
 }

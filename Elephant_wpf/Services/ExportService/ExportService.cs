@@ -4,27 +4,7 @@ using System.Windows.Forms;
 namespace Elephant.Services.ExportService;
 public class ExportService : IExportService
 {
-    private static ExportService? instance;
-    private static object instanceLock = new();
-    public static ExportService Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new ExportService();
-                    }
-                }
-            }
-            return instance;
-        }
-    }
-
-    private ExportService() {}
+    public ExportService() {}
 
     public async Task Export(List<TDCTag> tagList)
     {
