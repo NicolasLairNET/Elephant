@@ -1,12 +1,11 @@
 ﻿using Elephant.Model;
 using Elephant.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
 
 namespace Elephant.ViewModel;
 
-public class TdcTagViewModel : ObservableObject
+public class TdcTagViewModel : BaseViewModel
 {
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;

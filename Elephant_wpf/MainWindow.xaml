@@ -4,9 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Elephant.Views"
+        xmlns:local="clr-namespace:Elephant"
         mc:Ignorable="d"
         Title="Elephant" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
     <Grid>
-        <views:TdcTagView/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!--<views:TdcTagView/>-->
+        <ContentControl Content="{Binding SelectedViewModel}"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Margin="10" Width="200" Content="Accueil" Command="{Binding UpdateViewCommand}" CommandParameter="Home"/>
+            <Button Margin="10" Width="200" Content="Paramètre" Command="{Binding UpdateViewCommand}" CommandParameter="Parameter"/>
+        </StackPanel>
     </Grid>
 </Window>

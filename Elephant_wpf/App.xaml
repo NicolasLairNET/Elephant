@@ -2,6 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Elephant_wpf"
+             xmlns:viewmodels="clr-namespace:Elephant.ViewModel"
+             xmlns:views="clr-namespace:Elephant.Views"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -12,6 +14,15 @@
                 <ResourceDictionary Source="Themes/ExportButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/TextBoxTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewmodels:TdcTagViewModel}">
+                <views:TdcTagView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:ParameterViewModel}">
+                <views:ParameterView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

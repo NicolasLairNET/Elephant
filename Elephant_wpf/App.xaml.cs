@@ -17,7 +17,7 @@ namespace Elephant_wpf
         public App()
         {
             Services = ConfigureServices();
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private static IServiceProvider ConfigureServices()
@@ -26,7 +26,9 @@ namespace Elephant_wpf
             services.AddSingleton<IExportService, ExportService>();
             services.AddSingleton<IJsonTdcTagService, JsonFileTdcTagService>();
 
-            services.AddTransient<TdcTagViewModel>();
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<TdcTagViewModel>();
+            services.AddSingleton<ParameterViewModel>();
 
             return services.BuildServiceProvider();
         }
