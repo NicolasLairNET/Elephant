@@ -5,17 +5,20 @@
         BasedOn="{StaticResource {x:Type TextBox}}"
         TargetType="{x:Type TextBox}" 
         x:Key="TextboxTheme">
-        <Setter Property="Height" Value="34"/>
-        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="Margin" Value="0 3 0 3"/>
+        <Setter Property="Width" Value="250"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Padding" Value="7"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource MainColor}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border x:Name="border"
                             CornerRadius="8"
-                            Background="{StaticResource Control.Background}"
+                            BorderBrush="white"
+                            Background="{StaticResource LightColor}"
 >
                         <ScrollViewer x:Name="PART_ContentHost"
                                     Focusable="false"

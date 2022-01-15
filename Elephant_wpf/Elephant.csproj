@@ -18,6 +18,13 @@
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="LogoElephant.png" />
+		<Resource Include="elephant.png" />
+		<Resource Include="whiteElephant.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Themes\ButtonTheme.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 </Project>

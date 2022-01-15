@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
              mc:Ignorable="d" >
 
-    <Grid Background="{StaticResource Application.Background}">
+    <Grid Background="{StaticResource MainColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -17,34 +17,22 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Image Source="/LogoElephant.png" 
-               Width="200"
-               Height="100"
-               Margin="35,20,0,20"
-               HorizontalAlignment="Left"/>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="20, 20, 0, 30">
+        <StackPanel Grid.Row="0"  Grid.ColumnSpan="3" Orientation="Horizontal"  Background="{StaticResource SecondaryColor}">
+            <Image Source="/whiteElephant.png" Margin="20 3 20 3"/>
             <TextBox x:Name="txtName" 
                      Style="{StaticResource TextboxTheme}"
                      CharacterCasing="Upper"
                 Text="{Binding TagToSearch, UpdateSourceTrigger=PropertyChanged}">
 
             </TextBox>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Margin="0, 20, 30, 30">
-            <Button  x:Name="btnImportData" 
-                     Style="{StaticResource ImportButtonTheme}"
-                     Command="{Binding ImportCommand}">Import</Button>
-
-            <Button  x:Name="btnExportData" 
-                     Style="{StaticResource ExportButtonTheme}"
-                     Command="{Binding ExportCommand}">Export</Button>
+            <Button Style="{StaticResource ButtonTheme}" Content="Import"  Command="{Binding ImportCommand}"/>
+            <Button Style="{StaticResource ButtonTheme}" Content="Export"  Command="{Binding ExportCommand}"/>
+            <Button Style="{StaticResource ButtonTheme}" Content="Paramètres" Command="{Binding UpdateViewCommand}"/>
         </StackPanel>
 
         <DataGrid  x:Name="DGridResult" 
                    Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
-                   Height="auto" Margin="30, 0, 30, 30" 
+                   Height="auto" Margin="30, 30, 30, 30" 
                    ItemsSource="{Binding TagsList}"
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
 
@@ -83,8 +71,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <custom:LoadingSpinner Grid.Row="0" IsLoading="True" Thickness="6" Color="White"/>
-            <TextBlock Grid.Row="1" Text="Import en cours ..." HorizontalAlignment="Center" FontSize="20" Margin="0 10" Foreground="white"/>
+            <custom:LoadingSpinner Grid.Row="0" IsLoading="True" Thickness="6" Color="{StaticResource LightColor}"/>
+            <TextBlock Grid.Row="1" Text="Import en cours ..." HorizontalAlignment="Center" FontSize="20" Margin="0 10" Foreground="{StaticResource LightColor}"/>
         </Grid>
     </Grid>
 </UserControl>

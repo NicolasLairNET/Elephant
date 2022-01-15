@@ -1,11 +1,14 @@
-﻿using Elephant.Model;
+﻿using Elephant.Messages;
+using Elephant.Model;
 using Elephant.Services;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using System.Windows.Input;
 
 namespace Elephant.ViewModel;
 
-public class TdcTagViewModel : BaseViewModel
+public class TdcTagViewModel : ObservableRecipient, IViewModel
 {
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;
@@ -14,6 +17,7 @@ public class TdcTagViewModel : BaseViewModel
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
     public ICommand SearchCommand { get; }
+    public ICommand UpdateViewCommand { get;}
 
     public IEnumerable<TDCTag> TagsList
     {
@@ -33,10 +37,13 @@ public class TdcTagViewModel : BaseViewModel
         JsonService.InitializeJsonFile(path);
         tagsList = JsonService.TDCTags;
         tagToSearch = "";
+
+        UpdateViewCommand = new RelayCommand(SendMessage);
     }
 
     public string TagToSearch
     {
+
         get => tagToSearch;
         set
         {
@@ -58,6 +65,11 @@ public class TdcTagViewModel : BaseViewModel
     private async Task Export()
     {
         await ExportService.Export(TagsList.ToList()).ConfigureAwait(false);
+    }
+
+    public void SendMessage()
+    {
+        Messenger.Send(new ViewModelChangedMessage("ParameterViewModel"));
     }
 }
 

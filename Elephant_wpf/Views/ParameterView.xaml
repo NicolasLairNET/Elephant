@@ -7,5 +7,6 @@
 
     <Grid Background="White">
         <TextBlock Text="Paramètre de l'application"/>
+        <Button Margin="10" Width="200" Content="Accueil" Command="{Binding UpdateViewCommand}"/>
     </Grid>
 </UserControl>
