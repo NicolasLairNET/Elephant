@@ -4,13 +4,13 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<ApplicationIcon>icone.ico</ApplicationIcon>
+		<ApplicationIcon>Ressources\icone.ico</ApplicationIcon>
 		<StartupObject>Elephant_wpf.App</StartupObject>
 		<MinimumPlatformVersion>10.0.17763.0</MinimumPlatformVersion>
 		<Nullable>Enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<Content Include="icone.ico" />
+		<Content Include="Ressources\icone.ico" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="LoadingSpinner.WPF" Version="1.0.0" />
@@ -18,13 +18,25 @@
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="elephant.png" />
-		<Resource Include="whiteElephant.png" />
+		<Resource Include="Ressources\elephant.png" />
+		<Resource Include="Ressources\whiteElephant.png" />
+		<Resource Include="Ressources\importIcone.png" />
+		<Resource Include="Ressources\exportIcone.png" />
+		<Resource Include="Ressources\returnIcone.png" />
+		<Resource Include="Ressources\settings.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Themes\ButtonTheme.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
 	  </Page>
+	  <Page Update="Themes\TextBoxTheme.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+		<Page Update="Themes\TextBoxParcourirTheme.xaml">
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<SubType>Designer</SubType>
+		</Page>
 	</ItemGroup>
 </Project>

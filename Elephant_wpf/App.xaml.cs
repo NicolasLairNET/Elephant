@@ -1,4 +1,5 @@
 ﻿using Elephant.Services;
+using Elephant.Services.ConfigFileManagerService;
 using Elephant.Services.ExportService;
 using Elephant.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ namespace Elephant_wpf
             var services = new ServiceCollection();
             services.AddSingleton<IExportService, ExportService>();
             services.AddSingleton<IJsonTdcTagService, JsonFileTdcTagService>();
+            services.AddSingleton<IConfigFileManagerService, ConfigFileManager>();
 
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<TdcTagViewModel>();

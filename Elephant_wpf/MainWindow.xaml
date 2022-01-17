@@ -6,16 +6,9 @@
         xmlns:views="clr-namespace:Elephant.Views"
         xmlns:local="clr-namespace:Elephant"
         mc:Ignorable="d"
-        WindowStyle="ToolWindow"
-        Title="Elephant" Height="600" Width="800" ResizeMode="CanResizeWithGrip" MinHeight="600" MinWidth="800">
+        Title="Elephant" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
 
-    <Grid Background="{StaticResource MainColor}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!--<views:TdcTagView/>-->
+    <Grid>
         <ContentControl Grid.Row="0" Content="{Binding SelectedViewModel}"/>
-
     </Grid>
 </Window>

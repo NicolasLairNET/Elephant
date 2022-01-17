@@ -12,7 +12,8 @@
         <Setter Property="Height" Value="auto"/>
         <Setter Property="Width" Value="100"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="{StaticResource SecondaryColor}"/>
+        <Setter Property="Background" Value="Transparent">
+        </Setter>
         <Setter Property="Foreground" Value="{StaticResource LightColor}"/>
         <Setter Property="Padding" Value="5"/>
 
@@ -30,7 +31,6 @@
             <Trigger Property="IsMouseOver" Value="true">
                 <Setter Property="Foreground" Value="{StaticResource AccentColor}"/>
             </Trigger>
-
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

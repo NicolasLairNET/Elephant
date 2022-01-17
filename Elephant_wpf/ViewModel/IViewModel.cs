@@ -1,10 +1,9 @@
-﻿using System.Windows.Input;
+﻿using Microsoft.Toolkit.Mvvm.Input;
 
-namespace Elephant.ViewModel
+namespace Elephant.ViewModel;
+
+public interface IViewModel
 {
-    public interface IViewModel
-    {
-        ICommand UpdateViewCommand { get ;}
-        public void SendMessage();
-    }
+    IRelayCommand UpdateViewCommand { get; }
+    public void SendMessage();
 }

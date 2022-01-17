@@ -18,16 +18,31 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="0"  Grid.ColumnSpan="3" Orientation="Horizontal"  Background="{StaticResource SecondaryColor}">
-            <Image Source="/whiteElephant.png" Margin="20 3 20 3"/>
+            <Image Source="/Ressources/elephant.png" Margin="20 3 20 3"/>
             <TextBox x:Name="txtName" 
                      Style="{StaticResource TextboxTheme}"
                      CharacterCasing="Upper"
                 Text="{Binding TagToSearch, UpdateSourceTrigger=PropertyChanged}">
 
             </TextBox>
-            <Button Style="{StaticResource ButtonTheme}" Content="Import"  Command="{Binding ImportCommand}"/>
-            <Button Style="{StaticResource ButtonTheme}" Content="Export"  Command="{Binding ExportCommand}"/>
-            <Button Style="{StaticResource ButtonTheme}" Content="Paramètres" Command="{Binding UpdateViewCommand}"/>
+            <Button Style="{StaticResource ButtonTheme}" Command="{Binding ImportCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Ressources/importIcone.png" Margin="0 4 2 4" Height="18" Width="20" />
+                    <TextBlock Text="Import" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource ButtonTheme}"   Command="{Binding ExportCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Ressources/exportIcone.png" Margin="0 4 2 4" Height="18" Width="20" />
+                    <TextBlock Text="Export" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource ButtonTheme}" Command="{Binding UpdateViewCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Ressources/settings.png" Margin="0 4 2 4" Height="18" Width="20" />
+                    <TextBlock Text="Paramètres" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
         <DataGrid  x:Name="DGridResult" 

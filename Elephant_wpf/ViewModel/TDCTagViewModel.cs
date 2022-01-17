@@ -1,10 +1,10 @@
 ﻿using Elephant.Messages;
 using Elephant.Model;
 using Elephant.Services;
+using Elephant.Services.ConfigFileManagerService;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using System.Windows.Input;
 
 namespace Elephant.ViewModel;
 
@@ -12,12 +12,13 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 {
     private readonly IJsonTdcTagService JsonService;
     private readonly IExportService ExportService;
+    private readonly IConfigFileManagerService ConfigFileService;
     private IEnumerable<TDCTag> tagsList;
     private string tagToSearch;
-    public ICommand ImportCommand { get; }
-    public ICommand ExportCommand { get; }
-    public ICommand SearchCommand { get; }
-    public ICommand UpdateViewCommand { get;}
+    public IRelayCommand ImportCommand { get; }
+    public IRelayCommand ExportCommand { get; }
+    public IRelayCommand SearchCommand { get; }
+    public IRelayCommand UpdateViewCommand { get;}
 
     public IEnumerable<TDCTag> TagsList
     {
@@ -25,7 +26,9 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         set => SetProperty(ref tagsList, value);
     }
 
-    public TdcTagViewModel(IExportService exportService, IJsonTdcTagService jsonService)
+    public TdcTagViewModel(IExportService exportService,
+        IJsonTdcTagService jsonService,
+        IConfigFileManagerService configFileManagerService)
     {
         ImportCommand = new AsyncRelayCommand(Import);
         ExportCommand = new AsyncRelayCommand(Export);
@@ -33,12 +36,12 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
         JsonService = jsonService;
         ExportService = exportService;
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "DATA.json");
-        JsonService.InitializeJsonFile(path);
+        ConfigFileService = configFileManagerService;
         tagsList = JsonService.TDCTags;
         tagToSearch = "";
 
         UpdateViewCommand = new RelayCommand(SendMessage);
+        OnActivated();
     }
 
     public string TagToSearch
@@ -70,6 +73,14 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     public void SendMessage()
     {
         Messenger.Send(new ViewModelChangedMessage("ParameterViewModel"));
+    }
+
+    protected override void OnActivated()
+    {
+        Messenger.Register<TdcTagViewModel, DataFileChangedMessage>(this, (r, m) =>
+        {
+            r.TagsList = JsonService.GetAllListTag(m.Value);
+        });
     }
 }
 

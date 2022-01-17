@@ -4,9 +4,7 @@ namespace Elephant.Services;
 
 public class TDCFileFactory : Factory
 {
-    public TDCFileFactory(string filePath) : base(filePath)
-    {
-    }
+    public TDCFileFactory(string filePath) : base(filePath) {}
 
     public override ITDCFile? Create()
     {
