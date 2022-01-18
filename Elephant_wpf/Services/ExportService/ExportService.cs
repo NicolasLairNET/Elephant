@@ -1,10 +1,15 @@
 ﻿using Elephant.Model;
+using Elephant.Services.ConfigFileManagerService;
 using System.Windows.Forms;
 
 namespace Elephant.Services.ExportService;
 public class ExportService : IExportService
 {
-    public ExportService() {}
+    public IConfigFileManagerService ConfigFileManager { get; set; }
+    public ExportService(IConfigFileManagerService configFileManager)
+    {
+        ConfigFileManager = configFileManager;
+    }
 
     public async Task Export(List<TDCTag> tagList)
     {
@@ -37,10 +42,10 @@ public class ExportService : IExportService
         return string.Join(",", list.ToArray()).Replace(Environment.NewLine + ",", Environment.NewLine);
     }
 
-    private static string? SelectPathExport()
+    private string? SelectPathExport()
     {
         var defaultFileName = $"export{DateTime.Now:ddMMyyyyHmmss}.csv";
-        var defaultPath = Path.Combine(Directory.GetCurrentDirectory());
+        var defaultPath = ConfigFileManager.ExportFilePath;
 
         SaveFileDialog saveFileDialog = new();
         saveFileDialog.FileName = defaultFileName;

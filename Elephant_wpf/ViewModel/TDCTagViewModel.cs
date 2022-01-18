@@ -46,7 +46,6 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
     public string TagToSearch
     {
-
         get => tagToSearch;
         set
         {

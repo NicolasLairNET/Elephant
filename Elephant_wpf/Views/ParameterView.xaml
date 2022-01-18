@@ -34,13 +34,13 @@
             <StackPanel  Orientation="Horizontal" Background="{StaticResource MainColor}">
                 <TextBox Height="20" BorderThickness="0"  Margin="20 10 0 0" Background="{StaticResource MainColor}" Foreground="{StaticResource LightColor}">Emplacement fichier de données : </TextBox>
                 <TextBox Style="{StaticResource TextboxParcourirTheme}" Text="{Binding DataFilePath}"/>
-                <Button Content="..." Padding="5 0 5 0" Margin="2 0 0 0" Width="auto" Height="20" Background="{StaticResource LightColor}"/>
+                <Button Content="..." Padding="5 0 5 0" Margin="2 0 0 0" Width="auto" Height="20" Background="{StaticResource LightColor}" Command="{Binding SelectedDataFileCommand}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Background="{StaticResource MainColor}">
-                <TextBox Height="20" BorderThickness="0"  Margin="20 10 0 0" Background="{StaticResource MainColor}" Foreground="{StaticResource LightColor}">Emplacement fichier d'import :</TextBox>
+                <TextBox Height="20" BorderThickness="0"  Margin="20 10 0 0" Background="{StaticResource MainColor}" Foreground="{StaticResource LightColor}">Emplacement fichier d'export :</TextBox>
                 <TextBox Style="{StaticResource TextboxParcourirTheme}" Text="{Binding ExportFilePath}"/>
-                <Button Content="..." Padding="5 0 5 0" Margin="2 0 0 0" Width="auto" Height="20" Background="{StaticResource LightColor}"/>
+                <Button Content="..." Padding="5 0 5 0" Margin="2 0 0 0" Width="auto" Height="20" Background="{StaticResource LightColor}" Command="{Binding SelectedExportFileCommand}"/>
             </StackPanel>
             
         </StackPanel>

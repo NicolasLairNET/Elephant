@@ -1,4 +1,5 @@
 ﻿using Elephant.Model;
+using System.Windows.Forms;
 
 namespace Elephant.Services.ConfigFileManagerService;
 
@@ -12,7 +13,7 @@ public class ConfigFileManager : IConfigFileManagerService
     {
         ConfigFilePath = Path.Combine(Directory.GetCurrentDirectory(), "config.json");
         DataFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data.json");
-        ExportFilePath = Path.Combine(Directory.GetCurrentDirectory(), "export.csv");
+        ExportFilePath = Directory.GetCurrentDirectory();
         InitializeFile();
     }
 
@@ -36,15 +37,22 @@ public class ConfigFileManager : IConfigFileManagerService
         }
     }
 
-    public void UpdateDataFile(string newValue)
+    public bool UpdateDataFile(string newValue)
     {
-        DataFilePath = newValue;
-        var newConfig = new ConfigFile { DataFile = DataFilePath, ExportFile = ExportFilePath };
         if (!File.Exists(newValue))
         {
+            DialogResult choice = MessageBox.Show($"Le fichier {newValue} n'existe pas voulez-vous le créer ?", "Création fichier", MessageBoxButtons.YesNo);
+            if (choice != DialogResult.Yes)
+            {
+                return false;
+            }
             CreateDataFile(newValue);
         }
+        DataFilePath = newValue;
+        var newConfig = new ConfigFile { DataFile = DataFilePath, ExportFile = ExportFilePath };
         EditConfigFile(newConfig);
+
+        return true;
     }
 
     private void EditConfigFile(ConfigFile configFile)
@@ -62,7 +70,7 @@ public class ConfigFileManager : IConfigFileManagerService
 
     public void UpdateExportFile(string newValue)
     {
-        if (File.Exists(newValue))
+        if (Directory.Exists(newValue))
         {
             ExportFilePath = newValue;
             var newConfig = new ConfigFile { DataFile = DataFilePath, ExportFile = ExportFilePath };

@@ -3,19 +3,24 @@ using Elephant.Services.ConfigFileManagerService;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System.Windows.Forms;
 
 namespace Elephant.ViewModel
 {
     public class ParameterViewModel : ObservableRecipient, IViewModel
     {
         public IRelayCommand UpdateViewCommand { get; }
+        public IRelayCommand SelectedDataFileCommand { get; }
+        public IRelayCommand SelectedExportFileCommand { get; }
         public IConfigFileManagerService ConfigService { get; }
-        private string? _dataFilePath;
-        private string? _exportFilePath;
+        private string? dataFilePath;
+        private string? exportFilePath;
 
         public ParameterViewModel(IConfigFileManagerService config)
         {
             UpdateViewCommand = new RelayCommand(SendMessage);
+            SelectedDataFileCommand = new RelayCommand(SelectDataFile);
+            SelectedExportFileCommand = new RelayCommand(SelectExportFolder);
             ConfigService = config;
         }
 
@@ -32,10 +37,12 @@ namespace Elephant.ViewModel
             get => ConfigService.DataFilePath;
             set
             {
-                SetProperty(ref _dataFilePath, value);
-                ConfigService.UpdateDataFile(value);
-                // Sending TDCTagViewModel that the data file has been changed
-                Messenger.Send(new DataFileChangedMessage(value));
+                if (ConfigService.UpdateDataFile(value))
+                {
+                    // Sending TDCTagViewModel that the data file has been changed
+                    Messenger.Send(new DataFileChangedMessage(value));
+                    SetProperty(ref dataFilePath, value);
+                }
             }
         }
 
@@ -44,9 +51,31 @@ namespace Elephant.ViewModel
             get => ConfigService.ExportFilePath;
             set
             {
-                SetProperty(ref _exportFilePath, _exportFilePath);
                 ConfigService.UpdateExportFile(value);
+                SetProperty(ref exportFilePath, value);
             }
+        }
+
+        public void SelectDataFile()
+        {
+            OpenFileDialog FileDialog = new() {
+                DefaultExt = ".json",
+                AddExtension = true,
+                CheckFileExists = false,
+                Filter = "Fichier json (*.json)|*.json"
+            };
+            FileDialog.ShowDialog();
+            if (FileDialog.FileName != "")
+            {
+                DataFilePath = FileDialog.FileName;
+            }
+        }
+
+        public void SelectExportFolder()
+        {
+            FolderBrowserDialog FolderBrowserDialog = new FolderBrowserDialog();
+            FolderBrowserDialog.ShowDialog();
+            ExportFilePath = FolderBrowserDialog.SelectedPath;
         }
     }
 }
