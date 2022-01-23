@@ -51,7 +51,7 @@ namespace Elephant.ViewModel
             get => ConfigService.ExportFilePath;
             set
             {
-                ConfigService.UpdateExportFile(value);
+                ConfigService.UpdateExportFilePath(value);
                 SetProperty(ref exportFilePath, value);
             }
         }

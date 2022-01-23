@@ -15,9 +15,9 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     private readonly IConfigFileManagerService ConfigFileService;
     private IEnumerable<TDCTag> tagsList;
     private string tagToSearch;
-    public IRelayCommand ImportCommand { get; }
-    public IRelayCommand ExportCommand { get; }
-    public IRelayCommand SearchCommand { get; }
+    public IAsyncRelayCommand ImportCommand { get; }
+    public IAsyncRelayCommand ExportCommand { get; }
+    public IAsyncRelayCommand SearchCommand { get; }
     public IRelayCommand UpdateViewCommand { get;}
 
     public IEnumerable<TDCTag> TagsList
@@ -74,12 +74,17 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         Messenger.Send(new ViewModelChangedMessage("ParameterViewModel"));
     }
 
+    /// <summary>
+    /// Activates the listening of the message which notifies the change of the data file.
+    /// When the file is changed the list of tags is updated.
+    /// </summary>
     protected override void OnActivated()
     {
         Messenger.Register<TdcTagViewModel, DataFileChangedMessage>(this, (r, m) =>
         {
             r.TagsList = JsonService.GetAllListTag(m.Value);
+            // update tags list in the jsonTdcfileService
+            JsonService.TDCTags = r.TagsList.ToList();
         });
     }
 }
-

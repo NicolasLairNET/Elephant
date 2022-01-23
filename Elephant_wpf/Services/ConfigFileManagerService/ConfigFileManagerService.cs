@@ -17,6 +17,9 @@ public class ConfigFileManager : IConfigFileManagerService
         InitializeFile();
     }
 
+    /// <summary>
+    /// Creates the config file if not exist with default values
+    /// </summary>
     public void InitializeFile()
     {
 
@@ -37,6 +40,12 @@ public class ConfigFileManager : IConfigFileManagerService
         }
     }
 
+    /// <summary>
+    /// Update the file which store the datas
+    /// And edits the config file with the new path for data file
+    /// </summary>
+    /// <param name="newValue"></param>
+    /// <returns></returns>
     public bool UpdateDataFile(string newValue)
     {
         if (!File.Exists(newValue))
@@ -46,29 +55,69 @@ public class ConfigFileManager : IConfigFileManagerService
             {
                 return false;
             }
-            CreateDataFile(newValue);
+            if (!CreateDataFile(newValue))
+            {
+                return false;
+            }
         }
         DataFilePath = newValue;
         var newConfig = new ConfigFile { DataFile = DataFilePath, ExportFile = ExportFilePath };
-        EditConfigFile(newConfig);
 
+        return EditConfigFile(newConfig);
+    }
+
+    /// <summary>
+    /// Writes in the config file the new configuration for the app
+    /// </summary>
+    /// <param name="configFile">Path to config file</param>
+    /// <returns>true if the file is edited otherwise false</returns>
+    private bool EditConfigFile(ConfigFile configFile)
+    {
+        try
+        {
+            using StreamWriter writer = new(ConfigFilePath);
+            writer.WriteLine(JsonSerializer.Serialize(configFile));
+        }
+        catch (Exception)
+        {
+           MessageBox.Show(
+               "Le fichier de config n'a pas été mis à jour.\nAnnulation de la modification.",
+               "Erreur: Modification du fichier de config.",
+               MessageBoxButtons.OK, MessageBoxIcon.Error);
+           return false;
+        }
         return true;
     }
 
-    private void EditConfigFile(ConfigFile configFile)
+    /// <summary>
+    /// Create the json file which store datas
+    /// </summary>
+    /// <param name="path">Path of file</param>
+    /// <returns>true if the file is created otherwise false</returns>
+    private static bool CreateDataFile(string path)
     {
-        using StreamWriter writer = new(ConfigFilePath);
-        writer.WriteLine(JsonSerializer.Serialize(configFile));
+        try
+        {
+            File.Create(path).Dispose();
+            using StreamWriter writer = new(path);
+            writer.WriteLine("[]");
+        }
+        catch (DirectoryNotFoundException)
+        {
+            MessageBox.Show(
+                "Le chemin sélectionné n'existe pas.\nAnnulation de la modification.",
+                "Erreur: Création du fichier de données.", 
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+        return true;
     }
 
-    private void CreateDataFile(string path)
-    {
-        File.Create(path).Dispose();
-        using StreamWriter writer = new(path);
-        writer.WriteLine("[]");
-    }
-
-    public void UpdateExportFile(string newValue)
+    /// <summary>
+    /// Updated the default path for store the export files
+    /// </summary>
+    /// <param name="newValue"></param>
+    public void UpdateExportFilePath(string newValue)
     {
         if (Directory.Exists(newValue))
         {

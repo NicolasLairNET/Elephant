@@ -64,7 +64,7 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
             tagList.AddRange(item.Value.Result);
         }
 
-        return tagList.Distinct(new TDCTagComparer()).ToList();
+        return tagList.Distinct().ToList();
     }
 
     public static string SerializeTagsList(IEnumerable<TDCTag> list)
@@ -116,6 +116,11 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
         return tags;
     }
 
+    /// <summary>
+    /// Search in the list of tags
+    /// </summary>
+    /// <param name="value">Value to search</param>
+    /// <returns>List of tags that matches the search</returns>
     public async Task<IEnumerable<TDCTag>> Search(string value)
     {
         return await Task.Run(() =>

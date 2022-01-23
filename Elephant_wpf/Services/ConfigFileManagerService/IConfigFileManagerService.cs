@@ -7,6 +7,6 @@ public interface IConfigFileManagerService
     public string ExportFilePath { get; set; }
 
     public bool UpdateDataFile(string newValue);
-    public void UpdateExportFile(string newValue);
+    public void UpdateExportFilePath(string newValue);
     public void InitializeFile();
 }
