@@ -47,7 +47,7 @@
 
         <DataGrid  x:Name="DGridResult" 
                    Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
-                   Height="auto" Margin="30, 30, 30, 30" 
+                   Height="auto" Margin="30" 
                    ItemsSource="{Binding TagsList}"
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
 
@@ -85,9 +85,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <custom:LoadingSpinner Grid.Row="0" IsLoading="True" Thickness="6" Color="{StaticResource LightColor}"/>
-            <TextBlock Grid.Row="1" Text="Import en cours ..." HorizontalAlignment="Center" FontSize="20" Margin="0 10" Foreground="{StaticResource LightColor}"/>
+            <TextBlock Grid.Row="1" Text="{Binding ImportMessage}" HorizontalAlignment="Center" FontSize="20" Margin="0 10" Foreground="{StaticResource LightColor}"/>
+            <TextBlock Grid.Row="2" Text="{Binding ImportFile}" HorizontalAlignment="Center" FontSize="20" Margin="0 6" Foreground="{StaticResource LightColor}"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -1,6 +1,6 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services;
+namespace Elephant.Services.ExportService;
 
 public interface IExportService
 {

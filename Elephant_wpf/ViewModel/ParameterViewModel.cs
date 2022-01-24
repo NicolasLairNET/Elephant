@@ -13,8 +13,8 @@ namespace Elephant.ViewModel
         public IRelayCommand SelectedDataFileCommand { get; }
         public IRelayCommand SelectedExportFileCommand { get; }
         public IConfigFileManagerService ConfigService { get; }
-        private string? dataFilePath;
-        private string? exportFilePath;
+        private string? _dataFilePath;
+        private string? _exportFilePath;
 
         public ParameterViewModel(IConfigFileManagerService config)
         {
@@ -41,7 +41,7 @@ namespace Elephant.ViewModel
                 {
                     // Sending TDCTagViewModel that the data file has been changed
                     Messenger.Send(new DataFileChangedMessage(value));
-                    SetProperty(ref dataFilePath, value);
+                    SetProperty(ref _dataFilePath, value);
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace Elephant.ViewModel
             set
             {
                 ConfigService.UpdateExportFilePath(value);
-                SetProperty(ref exportFilePath, value);
+                SetProperty(ref _exportFilePath, value);
             }
         }
 

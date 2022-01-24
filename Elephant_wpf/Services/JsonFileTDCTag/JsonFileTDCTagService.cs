@@ -1,5 +1,6 @@
 ﻿using Elephant.Model;
 using Elephant.Services.ConfigFileManagerService;
+using Elephant.Services.JsonFileTDCTag;
 using Elephant.Services.JsonFileTDCTag.Helpers;
 using System.Windows.Forms;
 
@@ -13,70 +14,48 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
     public JsonFileTdcTagService(IConfigFileManagerService configFileManagerService)
     {
         configFileManager = configFileManagerService;
-        TDCTags = GetAllListTag(configFileManager.DataFilePath).ToList();
+        TDCTags = GetTagsToDataFile(configFileManager.DataFilePath).ToList();
     }
 
     /// <summary>
-    /// Import the selected files into the json file
+    /// Get the list of tags from a tdc file.
     /// </summary>
-    public async Task<IEnumerable<TDCTag>> Import()
+    /// <param name="filePath">path to tdc file</param>
+    /// <param name="p">Task progress management, allows to know when the task is finished</param>
+    /// <returns>list of tags or an empty list if the file isn't a tdc file</returns>
+    public async Task GetTagsAsync(string filePath, IProgress<(string, List<TDCTag>)> p)
     {
-        var filePathList = GetPathList();
-        List<TDCTag> tagList = new();
-        if (filePathList.Length == 0) return TDCTags;
-        tagList = await ConvertFileToTagList(filePathList);
-
-        using StreamWriter writer = new(configFileManager.DataFilePath);
-        writer.Write(SerializeTagsList(tagList));
-
-        TDCTags = tagList;
-        return TDCTags;
-    }
-
-    /// <summary>
-    /// Converted a file list to tag list
-    /// </summary>
-    /// <param name="filePathList">List of files to convert</param>
-    /// <returns></returns>
-    public async Task<List<TDCTag>> ConvertFileToTagList(string[] filePathList)
-    {
-        var dico = new Dictionary<string, Task<List<TDCTag>>>();
-
-        foreach (string filePath in filePathList)
+        await Task.Run(() =>
         {
-            dico.Add(filePath, Task.Run(() =>
+            var tdcFile = new TDCFileFactory(filePath).Create();
+
+            if (tdcFile is null)
             {
-                var tdcFile = new TDCFileFactory(filePath).Create();
-
-                if (tdcFile is null)
-                {
-                    return new List<TDCTag>();
-                }
-                return tdcFile.GetTagsList();
-            }));
-        }
-
-        await Task.WhenAll(dico.Values).ConfigureAwait(false);
-
-        var tagList = new List<TDCTag>();
-        foreach (var item in dico)
-        {
-            tagList.AddRange(item.Value.Result);
-        }
-
-        return tagList.Distinct().ToList();
+                p?.Report((filePath, new List<TDCTag>()));
+            }
+            else
+            {
+                p?.Report((filePath, tdcFile.GetTagsList()));
+            }
+        });
     }
 
-    public static string SerializeTagsList(IEnumerable<TDCTag> list)
+    /// <summary>
+    /// Writes a list of tags in DataFile.
+    /// </summary>
+    /// <param name="newList">list to write in the file</param>
+    public void WriteData(List<TDCTag> newList)
     {
-        return JsonSerializer.Serialize(list);
+        using StreamWriter writer = new(configFileManager.DataFilePath);
+        var json = JsonSerializer.Serialize(newList);
+        writer.Write(json);
     }
 
     /// <summary>
     /// Open a fileDialog for import TDC Files
     /// </summary>
     /// <returns>List of TDC Files's path</returns>
-    public static string[] GetPathList()
+    public string[] GetPathList()
     {
         var pathList = Array.Empty<string>();
         OpenFileDialog openFileDialog = new()
@@ -99,7 +78,7 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
     /// </summary>
     /// <param name="dataFilePath"></param>
     /// <returns></returns>
-    public IEnumerable<TDCTag> GetAllListTag(string dataFilePath)
+    public List<TDCTag> GetTagsToDataFile(string dataFilePath)
     {
         var tags = new List<TDCTag>();
         if (File.Exists(dataFilePath))
@@ -121,7 +100,7 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
     /// </summary>
     /// <param name="value">Value to search</param>
     /// <returns>List of tags that matches the search</returns>
-    public async Task<IEnumerable<TDCTag>> Search(string value)
+    public async Task<List<TDCTag>> Search(string value)
     {
         return await Task.Run(() =>
         {
