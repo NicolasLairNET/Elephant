@@ -1,6 +1,5 @@
 ﻿using Elephant.Messages;
 using Elephant.Model;
-using Elephant.Services.ConfigFileManagerService;
 using Elephant.Services.ExportService;
 using Elephant.Services.JsonFileTDCTag;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -29,9 +28,9 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     {
         ImportCommand = new AsyncRelayCommand(Import);
         ExportCommand = new AsyncRelayCommand(Export);
-    SearchCommand = new AsyncRelayCommand(Search);
+        SearchCommand = new AsyncRelayCommand(Search);
 
-    _jsonTdcTagService = jsonService;
+        _jsonTdcTagService = jsonService;
         _exportService = exportService;
         _tagsList = _jsonTdcTagService.TDCTags;
         _tagToSearch = "";
@@ -40,9 +39,9 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         _importMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
         _importFile = "";
 
-    UpdateViewCommand = new RelayCommand(SendMessage);
-    OnActivated();
-}
+        UpdateViewCommand = new RelayCommand(SendMessage);
+        OnActivated();
+    }
     public List<TDCTag> TagsList
     {
         get => _tagsList;

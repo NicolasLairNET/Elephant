@@ -14,7 +14,7 @@ public class CLHPMFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagDto()
+        var tagDto = new TagInfo()
         {
             NamePosition = new int[2] { 20, 36 },
             Parameter = "ENT_REF",

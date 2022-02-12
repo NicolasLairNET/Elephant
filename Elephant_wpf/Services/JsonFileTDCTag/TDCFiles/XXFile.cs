@@ -11,7 +11,7 @@ public abstract class XXFile
     /// <param name="fileContent">Content of the file</param>
     /// <param name="tagDto"></param>
     /// <returns>The list of TDCTags in the file </returns>
-    public List<TDCTag> CreateTagsList(string[] fileContent, TagDto tagDto)
+    public List<TDCTag> CreateTagsList(string[] fileContent, TagInfo tagDto)
     {
         List<TDCTag> tagList = new();
         TDCTag tag = new();

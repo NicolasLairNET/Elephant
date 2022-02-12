@@ -14,7 +14,7 @@ public class HWYFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagDto()
+        var tagDto = new TagInfo()
         {
             NamePosition = new int[2] { 16, 51 },
             Parameter = "ENT_REF",

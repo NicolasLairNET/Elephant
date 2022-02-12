@@ -46,9 +46,26 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
     /// <param name="newList">list to write in the file</param>
     public void WriteData(List<TDCTag> newList)
     {
+        var dataFileUpdated = UpdateDataFile(newList);
+        Save(dataFileUpdated);
+    }
+
+    private DataFile UpdateDataFile(List<TDCTag> newList)
+    {
+        using StreamReader reader = new(configFileManager.DataFilePath);
+        var dataFile = JsonSerializer.Deserialize<DataFile>(reader.ReadToEnd());
+        if (dataFile == null)
+        {
+            return new DataFile();
+        }
+        dataFile.Data = newList;
+        return dataFile;
+    }
+
+    private void Save(DataFile dataFile)
+    {
         using StreamWriter writer = new(configFileManager.DataFilePath);
-        var json = JsonSerializer.Serialize(newList);
-        writer.Write(json);
+        writer.WriteLine(JsonSerializer.Serialize<DataFile>(dataFile));
     }
 
     /// <summary>
@@ -84,7 +101,9 @@ public sealed class JsonFileTdcTagService : IJsonTdcTagService
         if (File.Exists(dataFilePath))
         {
             using StreamReader reader = new(dataFilePath);
-            tags = JsonSerializer.Deserialize<List<TDCTag>>(reader.ReadToEnd());
+            var datafile = JsonSerializer.Deserialize<DataFile>(reader.ReadToEnd());
+
+            tags = datafile?.Data;
 
             if (tags is null)
             {

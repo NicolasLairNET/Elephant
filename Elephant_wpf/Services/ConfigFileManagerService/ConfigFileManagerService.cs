@@ -60,6 +60,7 @@ public class ConfigFileManager : IConfigFileManagerService
                 return false;
             }
         }
+
         DataFilePath = newValue;
         var newConfig = new ConfigFile { DataFile = DataFilePath, ExportFile = ExportFilePath };
 
@@ -80,11 +81,11 @@ public class ConfigFileManager : IConfigFileManagerService
         }
         catch (Exception)
         {
-           MessageBox.Show(
-               "Le fichier de config n'a pas été mis à jour.\nAnnulation de la modification.",
-               "Erreur: Modification du fichier de config.",
-               MessageBoxButtons.OK, MessageBoxIcon.Error);
-           return false;
+            MessageBox.Show(
+                "Le fichier de config n'a pas été mis à jour.\nAnnulation de la modification.",
+                "Erreur: Modification du fichier de config.",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
         return true;
     }
@@ -100,13 +101,15 @@ public class ConfigFileManager : IConfigFileManagerService
         {
             File.Create(path).Dispose();
             using StreamWriter writer = new(path);
-            writer.WriteLine("[]");
+            var newDataFile = new DataFile();
+            JsonSerializer.Serialize(newDataFile);
+            writer.WriteLine(JsonSerializer.Serialize(newDataFile));
         }
         catch (DirectoryNotFoundException)
         {
             MessageBox.Show(
                 "Le chemin sélectionné n'existe pas.\nAnnulation de la modification.",
-                "Erreur: Création du fichier de données.", 
+                "Erreur: Création du fichier de données.",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }

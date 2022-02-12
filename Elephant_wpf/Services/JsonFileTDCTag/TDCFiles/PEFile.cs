@@ -15,7 +15,7 @@ public class UCNFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagDto()
+        var tagDto = new TagInfo()
         {
             NamePosition = new int[2] { 39, 71 },
             Parameter = "ENT_REF",

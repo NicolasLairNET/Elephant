@@ -15,7 +15,7 @@ public class PEFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagDto()
+        var tagInfo = new TagInfo()
         {
             NamePosition = new int[2] { 19, 57 },
             Parameter = "ENT_REF",
@@ -23,7 +23,7 @@ public class PEFile : XXFile, ITDCFile
             Origin = "PE"
         };
 
-        return CreateTagsList(FileContent, tagDto);
+        return CreateTagsList(FileContent, tagInfo);
     }
 }
 

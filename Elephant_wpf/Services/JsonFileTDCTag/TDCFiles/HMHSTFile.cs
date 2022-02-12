@@ -14,7 +14,7 @@ public class HMHSTFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagDto()
+        var tagDto = new TagInfo()
         {
             NamePosition = new int[2] { 22, 60 },
             Parameter = "ENT_REF",
