@@ -1,4 +1,4 @@
-﻿namespace Elephant.Services.JsonFileTDCTag.Helpers;
+﻿namespace Elephant.Services.TagDataFileManagerService.Helpers;
 
 public static class Extensions
 {

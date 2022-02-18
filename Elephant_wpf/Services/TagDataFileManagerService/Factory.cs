@@ -1,6 +1,6 @@
-﻿using Elephant.Services.JsonFileTDCTag.TDCFiles;
+﻿using Elephant.Services.TagDataFileManagerService.TDCFiles;
 
-namespace Elephant.Services;
+namespace Elephant.Services.TagDataFileManagerService;
 
 public abstract class Factory
 {

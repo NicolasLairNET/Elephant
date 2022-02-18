@@ -1,10 +1,10 @@
-﻿using Elephant.Services.JsonFileTDCTag.TDCFiles;
+﻿using Elephant.Services.TagDataFileManagerService.TDCFiles;
 
-namespace Elephant.Services;
+namespace Elephant.Services.TagDataFileManagerService;
 
 public class TDCFileFactory : Factory
 {
-    public TDCFileFactory(string filePath) : base(filePath) {}
+    public TDCFileFactory(string filePath) : base(filePath) { }
 
     public override ITDCFile? Create()
     {

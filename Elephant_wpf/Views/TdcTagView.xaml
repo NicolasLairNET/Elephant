@@ -48,7 +48,7 @@
         <DataGrid  x:Name="DGridResult" 
                    Grid.Row="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" 
                    Height="auto" Margin="30" 
-                   ItemsSource="{Binding TagsList}"
+                   ItemsSource="{Binding TagsDataGrid}"
                    IsReadOnly="True" ClipboardCopyMode="IncludeHeader">
 
             <DataGrid.Style>

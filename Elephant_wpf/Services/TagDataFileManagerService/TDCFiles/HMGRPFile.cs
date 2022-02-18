@@ -1,7 +1,7 @@
 ﻿using Elephant.Model;
-using Elephant.Services.JsonFileTDCTag.DTOs;
+using Elephant.Services.TagDataFileManagerService.DTOs;
 
-namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
+namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HMGRPFile : XXFile, ITDCFile
 {
@@ -14,7 +14,7 @@ public class HMGRPFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagInfo()
+        var tagInfo = new TagInfo()
         {
             NamePosition = new int[2] { 52, 90 },
             Parameter = "ENT_REF",
@@ -22,7 +22,7 @@ public class HMGRPFile : XXFile, ITDCFile
             Origin = "HM GRP"
         };
 
-        return CreateTagsList(FileContent, tagDto);
+        return CreateTagsList(FileContent, tagInfo);
     }
 }
 

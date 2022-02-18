@@ -1,7 +1,7 @@
 ﻿using Elephant.Model;
-using Elephant.Services.JsonFileTDCTag.DTOs;
+using Elephant.Services.TagDataFileManagerService.DTOs;
 
-namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
+namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public abstract class XXFile
 {
@@ -9,9 +9,9 @@ public abstract class XXFile
     /// Create a TDCTag list with the content of the file.
     /// </summary>
     /// <param name="fileContent">Content of the file</param>
-    /// <param name="tagDto"></param>
+    /// <param name="tagInfo"></param>
     /// <returns>The list of TDCTags in the file </returns>
-    public List<TDCTag> CreateTagsList(string[] fileContent, TagInfo tagDto)
+    public List<TDCTag> CreateTagsList(string[] fileContent, TagInfo tagInfo)
     {
         List<TDCTag> tagList = new();
         TDCTag tag = new();
@@ -21,10 +21,10 @@ public abstract class XXFile
             {
                 tag = new()
                 {
-                    Name = line[tagDto.NamePosition[0]..tagDto.NamePosition[1]].Trim(),
-                    Parameter = tagDto.Parameter,
-                    Value = line[tagDto.ValuePosition[0]..tagDto.ValuePosition[1]].Trim(),
-                    Origin = tagDto.Origin
+                    Name = line[tagInfo.NamePosition[0]..tagInfo.NamePosition[1]].Trim(),
+                    Parameter = tagInfo.Parameter,
+                    Value = line[tagInfo.ValuePosition[0]..tagInfo.ValuePosition[1]].Trim(),
+                    Origin = tagInfo.Origin
                 };
                 tagList.Add(tag);
             }

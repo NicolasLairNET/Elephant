@@ -1,6 +1,6 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
+namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 class EBFile : ITDCFile
 {

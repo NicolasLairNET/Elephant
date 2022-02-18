@@ -1,7 +1,7 @@
 ﻿using Elephant.Model;
-using Elephant.Services.JsonFileTDCTag.DTOs;
+using Elephant.Services.TagDataFileManagerService.DTOs;
 
-namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
+namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 public class CLAMFile : XXFile, ITDCFile
 {
     public string[] FileContent { get; set; }
@@ -13,7 +13,7 @@ public class CLAMFile : XXFile, ITDCFile
 
     public List<TDCTag> GetTagsList()
     {
-        var tagDto = new TagInfo()
+        var tagInfo = new TagInfo()
         {
             NamePosition = new int[2] { 16, 51 },
             Parameter = "CL",
@@ -21,7 +21,7 @@ public class CLAMFile : XXFile, ITDCFile
             Origin = "CL AM"
         };
 
-        return CreateTagsList(FileContent, tagDto);
+        return CreateTagsList(FileContent, tagInfo);
     }
 }
 

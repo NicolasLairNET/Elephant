@@ -1,13 +1,12 @@
 ﻿using Elephant.Model;
-using Elephant.Services.JsonFileTDCTag.DTOs;
+using Elephant.Services.TagDataFileManagerService.DTOs;
 
-namespace Elephant.Services.JsonFileTDCTag.TDCFiles;
-
-public class CLHPMFile : XXFile, ITDCFile
+namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+public class CDSFile : XXFile, ITDCFile
 {
     public string[] FileContent { get; set; }
 
-    public CLHPMFile(string filePath)
+    public CDSFile(string filePath)
     {
         FileContent = File.ReadAllLines(filePath);
     }
@@ -16,13 +15,12 @@ public class CLHPMFile : XXFile, ITDCFile
     {
         var tagDto = new TagInfo()
         {
-            NamePosition = new int[2] { 20, 36 },
+            NamePosition = new int[2] { 16, 51 },
             Parameter = "ENT_REF",
-            ValuePosition = new int[2] { 46, 84 },
-            Origin = "CLHPM"
+            ValuePosition = new int[2] { 52, 90 },
+            Origin = "CDS"
         };
 
         return CreateTagsList(FileContent, tagDto);
     }
 }
-

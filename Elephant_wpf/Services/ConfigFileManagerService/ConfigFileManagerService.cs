@@ -101,7 +101,7 @@ public class ConfigFileManager : IConfigFileManagerService
         {
             File.Create(path).Dispose();
             using StreamWriter writer = new(path);
-            var newDataFile = new DataFile();
+            var newDataFile = new TagDataFile();
             JsonSerializer.Serialize(newDataFile);
             writer.WriteLine(JsonSerializer.Serialize(newDataFile));
         }

@@ -1,8 +1,7 @@
 ﻿using Elephant.Model;
-using Elephant.Services.JsonFileTDCTag.DTOs;
-using Elephant.Services.JsonFileTDCTag.TDCFiles;
+using Elephant.Services.TagDataFileManagerService.DTOs;
 
-namespace Elephant.Services;
+namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class PEFile : XXFile, ITDCFile
 {
