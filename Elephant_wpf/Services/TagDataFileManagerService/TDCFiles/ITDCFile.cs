@@ -6,4 +6,3 @@ public interface ITDCFile
 {
     public List<TDCTag> GetTagsList();
 }
-

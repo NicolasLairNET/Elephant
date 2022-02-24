@@ -1,29 +1,46 @@
 ﻿using Elephant.Services.TagDataFileManagerService.TDCFiles;
 
-namespace Elephant.Services.TagDataFileManagerService;
-
-public class TDCFileFactory : Factory
+namespace Elephant.Services.TagDataFileManagerService
 {
-    public TDCFileFactory(string filePath) : base(filePath) { }
-
-    public override ITDCFile? Create()
+    public class TDCFileFactory : Factory
     {
-        return FileExtension switch
+        public TDCFileFactory(string filePath) : base(filePath) { }
+
+        public override ITDCFile? Create()
         {
-            ".EB" => new EBFile(FilePath),
-            ".XX" => FileName switch
+            return FileExtension switch
             {
-                _ when FileName.Contains("UCN") => new UCNFile(FilePath),
-                _ when FileName.Contains("HIWAY") => new HWYFile(FilePath),
-                _ when FileName.Contains("CLAM") => new CLAMFile(FilePath),
-                _ when FileName.Contains("CLHPM") => new CLHPMFile(FilePath),
-                _ when FileName.Contains("CDS") => new CDSFile(FilePath),
-                _ when FileName.Contains("PE") => new PEFile(FilePath),
-                _ when FileName.Contains("HMGRP") => new HMGRPFile(FilePath),
-                _ when FileName.Contains("HMHST") => new HMHSTFile(FilePath),
+                ".EB" => new EBFile(FilePath),
+                ".XX" => ReadCommand(FilePath) switch
+                {
+                    null => null,
+                    var command when new Regex(CDSFile.commandRegex).IsMatch(command) => new CDSFile(FilePath),
+                    _ when FileName.Contains("UCN") => new UCNFile(FilePath),
+                    _ when FileName.Contains("HIWAY") => new HWYFile(FilePath),
+                    _ when FileName.Contains("CLAM") => new CLAMFile(FilePath),
+                    _ when FileName.Contains("CLHPM") => new CLHPMFile(FilePath),
+                    _ when FileName.Contains("CDS") => new CDSFile(FilePath),
+                    _ when FileName.Contains("PE") => new PEFile(FilePath),
+                    _ when FileName.Contains("HMGRP") => new HMGRPFile(FilePath),
+                    _ when FileName.Contains("HMHST") => new HMHSTFile(FilePath),
+                    _ => null
+                },
                 _ => null
-            },
-            _ => null
-        };
+            };
+        }
+
+        private static string? ReadCommand(string filePath)
+        {
+            var fileContent = File.ReadAllLines(filePath);
+            foreach (string line in fileContent)
+            {
+                if (line.Contains("FN"))
+                {
+                    return line;
+                }
+            }
+
+            return null;
+        }
     }
 }
