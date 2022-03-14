@@ -1,41 +1,36 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TagDataFileManagerService.DTOs;
 
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+
 public class CDSFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
+    public CDSFile(string filePath) : base (filePath) {}
 
-    public CDSFile(string filePath)
-    {
-        FileContent = File.ReadAllLines(filePath);
-    }
-
-    public static string commandRegex = @"\b[FN]*[AM_CP]*[ENTITY]*[ENT_REF]";
+    public const string CommandRegex = @"\b[FN]*[AM_CP]*[ENTITY]*[ENT_REF]";
 
     public List<TDCTag> GetTagsList()
     {
-        List<string> header = new();
         List<TDCTag> tags = new();
-        foreach (string line in FileContent)
-        {
-            if (line.Contains("MEDIA"))
-            {
-                header = line.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
-                continue;
-            }
 
-            if (line.Contains("NET"))
+        if (ColumnInfos == null)
+        {
+            return tags;
+        }
+
+        for (int i = 0; i < FileContent.Length; i++)
+        {
+            if (FileContent[i].Contains("NET"))
             {
-                var lineValue = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                var entity = ColumnInfos.First(column => column.Name == "ENTITY");
+                var value = ColumnInfos.First(column => column.Name == "ENT_REF");
+
                 var tag = new TDCTag()
                 {
-                    Name = lineValue[header.IndexOf("ENTITY")],
-                    Value = lineValue[header.IndexOf("ENT_REF")],
-                    Parameter = "ENT_REF",
-                    Origin = "CDS"
+                   Name = FileContent[i].Substring(entity.StartIndex, entity.Length).Trim(),
+                   Value = FileContent[i].Substring(value.StartIndex, value.Length).Trim(),
+                   Parameter = "ENT_REF",
+                   Origin = "CDS"
                 };
-
                 tags.Add(tag);
             }
         }

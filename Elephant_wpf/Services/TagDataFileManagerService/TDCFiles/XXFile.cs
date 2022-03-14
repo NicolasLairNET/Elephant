@@ -1,35 +1,72 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TagDataFileManagerService.DTOs;
 
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public abstract class XXFile
 {
-    /// <summary>
-    /// Create a TDCTag list with the content of the file.
-    /// </summary>
-    /// <param name="fileContent">Content of the file</param>
-    /// <param name="tagInfo"></param>
-    /// <returns>The list of TDCTags in the file </returns>
-    public List<TDCTag> CreateTagsList(string[] fileContent, TagInfo tagInfo)
+    public List<ColumnInfo>? ColumnInfos { get; set; }
+    public string FilePath { get; set; }
+    public string FileName { get; set; }
+    public string[] FileContent { get; set; }
+
+    public XXFile(string filePath)
     {
-        List<TDCTag> tagList = new();
-        TDCTag tag = new();
-        foreach (string line in fileContent)
+        FilePath = filePath;
+        FileName = Path.GetFileName(filePath);
+        FileContent = File.ReadAllLines(filePath);
+        ColumnInfos = GetColumnsInformations();
+    }
+
+    /// <summary>
+    /// Create a list with the informations for each columns
+    /// </summary>
+    /// <returns></returns>
+    public List<ColumnInfo>? GetColumnsInformations()
+    {
+        (string names, string sizes) = GetHeaderLines() ?? default;
+        var lineInfos = new List<ColumnInfo>();
+        if (names.Length == 0 || sizes.Length == 0)
         {
-            if (line.Length > 3 && line[0..3] == "NET")
+            return null;
+        }
+        string[] headerNames = names.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        int headerPosition = 0;
+        int startPosition = 0;
+
+        for (int i = 0; i < sizes.Length; i++)
+        {
+            if (sizes[i] == ' ')
             {
-                tag = new()
+                ColumnInfo columnInfo = new()
                 {
-                    Name = line[tagInfo.NamePosition[0]..tagInfo.NamePosition[1]].Trim(),
-                    Parameter = tagInfo.Parameter,
-                    Value = line[tagInfo.ValuePosition[0]..tagInfo.ValuePosition[1]].Trim(),
-                    Origin = tagInfo.Origin
+                    Name = headerNames[headerPosition],
+                    StartIndex = startPosition,
+                    Length = i - startPosition,
                 };
-                tagList.Add(tag);
+                headerPosition++;
+                startPosition = i + 1;
+                lineInfos.Add(columnInfo);
             }
         }
+        return lineInfos;
+    }
 
-        return tagList;
+    /// <summary>
+    /// Get the two header lines.
+    /// The first line is the name of the column
+    /// the second line represents the size of the columns in the form of a dash.
+    /// Exemple : ---- is a column of 4 characters.
+    /// </summary>
+    /// <returns></returns>
+    private (string, string)? GetHeaderLines()
+    {
+        for (int i = 0; i < FileContent.Length; i++)
+        {
+            if (FileContent[i].Contains("MEDIA"))
+            {
+                return (FileContent[i], FileContent[i + 1]);
+            }
+        }
+        return null;
     }
 }

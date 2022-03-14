@@ -5,11 +5,9 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class PEFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
 
-    public PEFile(string filePath)
+    public PEFile(string filePath) : base(filePath)
     {
-        FileContent = File.ReadAllLines(filePath);
     }
 
     public List<TDCTag> GetTagsList()
@@ -22,7 +20,7 @@ public class PEFile : XXFile, ITDCFile
             Origin = "PE"
         };
 
-        return CreateTagsList(FileContent, tagInfo);
+        //return CreateTagsList(FileContent, tagInfo);
+        return new List<TDCTag>();
     }
 }
-

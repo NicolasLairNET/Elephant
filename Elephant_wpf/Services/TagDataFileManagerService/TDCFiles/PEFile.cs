@@ -5,11 +5,9 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class UCNFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
 
-    public UCNFile(string filePath)
+    public UCNFile(string filePath) : base(filePath)
     {
-        FileContent = File.ReadAllLines(filePath);
     }
 
     public List<TDCTag> GetTagsList()
@@ -22,7 +20,7 @@ public class UCNFile : XXFile, ITDCFile
             Origin = "UCN",
         };
 
-        return CreateTagsList(FileContent, tagInfo);
+        //return CreateTagsList(FileContent, tagInfo);
+        return new List<TDCTag>();
     }
 }
-

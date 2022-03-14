@@ -5,11 +5,10 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class CLHPMFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
 
-    public CLHPMFile(string filePath)
+    public CLHPMFile(string filePath) : base(filePath)
     {
-        FileContent = File.ReadAllLines(filePath);
+        //FileContent = File.ReadAllLines(filePath);
     }
 
     public List<TDCTag> GetTagsList()
@@ -22,7 +21,8 @@ public class CLHPMFile : XXFile, ITDCFile
             Origin = "CLHPM"
         };
 
-        return CreateTagsList(FileContent, tagInfo);
+        //return CreateTagsList(FileContent, tagInfo);
+        return new List<TDCTag>();
     }
 }
 

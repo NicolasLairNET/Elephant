@@ -4,12 +4,7 @@ using Elephant.Services.TagDataFileManagerService.DTOs;
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 public class CLAMFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
-
-    public CLAMFile(string filePath)
-    {
-        FileContent = File.ReadAllLines(filePath);
-    }
+    public CLAMFile(string filePath) : base(filePath){}
 
     public List<TDCTag> GetTagsList()
     {
@@ -21,7 +16,9 @@ public class CLAMFile : XXFile, ITDCFile
             Origin = "CL AM"
         };
 
-        return CreateTagsList(FileContent, tagInfo);
+        //return CreateTagsList(FileContent, tagInfo);
+
+        return new List<TDCTag>();
     }
 }
 

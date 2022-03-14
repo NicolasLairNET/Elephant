@@ -5,11 +5,8 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HMHSTFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
-
-    public HMHSTFile(string filePath)
+    public HMHSTFile(string filePath) : base(filePath)
     {
-        FileContent = File.ReadAllLines(filePath);
     }
 
     public List<TDCTag> GetTagsList()
@@ -22,7 +19,7 @@ public class HMHSTFile : XXFile, ITDCFile
             Origin = "HM HST"
         };
 
-        return CreateTagsList(FileContent, tagInfo);
+        //return CreateTagsList(FileContent, tagInfo);
+        return new List<TDCTag>();
     }
 }
-

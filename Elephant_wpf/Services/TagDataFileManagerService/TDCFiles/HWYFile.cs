@@ -5,11 +5,8 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HWYFile : XXFile, ITDCFile
 {
-    public string[] FileContent { get; set; }
-
-    public HWYFile(string filePath)
+    public HWYFile(string filePath) : base(filePath)
     {
-        FileContent = File.ReadAllLines(filePath);
     }
 
     public List<TDCTag> GetTagsList()
@@ -22,7 +19,7 @@ public class HWYFile : XXFile, ITDCFile
             Origin = "HIWAY"
         };
 
-        return CreateTagsList(FileContent, tagInfo);
+        //return CreateTagsList(FileContent, tagInfo);
+        return new List<TDCTag>();
     }
 }
-
