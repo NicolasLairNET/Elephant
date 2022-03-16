@@ -25,29 +25,31 @@ public abstract class XXFile
     {
         (string names, string sizes) = GetHeaderLines() ?? default;
         var lineInfos = new List<ColumnInfo>();
+
         if (names.Length == 0 || sizes.Length == 0)
         {
             return null;
         }
+
         string[] headerNames = names.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        string[] headerSizes = sizes.Split(" ", StringSplitOptions.RemoveEmptyEntries);
         int headerPosition = 0;
         int startPosition = 0;
 
-        for (int i = 0; i < sizes.Length; i++)
+        for (int i = 0; i < headerSizes.Length; i++)
         {
-            if (sizes[i] == ' ')
+            string? size = headerSizes[i];
+            ColumnInfo columnInfo = new()
             {
-                ColumnInfo columnInfo = new()
-                {
-                    Name = headerNames[headerPosition],
-                    StartIndex = startPosition,
-                    Length = i - startPosition,
-                };
-                headerPosition++;
-                startPosition = i + 1;
-                lineInfos.Add(columnInfo);
-            }
+                Name = headerNames[headerPosition],
+                StartIndex = startPosition,
+                Length = headerSizes[i].Length
+            };
+            headerPosition++;
+            startPosition = startPosition + headerSizes[i].Length + 1;
+            lineInfos.Add(columnInfo);
         }
+
         return lineInfos;
     }
 

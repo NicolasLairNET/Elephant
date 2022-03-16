@@ -14,7 +14,7 @@ namespace Elephant.Services.TagDataFileManagerService
                 ".XX" => ReadCommand(FilePath) switch
                 {
                     null => null,
-                    var command when new Regex(CDSFile.CommandRegex).IsMatch(command) => new CDSFile(FilePath),
+                    var command when CheckCommand(command, CDSFile.CommandRegex) => new CDSFile(FilePath),
                     _ when FileName.Contains("UCN") => new UCNFile(FilePath),
                     _ when FileName.Contains("HIWAY") => new HWYFile(FilePath),
                     _ when FileName.Contains("CLAM") => new CLAMFile(FilePath),
@@ -41,6 +41,11 @@ namespace Elephant.Services.TagDataFileManagerService
             }
 
             return null;
+        }
+
+        private bool CheckCommand(string command, string regex)
+        {
+            return new Regex(regex).IsMatch(command);
         }
     }
 }

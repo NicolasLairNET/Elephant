@@ -6,7 +6,8 @@ public class CDSFile : XXFile, ITDCFile
 {
     public CDSFile(string filePath) : base (filePath) {}
 
-    public const string CommandRegex = @"\b[FN]*[AM_CP]*[ENTITY]*[ENT_REF]";
+    public const string CommandRegex = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
+ 
 
     public List<TDCTag> GetTagsList()
     {
