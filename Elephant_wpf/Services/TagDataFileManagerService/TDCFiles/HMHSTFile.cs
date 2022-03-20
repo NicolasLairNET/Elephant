@@ -1,25 +1,48 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TagDataFileManagerService.DTOs;
 
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HMHSTFile : XXFile, ITDCFile
 {
-    public HMHSTFile(string filePath) : base(filePath)
-    {
-    }
+    public const string CommandRegex = @"(?-im)\AFN\sH_UNIT\s.*\sH_GRP\s.*\sENT_REF\s.*";
+    public HMHSTFile(string filePath) : base(filePath) { }
 
-    public List<TDCTag> GetTagsList()
+    public List<TDCTag>? GetTagsList()
     {
-        var tagInfo = new TagInfo()
+        try
         {
-            NamePosition = new int[2] { 22, 60 },
-            Parameter = "ENT_REF",
-            ValuePosition = new int[2] { 16, 21 },
-            Origin = "HM HST"
-        };
+            List<TDCTag> tags = new();
 
-        //return CreateTagsList(FileContent, tagInfo);
-        return new List<TDCTag>();
+            if (ColumnInfos == null)
+            {
+                return null;
+            }
+
+            foreach (string line in FileContent)
+            {
+                if (line.Contains("NET"))
+                {
+                    var hu = ColumnInfos.First(c => c.Name == "HU");
+                    var hgrp = ColumnInfos.First(c => c.Name == "HGRP");
+
+                    var tag = new TDCTag()
+                    {
+                        Name = line.Substring(hu.StartIndex, hu.Length).Trim(),
+                        Value = line.Substring(hgrp.StartIndex, hgrp.Length).Trim(),
+                        Parameter = "HGRP",
+                        Origin = "HMHST"
+                    };
+
+                    tags.Add(tag);
+                }
+            }
+
+            return tags;
+        }
+        catch (Exception)
+        {
+            System.Windows.MessageBox.Show($"Erreur de lecture du fichier {FileName}");
+            return null;
+        }
     }
 }

@@ -4,18 +4,16 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class CDSFile : XXFile, ITDCFile
 {
+    public const string CommandRegex = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
     public CDSFile(string filePath) : base (filePath) {}
 
-    public const string CommandRegex = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
- 
-
-    public List<TDCTag> GetTagsList()
+    public List<TDCTag>? GetTagsList()
     {
         List<TDCTag> tags = new();
 
         if (ColumnInfos == null)
         {
-            return tags;
+            return null;
         }
 
         for (int i = 0; i < FileContent.Length; i++)

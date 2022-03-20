@@ -23,52 +23,60 @@ public abstract class XXFile
     /// <returns></returns>
     public List<ColumnInfo>? GetColumnsInformations()
     {
-        (string names, string sizes) = GetHeaderLines() ?? default;
+        //(string names, string sizes) = GetHeaderLines() ?? default;
         var lineInfos = new List<ColumnInfo>();
 
-        if (names.Length == 0 || sizes.Length == 0)
-        {
-            return null;
-        }
+        string[]? headerNames = GetHeaderName();
+        string[]? headerSizes = GetHeaderSizes();
 
-        string[] headerNames = names.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-        string[] headerSizes = sizes.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-        int headerPosition = 0;
-        int startPosition = 0;
-
-        for (int i = 0; i < headerSizes.Length; i++)
+        if (headerNames != null && headerSizes != null)
         {
-            string? size = headerSizes[i];
-            ColumnInfo columnInfo = new()
+            int headerPosition = 0;
+            int startPosition = 0;
+
+            foreach (string line in headerSizes)
             {
-                Name = headerNames[headerPosition],
-                StartIndex = startPosition,
-                Length = headerSizes[i].Length
-            };
-            headerPosition++;
-            startPosition = startPosition + headerSizes[i].Length + 1;
-            lineInfos.Add(columnInfo);
-        }
+                ColumnInfo columnInfo = new()
+                {
+                    Name = headerNames[headerPosition],
+                    StartIndex = startPosition,
+                    Length = line.Length
+                };
+                headerPosition++;
+                startPosition = startPosition + line.Length + 1;
+                lineInfos.Add(columnInfo);
+            }
 
-        return lineInfos;
+            return lineInfos;
+        }
+        return null;
     }
 
-    /// <summary>
-    /// Get the two header lines.
-    /// The first line is the name of the column
-    /// the second line represents the size of the columns in the form of a dash.
-    /// Exemple : ---- is a column of 4 characters.
-    /// </summary>
-    /// <returns></returns>
-    private (string, string)? GetHeaderLines()
+    private string[]? GetHeaderName()
     {
-        for (int i = 0; i < FileContent.Length; i++)
+        const string regexHeaderName = @"(?-im)\A\s{1,}MEDIA\b\s{1,}";
+        foreach (string line in FileContent)
         {
-            if (FileContent[i].Contains("MEDIA"))
+            if (Regex.IsMatch(line, regexHeaderName))
             {
-                return (FileContent[i], FileContent[i + 1]);
+                return line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             }
         }
+
+        return null;
+    }
+
+    private string[]? GetHeaderSizes()
+    {
+        const string regexHeaderSizes = @"\A-{2,}[\s-]*";
+        foreach (string line in FileContent)
+        {
+            if (Regex.IsMatch(line, regexHeaderSizes))
+            {
+                return line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            }
+        }
+
         return null;
     }
 }

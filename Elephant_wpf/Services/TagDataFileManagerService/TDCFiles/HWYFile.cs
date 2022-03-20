@@ -1,25 +1,39 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TagDataFileManagerService.DTOs;
 
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HWYFile : XXFile, ITDCFile
 {
-    public HWYFile(string filePath) : base(filePath)
-    {
-    }
+    public const string CommandRegex = @"(?-im)\AFN\s+HWY_CP\s.*\sENTITY\s.*\sENT_REF\s.*";
+    public HWYFile(string filePath) : base(filePath) { }
 
-    public List<TDCTag> GetTagsList()
+    public List<TDCTag>? GetTagsList()
     {
-        var tagInfo = new TagInfo()
+        List<TDCTag> tags = new();
+
+        if (ColumnInfos == null)
         {
-            NamePosition = new int[2] { 16, 51 },
-            Parameter = "ENT_REF",
-            ValuePosition = new int[2] { 52, 90 },
-            Origin = "HIWAY"
-        };
+            return null;
+        }
 
-        //return CreateTagsList(FileContent, tagInfo);
-        return new List<TDCTag>();
+        foreach (string line in FileContent)
+        {
+            if (line.Contains("NET"))
+            {
+                var entity = ColumnInfos.First(column => column.Name == "ENTITY");
+                var value = ColumnInfos.First(column => column.Name == "ENT_REF");
+
+                var tag = new TDCTag()
+                {
+                    Name = line.Substring(entity.StartIndex, entity.Length).Trim(),
+                    Value = line.Substring(value.StartIndex, value.Length).Trim(),
+                    Parameter = "ENT_REF",
+                    Origin = "HIWAY"
+                };
+                tags.Add(tag);
+            }
+        }
+
+        return tags;
     }
 }

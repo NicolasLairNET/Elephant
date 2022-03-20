@@ -89,13 +89,16 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
             InitializeImportMessage(filePathList.Length);
 
             var tasks = new List<Task>();
-            Progress<(string fileName, List<TDCTag> tagList)> p = new();
+            Progress<(string fileName, List<TDCTag>? tagList)> p = new();
             p.ProgressChanged += (_, args) =>
             {
-                TagsDataGrid.AddRange(args.tagList);
-                _numberFilesImported++;
-                ImportMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
-                ImportFile = args.fileName;
+                if (args.tagList != null)
+                {
+                    TagsDataGrid.AddRange(args.tagList);
+                    _numberFilesImported++;
+                    ImportMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
+                    ImportFile = args.fileName;
+                }
             };
 
             foreach (string filePath in filePathList)

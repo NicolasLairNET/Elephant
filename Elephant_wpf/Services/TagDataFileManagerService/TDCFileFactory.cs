@@ -15,21 +15,20 @@ namespace Elephant.Services.TagDataFileManagerService
                 {
                     null => null,
                     var command when CheckCommand(command, CDSFile.CommandRegex) => new CDSFile(FilePath),
-                    _ when FileName.Contains("UCN") => new UCNFile(FilePath),
-                    _ when FileName.Contains("HIWAY") => new HWYFile(FilePath),
-                    _ when FileName.Contains("CLAM") => new CLAMFile(FilePath),
-                    _ when FileName.Contains("CLHPM") => new CLHPMFile(FilePath),
-                    _ when FileName.Contains("CDS") => new CDSFile(FilePath),
-                    _ when FileName.Contains("PE") => new PEFile(FilePath),
-                    _ when FileName.Contains("HMGRP") => new HMGRPFile(FilePath),
-                    _ when FileName.Contains("HMHST") => new HMHSTFile(FilePath),
+                    var command when CheckCommand(command, UCNFile.CommandRegex) => new UCNFile(FilePath),
+                    var command when CheckCommand(command, HWYFile.CommandRegex) => new HWYFile(FilePath),
+                    var command when CheckCommand(command, CLAMFile.CommandRegex) => new CLAMFile(FilePath),
+                    var command when CheckCommand(command, CLHPMFile.CommandRegex) => new CLHPMFile(FilePath),
+                    var command when CheckCommand(command, PEFile.CommandRegex) => new PEFile(FilePath),
+                    var command when CheckCommand(command, HMHSTFile.CommandRegex) => new HMHSTFile(FilePath),
+                    var command when CheckCommand(command, HMGRPFile.CommandRegex) => new HMGRPFile(FilePath),
                     _ => null
                 },
                 _ => null
             };
         }
 
-        private static string? ReadCommand(string filePath)
+        private string? ReadCommand(string filePath)
         {
             var fileContent = File.ReadAllLines(filePath);
             foreach (string line in fileContent)

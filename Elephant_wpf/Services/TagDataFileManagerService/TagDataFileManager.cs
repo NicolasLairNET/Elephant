@@ -16,14 +16,11 @@ public class TagDataFileManager : ITagDataFileManager
         await Task.Run(() =>
         {
             var tdcFile = new TDCFileFactory(filePath).Create();
+            var TagsList = tdcFile?.GetTagsList();
 
-            if (tdcFile is null)
+            if (TagsList != null)
             {
-                p?.Report((filePath, new List<TDCTag>()));
-            }
-            else
-            {
-                p?.Report((filePath, tdcFile.GetTagsList()));
+                p?.Report((filePath, TagsList));
             }
         });
     }

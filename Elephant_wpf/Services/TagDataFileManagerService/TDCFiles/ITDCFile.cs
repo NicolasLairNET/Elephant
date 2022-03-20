@@ -4,5 +4,5 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public interface ITDCFile
 {
-    public List<TDCTag> GetTagsList();
+    public List<TDCTag>? GetTagsList();
 }

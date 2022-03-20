@@ -1,26 +1,55 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TagDataFileManagerService.DTOs;
 
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
-public class UCNFile : XXFile, ITDCFile
+public class PEFile : XXFile, ITDCFile
 {
+    public const string CommandRegex = @"(?-im)\AFN\s+PE\s.*\sENT_REF\s.*";
+    public PEFile(string filePath) : base(filePath) { }
 
-    public UCNFile(string filePath) : base(filePath)
+    public List<TDCTag>? GetTagsList()
     {
-    }
-
-    public List<TDCTag> GetTagsList()
-    {
-        var tagInfo = new TagInfo()
+        try
         {
-            NamePosition = new int[2] { 39, 71 },
-            Parameter = "ENT_REF",
-            ValuePosition = new int[2] { 72, 104 },
-            Origin = "UCN",
-        };
+            List<TDCTag> tags = new();
 
-        //return CreateTagsList(FileContent, tagInfo);
-        return new List<TDCTag>();
+            if (ColumnInfos == null)
+            {
+                return null;
+            }
+
+            foreach (string line in FileContent)
+            {
+                if (line.Contains("NET"))
+                {
+                    var pe = ColumnInfos.First(c => c.Name == "PE");
+                    var ent_ref = ColumnInfos.First(c => c.Name == "ENT_REF");
+
+                    string value = line.Substring(ent_ref.StartIndex);
+
+                    if (value.Length == ent_ref.Length)
+                    {
+                        value = value[..ent_ref.Length];
+                    }
+
+                    var tag = new TDCTag()
+                    {
+                        Name = line.Substring(pe.StartIndex, pe.Length),
+                        Value = value.Trim(),
+                        Parameter = "ENT_REF",
+                        Origin = "PE"
+                    };
+
+                    tags.Add(tag);
+                }
+            }
+
+            return tags;
+        }
+        catch (Exception)
+        {
+            System.Windows.MessageBox.Show($"Erreur de lecture du fichier {FileName}");
+            return null;
+        }
     }
 }
