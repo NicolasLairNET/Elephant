@@ -32,16 +32,16 @@ public class CLHPMFile : XXFile, ITDCFile
 
                     var tagPm = new TDCTag()
                     {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
-                        Value = lineCorrected.Substring(valuePm.StartIndex, valuePm.Length),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(valuePm.StartIndex, valuePm.Length).Trim(),
                         Parameter = "PM_SEQ",
                         Origin = "CLHPM"
                     };
 
                     var tag = new TDCTag()
                     {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
-                        Value = lineCorrected.Substring(value.StartIndex, value.Length),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
                         Parameter = "ENT_REF",
                         Origin = "CLHPM"
                     };

@@ -30,8 +30,8 @@ public class CLAMFile : XXFile, ITDCFile
 
                     var tagCl = new TDCTag()
                     {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
-                        Value = lineCorrected.Substring(valueCl.StartIndex, valueCl.Length),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(valueCl.StartIndex, valueCl.Length).Trim(),
                         Parameter = "CL",
                         Origin = "CLAM"
                     };

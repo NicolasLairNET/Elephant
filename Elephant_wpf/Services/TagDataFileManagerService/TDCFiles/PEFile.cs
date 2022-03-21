@@ -29,8 +29,8 @@ public class PEFile : XXFile, ITDCFile
 
                     var tag = new TDCTag()
                     {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
-                        Value = lineCorrected.Substring(value.StartIndex, value.Length),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
                         Parameter = "ENT_REF",
                         Origin = "PE"
                     };
