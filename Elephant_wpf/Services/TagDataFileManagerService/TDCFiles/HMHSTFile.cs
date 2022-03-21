@@ -20,15 +20,17 @@ public class HMHSTFile : XXFile, ITDCFile
 
             foreach (string line in FileContent)
             {
-                if (line.Contains("NET"))
+                if (Regex.IsMatch(line, LineRegex))
                 {
-                    var hu = ColumnInfos.First(c => c.Name == "HU");
-                    var hgrp = ColumnInfos.First(c => c.Name == "HGRP");
+                    var name = ColumnInfos.First(c => c.Name == "HU");
+                    var value = ColumnInfos.First(c => c.Name == "HGRP");
+
+                    string lineCorrected = CorrectLineSize(line);
 
                     var tag = new TDCTag()
                     {
-                        Name = line.Substring(hu.StartIndex, hu.Length).Trim(),
-                        Value = line.Substring(hgrp.StartIndex, hgrp.Length).Trim(),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
                         Parameter = "HGRP",
                         Origin = "HMHST"
                     };

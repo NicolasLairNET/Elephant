@@ -21,22 +21,17 @@ public class HMGRPFile : XXFile, ITDCFile
 
             foreach (string line in FileContent)
             {
-                if (line.Contains("NET"))
+                if (Regex.IsMatch(line, LineRegex))
                 {
-                    var entity = ColumnInfos.First(c => c.Name == "ENTITY");
-                    var ent_ref = ColumnInfos.First(c => c.Name == "ENT_REF");
+                    var name = ColumnInfos.First(c => c.Name == "ENTITY");
+                    var value = ColumnInfos.First(c => c.Name == "ENT_REF");
 
-                    var value = line[ent_ref.StartIndex..];
-
-                    if (value.Length == ent_ref.Length)
-                    {
-                        value = value[..ent_ref.Length];
-                    }
+                    string lineCorrected = CorrectLineSize(line);
 
                     var tag = new TDCTag()
                     {
-                        Name = line.Substring(entity.StartIndex, entity.Length).Trim(),
-                        Value = value.Trim(),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
                         Parameter = "ENT_REF",
                         Origin = "HMGRP"
                     };

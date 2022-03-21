@@ -18,19 +18,29 @@ public class HWYFile : XXFile, ITDCFile
 
         foreach (string line in FileContent)
         {
-            if (line.Contains("NET"))
+            try
             {
-                var entity = ColumnInfos.First(column => column.Name == "ENTITY");
-                var value = ColumnInfos.First(column => column.Name == "ENT_REF");
-
-                var tag = new TDCTag()
+                if (Regex.IsMatch(line, LineRegex))
                 {
-                    Name = line.Substring(entity.StartIndex, entity.Length).Trim(),
-                    Value = line.Substring(value.StartIndex, value.Length).Trim(),
-                    Parameter = "ENT_REF",
-                    Origin = "HIWAY"
-                };
-                tags.Add(tag);
+                    var name = ColumnInfos.First(column => column.Name == "ENTITY");
+                    var value = ColumnInfos.First(column => column.Name == "ENT_REF");
+
+                    string lineCorrected = CorrectLineSize(line);
+
+                    var tag = new TDCTag()
+                    {
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
+                        Parameter = "ENT_REF",
+                        Origin = "HIWAY"
+                    };
+                    tags.Add(tag);
+                }
+            }
+            catch (Exception)
+            {
+                System.Windows.MessageBox.Show($"Erreur de lecture du fichier {FileName}");
+                return null;
             }
         }
 

@@ -18,30 +18,40 @@ public class CLAMFile : XXFile, ITDCFile
 
         foreach (string line in FileContent)
         {
-            if (line.Contains("NET"))
+            try
             {
-                var entity = ColumnInfos.First(column => column.Name == "ENTITY");
-                var ent_ref = ColumnInfos.First(column => column.Name == "ENT_REF");
-                var cl = ColumnInfos.First(column => column.Name == "CL");
-
-                var tag1 = new TDCTag()
+                if (Regex.IsMatch(line, LineRegex))
                 {
-                    Name = line.Substring(entity.StartIndex, entity.Length),
-                    Value = line.Substring(cl.StartIndex, cl.Length),
-                    Parameter = "CL",
-                    Origin = "CLAM"
-                };
+                    var name = ColumnInfos.First(column => column.Name == "ENTITY");
+                    var value = ColumnInfos.First(column => column.Name == "ENT_REF");
+                    var valueCl = ColumnInfos.First(column => column.Name == "CL");
 
-                var tag2 = new TDCTag()
-                {
-                    Name = line.Substring(entity.StartIndex, entity.Length),
-                    Value = line.Substring(ent_ref.StartIndex, ent_ref.Length),
-                    Parameter = "ENT_REF",
-                    Origin="CLAM"
-                };
+                    string lineCorrected = CorrectLineSize(line);
 
-                tags.Add(tag1);
-                tags.Add(tag2);
+                    var tagCl = new TDCTag()
+                    {
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
+                        Value = lineCorrected.Substring(valueCl.StartIndex, valueCl.Length),
+                        Parameter = "CL",
+                        Origin = "CLAM"
+                    };
+
+                    var tag = new TDCTag()
+                    {
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length),
+                        Parameter = "ENT_REF",
+                        Origin = "CLAM"
+                    };
+
+                    tags.Add(tagCl);
+                    tags.Add(tag);
+                }
+            }
+            catch (Exception)
+            {
+                System.Windows.MessageBox.Show($"Erreur de lecture du fichier {FileName}");
+                return null;
             }
         }
 

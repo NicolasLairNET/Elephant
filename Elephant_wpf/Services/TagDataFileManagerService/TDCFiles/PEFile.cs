@@ -20,22 +20,17 @@ public class PEFile : XXFile, ITDCFile
 
             foreach (string line in FileContent)
             {
-                if (line.Contains("NET"))
+                if (Regex.IsMatch(line, LineRegex))
                 {
-                    var pe = ColumnInfos.First(c => c.Name == "PE");
-                    var ent_ref = ColumnInfos.First(c => c.Name == "ENT_REF");
+                    var name = ColumnInfos.First(c => c.Name == "PE");
+                    var value = ColumnInfos.First(c => c.Name == "ENT_REF");
 
-                    string value = line.Substring(ent_ref.StartIndex);
-
-                    if (value.Length == ent_ref.Length)
-                    {
-                        value = value[..ent_ref.Length];
-                    }
+                    string lineCorrected = CorrectLineSize(line);
 
                     var tag = new TDCTag()
                     {
-                        Name = line.Substring(pe.StartIndex, pe.Length),
-                        Value = value.Trim(),
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length),
                         Parameter = "ENT_REF",
                         Origin = "PE"
                     };

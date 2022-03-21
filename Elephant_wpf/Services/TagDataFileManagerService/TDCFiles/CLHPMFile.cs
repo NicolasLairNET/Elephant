@@ -20,30 +20,40 @@ public class CLHPMFile : XXFile, ITDCFile
 
         foreach (string line in FileContent)
         {
-            if (line.Contains("NET"))
+            try
             {
-                var pmod_ent = ColumnInfos.First(c => c.Name == "PMOD_ENT");
-                var pm_seq = ColumnInfos.First(c => c.Name == "PM_SEQ");
-                var ent_ref = ColumnInfos.First(c => c.Name == "ENT_REF");
-
-                var tag1 = new TDCTag()
+                if (Regex.IsMatch(line, LineRegex))
                 {
-                    Name = line.Substring(pmod_ent.StartIndex, pmod_ent.Length),
-                    Value = line.Substring(pm_seq.StartIndex, pm_seq.Length),
-                    Parameter = "PM_SEQ",
-                    Origin = "CLHPM"
-                };
+                    var name = ColumnInfos.First(c => c.Name == "PMOD_ENT");
+                    var valuePm = ColumnInfos.First(c => c.Name == "PM_SEQ");
+                    var value = ColumnInfos.First(c => c.Name == "ENT_REF");
 
-                var tag2 = new TDCTag()
-                {
-                    Name = line.Substring(pmod_ent.StartIndex, pmod_ent.Length),
-                    Value = line.Substring(ent_ref.StartIndex, ent_ref.Length),
-                    Parameter = "ENT_REF",
-                    Origin = "CLHPM"
-                };
+                    string lineCorrected = CorrectLineSize(line);
 
-                tags.Add(tag1);
-                tags.Add(tag2);
+                    var tagPm = new TDCTag()
+                    {
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
+                        Value = lineCorrected.Substring(valuePm.StartIndex, valuePm.Length),
+                        Parameter = "PM_SEQ",
+                        Origin = "CLHPM"
+                    };
+
+                    var tag = new TDCTag()
+                    {
+                        Name = lineCorrected.Substring(name.StartIndex, name.Length),
+                        Value = lineCorrected.Substring(value.StartIndex, value.Length),
+                        Parameter = "ENT_REF",
+                        Origin = "CLHPM"
+                    };
+
+                    tags.Add(tagPm);
+                    tags.Add(tag);
+                }
+            }
+            catch (Exception)
+            {
+                System.Windows.MessageBox.Show($"Erreur de lecture du fichier {FileName}");
+                return null;
             }
         }
 
