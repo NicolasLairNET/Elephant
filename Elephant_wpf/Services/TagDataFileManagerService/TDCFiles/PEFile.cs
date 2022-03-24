@@ -4,7 +4,8 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class PEFile : XXFile, ITDCFile
 {
-    public const string CommandRegex = @"(?-im)\AFN\s+PE\s.*\sENT_REF\s.*";
+    private const string _patternCommand = @"(?-im)\AFN\s+PE\s.*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public PEFile(string filePath) : base(filePath) { }
 
     public List<TDCTag>? GetTagsList()

@@ -14,14 +14,14 @@ namespace Elephant.Services.TagDataFileManagerService
                 ".XX" => ReadCommand(FilePath) switch
                 {
                     null => null,
-                    var command when CheckCommand(command, CDSFile.CommandRegex) => new CDSFile(FilePath),
-                    var command when CheckCommand(command, UCNFile.CommandRegex) => new UCNFile(FilePath),
-                    var command when CheckCommand(command, HWYFile.CommandRegex) => new HWYFile(FilePath),
-                    var command when CheckCommand(command, CLAMFile.CommandRegex) => new CLAMFile(FilePath),
-                    var command when CheckCommand(command, CLHPMFile.CommandRegex) => new CLHPMFile(FilePath),
-                    var command when CheckCommand(command, PEFile.CommandRegex) => new PEFile(FilePath),
-                    var command when CheckCommand(command, HMHSTFile.CommandRegex) => new HMHSTFile(FilePath),
-                    var command when CheckCommand(command, HMGRPFile.CommandRegex) => new HMGRPFile(FilePath),
+                    var command when CDSFile.RegexCommand.IsMatch(command) => new CDSFile(FilePath),
+                    var command when UCNFile.RegexCommand.IsMatch(command) => new UCNFile(FilePath),
+                    var command when HWYFile.RegexCommand.IsMatch(command) => new HWYFile(FilePath),
+                    var command when CLAMFile.RegexCommand.IsMatch(command) => new CLAMFile(FilePath),
+                    var command when CLHPMFile.RegexCommand.IsMatch(command) => new CLHPMFile(FilePath),
+                    var command when PEFile.RegexCommand.IsMatch(command) => new PEFile(FilePath),
+                    var command when HMHSTFile.RegexCommand.IsMatch(command) => new HMHSTFile(FilePath),
+                    var command when HMGRPFile.RegexCommand.IsMatch(command) => new HMGRPFile(FilePath),
                     _ => null
                 },
                 _ => null
@@ -40,11 +40,6 @@ namespace Elephant.Services.TagDataFileManagerService
             }
 
             return null;
-        }
-
-        private bool CheckCommand(string command, string regex)
-        {
-            return new Regex(regex).IsMatch(command);
         }
     }
 }

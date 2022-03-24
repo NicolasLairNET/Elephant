@@ -4,7 +4,8 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HMHSTFile : XXFile, ITDCFile
 {
-    public const string CommandRegex = @"(?-im)\AFN\sH_UNIT\s.*\sH_GRP\s.*\sENT_REF\s.*";
+    private const string _patternCommand = @"(?-im)\AFN\sH_UNIT\s.*\sH_GRP\s.*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public HMHSTFile(string filePath) : base(filePath) { }
 
     public List<TDCTag>? GetTagsList()

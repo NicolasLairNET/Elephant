@@ -1,11 +1,11 @@
 ﻿using Elephant.Model;
-using Elephant.Services.TagDataFileManagerService.DTOs;
 
 namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class HMGRPFile : XXFile, ITDCFile
 {
-    public const string CommandRegex = @"(?-im)\AFN\sAREA\s.*\sENTITY\s.*\sENT_REF\s.*";
+    private const string _patternCommand = @"(?-im)\AFN\sAREA\s.*\sENTITY\s.*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public HMGRPFile(string filePath) : base(filePath) { }
 
     public List<TDCTag>? GetTagsList()

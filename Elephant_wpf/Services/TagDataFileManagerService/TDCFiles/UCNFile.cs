@@ -4,7 +4,8 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class UCNFile : XXFile, ITDCFile
 {
-    public const string CommandRegex = @"(?-im)\AFN\sUCN_CP\s.*\sNODE_CP\s.*\sMODULE\s.*\sSLOT\s.\sENTITY\s.*\sENT_REF\s.*\sRN\s.*\sREF_MOD\s.*\sREF_SL\s.*";
+    private const string _patternCommand = @"(?-im)\AFN\sUCN_CP\s.*\sNODE_CP\s.*\sMODULE\s.*\sSLOT\s.\sENTITY\s.*\sENT_REF\s.*\sRN\s.*\sREF_MOD\s.*\sREF_SL\s.*";
+    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public UCNFile(string filePath) : base(filePath) { }
 
     public List<TDCTag>? GetTagsList()

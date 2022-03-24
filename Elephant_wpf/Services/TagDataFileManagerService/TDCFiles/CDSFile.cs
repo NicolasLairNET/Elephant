@@ -4,7 +4,8 @@ namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
 
 public class CDSFile : XXFile, ITDCFile
 {
-    public const string CommandRegex = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
+    private const string _patternCommand = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public CDSFile(string filePath) : base (filePath) {}
 
     public List<TDCTag>? GetTagsList()
