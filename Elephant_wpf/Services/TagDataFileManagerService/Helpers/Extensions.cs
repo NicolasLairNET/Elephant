@@ -5,10 +5,10 @@ public static class Extensions
     public static string RegexFormat(this string value)
     {
         value += "*".Replace("**", "*");
-        return '^' + value
+        return @"\A" + value
         .Replace(")", "")
         .Replace("(", "")
         .Replace('?', '.')
-        .Replace("*", ".*") + "$";
+        .Replace("*", ".*");
     }
 }

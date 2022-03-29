@@ -26,7 +26,7 @@ namespace Elephant.Model
         {
             return await Task.Run(() =>
             {
-                Regex regex = new(value.RegexFormat());
+                Regex regex = new(value.RegexFormat(), RegexOptions.IgnoreCase);
 
                 if (value != "")
                 {
@@ -38,7 +38,7 @@ namespace Elephant.Model
                 }
 
                 return TagList;
-            }).ConfigureAwait(false);
+            });
         }
     }
 }
