@@ -1,8 +1,8 @@
 ﻿using Elephant.Messages;
 using Elephant.Model;
-using Elephant.Services.ConfigFileManagerService;
-using Elephant.Services.ExportService;
-using Elephant.Services.TagDataFileManagerService;
+using Elephant.Services.ApplicationConfiguration;
+using Elephant.Services.Export;
+using Elephant.Services.TagDataFile;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -11,17 +11,17 @@ namespace Elephant.ViewModel;
 
 public class TdcTagViewModel : ObservableRecipient, IViewModel
 {
-    private readonly ITagDataFileManager _tagDataFileManager;
+    private readonly ITagDataFileService _tagDataFileService;
     private readonly IExportService _exportService;
-    private readonly IConfigFileManagerService _configFileManagerService;
+    private readonly IConfigFileService _configFileService;
 
-    private List<TDCTag> _tagsDataGrid;
+    private List<Tag> _tagsDataGrid;
     private int _numberFilesImported = 0;
     private int _totalFilesToImport = 0;
     private string _tagToSearch = "";
     private string _importMessage = "";
     private string _importFile = "";
-    private TagDataFile _tagDataFile;
+    private TagsFile _tagDataFile;
 
     public IAsyncRelayCommand ImportCommand { get; }
     public IAsyncRelayCommand ExportCommand { get; }
@@ -30,24 +30,24 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
     public TdcTagViewModel(
         IExportService exportService,
-        ITagDataFileManager tagDataFileManager,
-        IConfigFileManagerService configFileManager)
+        ITagDataFileService tagDataFileService,
+        IConfigFileService configFileService)
     {
         ImportCommand = new AsyncRelayCommand(Import);
         ExportCommand = new AsyncRelayCommand(Export);
         SearchCommand = new AsyncRelayCommand(Search);
         UpdateViewCommand = new RelayCommand(SendMessage);
 
-        _tagDataFileManager = tagDataFileManager;
-        _exportService = exportService;
-        _configFileManagerService = configFileManager;
+        this._tagDataFileService = tagDataFileService;
+        this._exportService = exportService;
+        this._configFileService = configFileService;
 
-        _tagDataFile = _tagDataFileManager.ReadTagDataFile(configFileManager.DataFilePath);
+        _tagDataFile = this._tagDataFileService.ReadTagsFile(configFileService.DataFilePath);
         _tagsDataGrid = _tagDataFile.TagList;
         OnActivated();
     }
 
-    public List<TDCTag> TagsDataGrid
+    public List<Tag> TagsDataGrid
     {
         get => _tagsDataGrid;
         set => SetProperty(ref _tagsDataGrid, value);
@@ -83,14 +83,14 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
     private async Task Import()
     {
-        var filePathList = _tagDataFileManager.GetTagFilesToImport();
+        var filePathList = _tagDataFileService.GetTagFilesToImport();
         if (filePathList != null)
         {
             InitializeImportMessage(filePathList.Length);
 
             var tasks = new List<Task>();
-            Progress<(string fileName, List<TDCTag>? tagList)> p = new();
-            p.ProgressChanged += (_, args) =>
+            Progress<(string fileName, List<Tag>? tagList)> importProgress = new();
+            importProgress.ProgressChanged += (_, args) =>
             {
                 if (args.tagList != null)
                 {
@@ -103,7 +103,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
             foreach (string filePath in filePathList)
             {
-                tasks.Add(_tagDataFileManager.GetTagsAsync(filePath, p));
+                tasks.Add(_tagDataFileService.GetTagsAsync(filePath, importProgress!));
             }
 
             await Task.WhenAll(tasks);
@@ -125,7 +125,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     private void UpdateTagDataFile()
     {
         _tagDataFile.TagList = TagsDataGrid;
-        _tagDataFileManager.WriteTagDataToFile(_tagDataFile, _configFileManagerService.DataFilePath);
+        _tagDataFileService.WriteTagsToFile(_tagDataFile, _configFileService.DataFilePath);
     }
 
     private void InitializeImportMessage(int numberFileToImport)
@@ -149,7 +149,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     {
         Messenger.Register<TdcTagViewModel, DataFileChangedMessage>(this, (r, m) =>
         {
-            var newTagDataFile = _tagDataFileManager.ReadTagDataFile(m.Value);
+            var newTagDataFile = _tagDataFileService.ReadTagsFile(m.Value);
             r._tagDataFile = newTagDataFile;
             r.TagsDataGrid = newTagDataFile.TagList;
         });

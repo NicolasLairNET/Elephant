@@ -1,10 +1,10 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 
 class ECFile : ITDCFile
 {
-    public List<TDCTag> GetTagsList()
+    public List<Tag> GetTagsList()
     {
         throw new NotImplementedException();
     }

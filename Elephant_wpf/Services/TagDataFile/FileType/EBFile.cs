@@ -1,6 +1,6 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 
 class EBFile : ITDCFile
 {
@@ -11,9 +11,9 @@ class EBFile : ITDCFile
         FileContent = File.ReadAllLines(filePath);
     }
 
-    public List<TDCTag> GetTagsList()
+    public List<Tag> GetTagsList()
     {
-        List<TDCTag> tagsList = new();
+        List<Tag> tagsList = new();
         string? point = null;
         string? value = null;
 
@@ -50,7 +50,7 @@ class EBFile : ITDCFile
                 value = line[3..];
                 if (point is not null && point != "" && value != "")
                 {
-                    TDCTag tag = new()
+                    Tag tag = new()
                     {
                         Name = point,
                         Parameter = "PNTTYPE",
@@ -76,12 +76,12 @@ class EBFile : ITDCFile
         return tagsList;
     }
 
-    private TDCTag? ReadParameter(string line, string point)
+    private Tag? ReadParameter(string line, string point)
     {
         if (point != "" && line.Contains('='))
         {
             string[] element = line.Split("=");
-            TDCTag tag = new()
+            Tag tag = new()
             {
                 Name = point,
                 Parameter = element[0].Trim(),

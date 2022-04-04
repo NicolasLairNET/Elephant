@@ -1,4 +1,4 @@
-﻿namespace Elephant.Services.ConfigFileManagerService;
+﻿namespace Elephant.Services.ApplicationConfiguration;
 
 public interface IConfigFile
 {

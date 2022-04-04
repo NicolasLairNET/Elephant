@@ -1,22 +1,22 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 
-public class UCNFile : XXFile, ITDCFile
+public class CdsFile : XXFile, ITDCFile
 {
-    private const string _patternCommand = @"(?-im)\AFN\sUCN_CP\s.*\sNODE_CP\s.*\sMODULE\s.*\sSLOT\s.\sENTITY\s.*\sENT_REF\s.*\sRN\s.*\sREF_MOD\s.*\sREF_SL\s.*";
-    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
-    public UCNFile(string filePath) : base(filePath) { }
+    private const string PatternCommand = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(PatternCommand, RegexOptions.Compiled);
+    public CdsFile(string filePath) : base(filePath) { }
 
-    public List<TDCTag>? GetTagsList()
+    public List<Tag>? GetTagsList()
     {
         try
         {
-            List<TDCTag> tags = new();
+            List<Tag> tags = new();
 
             if (ColumnInfos == null)
             {
-                return tags;
+                return null;
             }
 
             foreach (var line in FileContent)
@@ -28,12 +28,12 @@ public class UCNFile : XXFile, ITDCFile
 
                     string lineCorrected = CorrectLineSize(line);
 
-                    var tag = new TDCTag()
+                    var tag = new Tag()
                     {
                         Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
                         Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
                         Parameter = "ENT_REF",
-                        Origin = "UCN"
+                        Origin = "CDS"
                     };
                     tags.Add(tag);
                 }

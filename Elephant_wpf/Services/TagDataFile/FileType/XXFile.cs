@@ -1,10 +1,10 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 
 public abstract class XXFile
 {
-    public List<ColumnInfo>? ColumnInfos { get; set; }
+    public List<TagFileColumn>? ColumnInfos { get; set; }
     public string FilePath { get; set; }
     public string FileName { get; set; }
     public string[] FileContent { get; set; }
@@ -23,10 +23,10 @@ public abstract class XXFile
     /// Create a list with the informations for each columns
     /// </summary>
     /// <returns></returns>
-    public List<ColumnInfo>? GetColumnsInformations()
+    public List<TagFileColumn>? GetColumnsInformations()
     {
         //(string names, string sizes) = GetHeaderLines() ?? default;
-        var lineInfos = new List<ColumnInfo>();
+        var lineInfos = new List<TagFileColumn>();
 
         string? headerNames = GetHeaderNames();
         string? headerSizes = GetHeaderSizes();
@@ -41,7 +41,7 @@ public abstract class XXFile
 
             foreach (string size in sizes)
             {
-                ColumnInfo columnInfo = new()
+                TagFileColumn columnInfo = new()
                 {
                     Name = names[headerPosition],
                     StartIndex = startPosition,

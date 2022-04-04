@@ -6,21 +6,21 @@ namespace Elephant.ViewModel
 {
     public class MainViewModel : ObservableRecipient
     {
-        private IViewModel selectedViewModel;
-        private TdcTagViewModel tdcTagViewModel;
-        private ParameterViewModel parameterViewModel;
+        private IViewModel _selectedViewModel;
+        private TdcTagViewModel _tdcTagViewModel;
+        private ParameterViewModel _parameterViewModel;
 
         public IViewModel SelectedViewModel
         {
-            get => selectedViewModel;
-            set => SetProperty(ref selectedViewModel, value);
+            get => _selectedViewModel;
+            set => SetProperty(ref _selectedViewModel, value);
         }
 
         public MainViewModel(TdcTagViewModel tdcTagViewModel, ParameterViewModel parameterViewModel)
         {
-            selectedViewModel = tdcTagViewModel;
-            this.tdcTagViewModel = tdcTagViewModel;
-            this.parameterViewModel = parameterViewModel;
+            _selectedViewModel = tdcTagViewModel;
+            this._tdcTagViewModel = tdcTagViewModel;
+            this._parameterViewModel = parameterViewModel;
             OnActivated();
         }
 
@@ -28,14 +28,12 @@ namespace Elephant.ViewModel
         {
             Messenger.Register<MainViewModel, ViewModelChangedMessage>(this, (r, m) =>
             {
-                if (m.Value == "TdcViewModel")
+                r.SelectedViewModel = m.Value switch
                 {
-                    r.SelectedViewModel = tdcTagViewModel;
-                }
-                else if (m.Value == "ParameterViewModel")
-                {
-                    r.SelectedViewModel = parameterViewModel;
-                }
+                    "TdcViewModel" => _tdcTagViewModel,
+                    "ParameterViewModel" => _parameterViewModel,
+                    _ => r.SelectedViewModel
+                };
             });
         }
     }

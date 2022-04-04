@@ -1,15 +1,15 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 public class CLAMFile : XXFile, ITDCFile
 {
     private const string PatternCommand = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s.*\sCL.*\sENT_REF\s.*";
-    public static Regex RegexCommand =  new(PatternCommand, RegexOptions.Compiled);
-    public CLAMFile(string filePath) : base(filePath){}
+    public static Regex RegexCommand = new(PatternCommand, RegexOptions.Compiled);
+    public CLAMFile(string filePath) : base(filePath) { }
 
-    public List<TDCTag>? GetTagsList()
+    public List<Tag>? GetTagsList()
     {
-        List<TDCTag> tags = new();
+        List<Tag> tags = new();
 
         if (ColumnInfos == null)
         {
@@ -28,7 +28,7 @@ public class CLAMFile : XXFile, ITDCFile
 
                     string lineCorrected = CorrectLineSize(line);
 
-                    var tagCl = new TDCTag()
+                    var tagCl = new Tag()
                     {
                         Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
                         Value = lineCorrected.Substring(valueCl.StartIndex, valueCl.Length).Trim(),
@@ -36,7 +36,7 @@ public class CLAMFile : XXFile, ITDCFile
                         Origin = "CLAM"
                     };
 
-                    var tag = new TDCTag()
+                    var tag = new Tag()
                     {
                         Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
                         Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),

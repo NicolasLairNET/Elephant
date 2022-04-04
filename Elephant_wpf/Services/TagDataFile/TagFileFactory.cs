@@ -1,10 +1,10 @@
-﻿using Elephant.Services.TagDataFileManagerService.TDCFiles;
+﻿using Elephant.Services.TagDataFile.FileType;
 
-namespace Elephant.Services.TagDataFileManagerService
+namespace Elephant.Services.TagDataFile
 {
-    public class TDCFileFactory : Factory
+    public class TagFileFactory : Factory
     {
-        public TDCFileFactory(string filePath) : base(filePath) { }
+        public TagFileFactory(string filePath) : base(filePath) { }
 
         public override ITDCFile? Create()
         {
@@ -14,7 +14,7 @@ namespace Elephant.Services.TagDataFileManagerService
                 ".XX" => ReadCommand(FilePath) switch
                 {
                     null => null,
-                    var command when CDSFile.RegexCommand.IsMatch(command) => new CDSFile(FilePath),
+                    var command when CdsFile.RegexCommand.IsMatch(command) => new CdsFile(FilePath),
                     var command when UCNFile.RegexCommand.IsMatch(command) => new UCNFile(FilePath),
                     var command when HWYFile.RegexCommand.IsMatch(command) => new HWYFile(FilePath),
                     var command when CLAMFile.RegexCommand.IsMatch(command) => new CLAMFile(FilePath),

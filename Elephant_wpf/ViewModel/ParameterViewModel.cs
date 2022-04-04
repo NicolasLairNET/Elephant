@@ -1,81 +1,80 @@
 ﻿using Elephant.Messages;
-using Elephant.Services.ConfigFileManagerService;
+using Elephant.Services.ApplicationConfiguration;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System.Windows.Forms;
 
-namespace Elephant.ViewModel
+namespace Elephant.ViewModel;
+
+public class ParameterViewModel : ObservableRecipient, IViewModel
 {
-    public class ParameterViewModel : ObservableRecipient, IViewModel
+    public IRelayCommand UpdateViewCommand { get; }
+    public IRelayCommand SelectedDataFileCommand { get; }
+    public IRelayCommand SelectedExportFileCommand { get; }
+    public IConfigFileService ConfigService { get; }
+    private string? _dataFilePath;
+    private string? _exportFilePath;
+
+    public ParameterViewModel(IConfigFileService config)
     {
-        public IRelayCommand UpdateViewCommand { get; }
-        public IRelayCommand SelectedDataFileCommand { get; }
-        public IRelayCommand SelectedExportFileCommand { get; }
-        public IConfigFileManagerService ConfigService { get; }
-        private string? _dataFilePath;
-        private string? _exportFilePath;
+        UpdateViewCommand = new RelayCommand(SendMessage);
+        SelectedDataFileCommand = new RelayCommand(SelectDataFile);
+        SelectedExportFileCommand = new RelayCommand(SelectExportFolder);
+        ConfigService = config;
+    }
 
-        public ParameterViewModel(IConfigFileManagerService config)
-        {
-            UpdateViewCommand = new RelayCommand(SendMessage);
-            SelectedDataFileCommand = new RelayCommand(SelectDataFile);
-            SelectedExportFileCommand = new RelayCommand(SelectExportFolder);
-            ConfigService = config;
-        }
+    /// <summary>
+    /// Send to MainViewModel the view to display
+    /// </summary>
+    public void SendMessage()
+    {
+        Messenger.Send(new ViewModelChangedMessage("TdcViewModel"));
+    }
 
-        /// <summary>
-        /// Send to MainViewModel the view to display
-        /// </summary>
-        public void SendMessage()
+    public string DataFilePath
+    {
+        get => ConfigService.DataFilePath;
+        set
         {
-            Messenger.Send(new ViewModelChangedMessage("TdcViewModel"));
-        }
-
-        public string DataFilePath
-        {
-            get => ConfigService.DataFilePath;
-            set
+            if (ConfigService.UpdateDataFile(value))
             {
-                if (ConfigService.UpdateDataFile(value))
-                {
-                    // Sending TDCTagViewModel that the data file has been changed
-                    Messenger.Send(new DataFileChangedMessage(value));
-                    SetProperty(ref _dataFilePath, value);
-                }
+                // Sending TDCTagViewModel that the data file has been changed
+                Messenger.Send(new DataFileChangedMessage(value));
+                SetProperty(ref _dataFilePath, value);
             }
         }
+    }
 
-        public string ExportFilePath
+    public string ExportFilePath
+    {
+        get => ConfigService.ExportFilePath;
+        set
         {
-            get => ConfigService.ExportFilePath;
-            set
-            {
-                ConfigService.UpdateExportFilePath(value);
-                SetProperty(ref _exportFilePath, value);
-            }
+            ConfigService.UpdateExportFilePath(value);
+            SetProperty(ref _exportFilePath, value);
         }
+    }
 
-        public void SelectDataFile()
+    public void SelectDataFile()
+    {
+        OpenFileDialog FileDialog = new() {
+            DefaultExt = ".json",
+            AddExtension = true,
+            CheckFileExists = false,
+            Filter = "Fichier json (*.json)|*.json"
+        };
+        FileDialog.ShowDialog();
+        if (FileDialog.FileName != "")
         {
-            OpenFileDialog FileDialog = new() {
-                DefaultExt = ".json",
-                AddExtension = true,
-                CheckFileExists = false,
-                Filter = "Fichier json (*.json)|*.json"
-            };
-            FileDialog.ShowDialog();
-            if (FileDialog.FileName != "")
-            {
-                DataFilePath = FileDialog.FileName;
-            }
+            DataFilePath = FileDialog.FileName;
         }
+    }
 
-        public void SelectExportFolder()
-        {
-            FolderBrowserDialog FolderBrowserDialog = new FolderBrowserDialog();
-            FolderBrowserDialog.ShowDialog();
-            ExportFilePath = FolderBrowserDialog.SelectedPath;
-        }
+    public void SelectExportFolder()
+    {
+        FolderBrowserDialog FolderBrowserDialog = new FolderBrowserDialog();
+        FolderBrowserDialog.ShowDialog();
+        ExportFilePath = FolderBrowserDialog.SelectedPath;
     }
 }

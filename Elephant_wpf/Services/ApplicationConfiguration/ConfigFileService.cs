@@ -1,15 +1,15 @@
 ﻿using Elephant.Model;
 using System.Windows.Forms;
 
-namespace Elephant.Services.ConfigFileManagerService;
+namespace Elephant.Services.ApplicationConfiguration;
 
-public class ConfigFileManager : IConfigFileManagerService
+public class ConfigFileService : IConfigFileService
 {
     public string ConfigFilePath { get; set; }
     public string DataFilePath { get; set; }
     public string ExportFilePath { get; set; }
 
-    public ConfigFileManager()
+    public ConfigFileService()
     {
         ConfigFilePath = Path.Combine(Directory.GetCurrentDirectory(), "config.json");
         DataFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data.json");
@@ -22,16 +22,13 @@ public class ConfigFileManager : IConfigFileManagerService
     /// </summary>
     public void InitializeFile()
     {
-
         if (File.Exists(ConfigFilePath))
         {
             using StreamReader reader = new(ConfigFilePath);
             var configFile = JsonSerializer.Deserialize<ConfigFile>(reader.ReadToEnd());
-            if (configFile?.DataFile != null && configFile?.ExportFile != null)
-            {
-                DataFilePath = configFile.DataFile;
-                ExportFilePath = configFile.ExportFile;
-            }
+            if (configFile?.DataFile == null || configFile?.ExportFile == null) return;
+            DataFilePath = configFile.DataFile;
+            ExportFilePath = configFile.ExportFile;
         }
         else
         {
@@ -101,7 +98,7 @@ public class ConfigFileManager : IConfigFileManagerService
         {
             File.Create(path).Dispose();
             using StreamWriter writer = new(path);
-            var newDataFile = new TagDataFile();
+            var newDataFile = new TagsFile();
             JsonSerializer.Serialize(newDataFile);
             writer.WriteLine(JsonSerializer.Serialize(newDataFile));
         }

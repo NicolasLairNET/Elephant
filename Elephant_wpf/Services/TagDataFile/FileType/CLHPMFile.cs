@@ -1,6 +1,6 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 
 public class CLHPMFile : XXFile, ITDCFile
 {
@@ -8,9 +8,9 @@ public class CLHPMFile : XXFile, ITDCFile
     public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public CLHPMFile(string filePath) : base(filePath) { }
 
-    public List<TDCTag>? GetTagsList()
+    public List<Tag>? GetTagsList()
     {
-        List<TDCTag> tags = new();
+        List<Tag> tags = new();
 
         if (ColumnInfos == null)
         {
@@ -29,7 +29,7 @@ public class CLHPMFile : XXFile, ITDCFile
 
                     string lineCorrected = CorrectLineSize(line);
 
-                    var tagPm = new TDCTag()
+                    var tagPm = new Tag()
                     {
                         Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
                         Value = lineCorrected.Substring(valuePm.StartIndex, valuePm.Length).Trim(),
@@ -37,7 +37,7 @@ public class CLHPMFile : XXFile, ITDCFile
                         Origin = "CLHPM"
                     };
 
-                    var tag = new TDCTag()
+                    var tag = new Tag()
                     {
                         Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
                         Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),

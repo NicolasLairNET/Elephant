@@ -1,6 +1,6 @@
-﻿namespace Elephant.Services.ConfigFileManagerService;
+﻿namespace Elephant.Services.ApplicationConfiguration;
 
-public interface IConfigFileManagerService
+public interface IConfigFileService
 {
     public string ConfigFilePath { get; set; }
     public string DataFilePath { get; set; }

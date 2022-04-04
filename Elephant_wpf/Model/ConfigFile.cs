@@ -1,4 +1,4 @@
-﻿using Elephant.Services.ConfigFileManagerService;
+﻿using Elephant.Services.ApplicationConfiguration;
 
 namespace Elephant.Model;
 

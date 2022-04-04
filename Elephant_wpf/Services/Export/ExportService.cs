@@ -1,17 +1,17 @@
 ﻿using Elephant.Model;
-using Elephant.Services.ConfigFileManagerService;
+using Elephant.Services.ApplicationConfiguration;
 using System.Windows.Forms;
 
-namespace Elephant.Services.ExportService;
+namespace Elephant.Services.Export;
 public class ExportService : IExportService
 {
-    public IConfigFileManagerService ConfigFileManager { get; set; }
-    public ExportService(IConfigFileManagerService configFileManager)
+    public IConfigFileService ConfigFileManager { get; set; }
+    public ExportService(IConfigFileService configFileManager)
     {
         ConfigFileManager = configFileManager;
     }
 
-    public async Task Export(List<TDCTag> tagList)
+    public async Task Export(List<Tag> tagList)
     {
         var path = SelectPathExport();
         if (path is null) return;
@@ -22,7 +22,7 @@ public class ExportService : IExportService
         System.Windows.MessageBox.Show($"Export terminé dans {path}");
     }
 
-    private async Task<string> GenerateCsvString(List<TDCTag> tagList)
+    private async Task<string> GenerateCsvString(List<Tag> tagList)
     {
         return await Task.Run(() =>
         {

@@ -1,6 +1,6 @@
-﻿using Elephant.Services.TagDataFileManagerService.TDCFiles;
+﻿using Elephant.Services.TagDataFile.FileType;
 
-namespace Elephant.Services.TagDataFileManagerService;
+namespace Elephant.Services.TagDataFile;
 
 public abstract class Factory
 {

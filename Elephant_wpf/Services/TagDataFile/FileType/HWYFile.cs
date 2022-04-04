@@ -1,6 +1,6 @@
 ﻿using Elephant.Model;
 
-namespace Elephant.Services.TagDataFileManagerService.TDCFiles;
+namespace Elephant.Services.TagDataFile.FileType;
 
 public class HWYFile : XXFile, ITDCFile
 {
@@ -8,9 +8,9 @@ public class HWYFile : XXFile, ITDCFile
     public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
     public HWYFile(string filePath) : base(filePath) { }
 
-    public List<TDCTag>? GetTagsList()
+    public List<Tag>? GetTagsList()
     {
-        List<TDCTag> tags = new();
+        List<Tag> tags = new();
 
         if (ColumnInfos == null)
         {
@@ -28,7 +28,7 @@ public class HWYFile : XXFile, ITDCFile
 
                     string lineCorrected = CorrectLineSize(line);
 
-                    var tag = new TDCTag()
+                    var tag = new Tag()
                     {
                         Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
                         Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),

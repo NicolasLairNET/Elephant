@@ -1,4 +1,4 @@
-﻿namespace Elephant.Services.TagDataFileManagerService.Helpers;
+﻿namespace Elephant.Services.TagDataFile.Helpers;
 
 public static class Extensions
 {

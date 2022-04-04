@@ -1,9 +1,9 @@
 ﻿using Elephant.Model;
 using System.Windows.Forms;
 
-namespace Elephant.Services.TagDataFileManagerService;
+namespace Elephant.Services.TagDataFile;
 
-public class TagDataFileManager : ITagDataFileManager
+public class TagDataFileService : ITagDataFileService
 {
     /// <summary>
     /// Get the list of tags from a tdc file.
@@ -11,11 +11,11 @@ public class TagDataFileManager : ITagDataFileManager
     /// <param name="filePath">path to tdc file</param>
     /// <param name="p">Task progress management, allows to know when the task is finished</param>
     /// <returns>list of tags or an empty list if the file isn't a tdc file</returns>
-    public async Task GetTagsAsync(string filePath, IProgress<(string, List<TDCTag>)> p)
+    public async Task GetTagsAsync(string filePath, IProgress<(string, List<Tag>)> p)
     {
         await Task.Run(() =>
         {
-            var tdcFile = new TDCFileFactory(filePath).Create();
+            var tdcFile = new TagFileFactory(filePath).Create();
             var TagsList = tdcFile?.GetTagsList();
 
             if (TagsList != null)
@@ -30,10 +30,10 @@ public class TagDataFileManager : ITagDataFileManager
     /// </summary>
     /// <param name="newTagDataFile">New TagDataFile object to serialize.</param>
     /// <param name="dataFilePath">Path of the data file to be written.</param>
-    public void WriteTagDataToFile(TagDataFile newTagDataFile, string dataFilePath)
+    public void WriteTagsToFile(TagsFile newTagsFile, string tagsFilePath)
     {
-        using StreamWriter writer = new StreamWriter(dataFilePath);
-        var tagDataFileSerialized = JsonSerializer.Serialize<TagDataFile>(newTagDataFile);
+        using StreamWriter writer = new StreamWriter(tagsFilePath);
+        var tagDataFileSerialized = JsonSerializer.Serialize<TagsFile>(newTagsFile);
         writer.Write(tagDataFileSerialized);
     }
 
@@ -63,16 +63,16 @@ public class TagDataFileManager : ITagDataFileManager
     /// Deserialize a TagDataFile return an empty TagDataFile if the deserialize is impossible.
     /// </summary>
     /// <param name="tagDataFilePath">Path of the file to be deserialized.</param>
-    public TagDataFile ReadTagDataFile(string tagDataFilePath)
+    public TagsFile ReadTagsFile(string tagDataFilePath)
     {
         if (!File.Exists(tagDataFilePath))
         {
-            return new TagDataFile();
+            return new TagsFile();
         }
 
         using StreamReader reader = new(tagDataFilePath);
-        var datafile = JsonSerializer.Deserialize<TagDataFile>(reader.ReadToEnd());
+        var datafile = JsonSerializer.Deserialize<TagsFile>(reader.ReadToEnd());
 
-        return datafile ?? new TagDataFile();
+        return datafile ?? new TagsFile();
     }
 }
