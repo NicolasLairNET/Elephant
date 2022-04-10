@@ -80,21 +80,13 @@ public class ConfigFileService : IConfigFileService
     /// </summary>
     /// <param name="path">Path of file</param>
     /// <returns>true if the file is created otherwise false</returns>
-    private static bool CreateDataFile(string path)
+    private void CreateDataFile(string path)
     {
-        try
-        {
-            File.Create(path).Dispose();
-            using StreamWriter writer = new(path);
-            var newDataFile = new TagsFile();
-            JsonSerializer.Serialize(newDataFile);
-            writer.WriteLine(JsonSerializer.Serialize(newDataFile));
-        }
-        catch (DirectoryNotFoundException)
-        {
-            return false;
-        }
-        return true;
+        File.Create(path).Dispose();
+        using StreamWriter writer = new(path);
+        var newDataFile = new TagsFile();
+        JsonSerializer.Serialize(newDataFile);
+        writer.WriteLine(JsonSerializer.Serialize(newDataFile));
     }
 
     /// <summary>

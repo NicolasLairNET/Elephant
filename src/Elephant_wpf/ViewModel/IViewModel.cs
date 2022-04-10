@@ -1,6 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 
-namespace Elephant.ViewModel;
+namespace Elephant_wpf.ViewModel;
 
 public interface IViewModel
 {

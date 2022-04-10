@@ -2,7 +2,7 @@
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
-namespace Elephant.ViewModel
+namespace Elephant_wpf.ViewModel
 {
     public class MainViewModel : ObservableRecipient
     {

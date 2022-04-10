@@ -1,8 +1,7 @@
-﻿using Elephant.ViewModel;
-using Elephant_wpf;
+﻿using Elephant_wpf.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Elephant.Views;
+namespace Elephant_wpf.Views;
 
 /// <summary>
 /// Logique d'interaction pour ParameterView.xaml

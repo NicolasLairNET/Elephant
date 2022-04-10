@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Elephant.Views.TdcTagView"
+﻿<UserControl x:Class="Elephant_wpf.Views.TdcTagView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

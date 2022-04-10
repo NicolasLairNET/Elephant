@@ -1,9 +1,8 @@
 ﻿<Application x:Class="Elephant_wpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Elephant_wpf"
-             xmlns:viewmodels="clr-namespace:Elephant.ViewModel"
-             xmlns:views="clr-namespace:Elephant.Views"
+             xmlns:viewmodels="clr-namespace:Elephant_wpf.ViewModel"
+             xmlns:views="clr-namespace:Elephant_wpf.Views"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>

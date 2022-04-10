@@ -3,12 +3,17 @@ using Elephant.Model;
 using Elephant_Services.ApplicationConfiguration;
 using Elephant_Services.Export;
 using Elephant_Services.TagDataFile;
+using Elephant_wpf.Views;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Elephant.ViewModel;
+namespace Elephant_wpf.ViewModel;
 
 public class TdcTagViewModel : ObservableRecipient, IViewModel
 {

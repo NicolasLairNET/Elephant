@@ -10,7 +10,6 @@
 		<Nullable>Enable</Nullable>
 		<PublishSingleFile>true</PublishSingleFile>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="Ressources\icone.ico" />
@@ -21,6 +20,7 @@
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\CustomMessageBox\MessageBox_wpf.csproj" />
 	  <ProjectReference Include="..\Elephant_Services\Elephant_Services.csproj" />
 	</ItemGroup>
 	<ItemGroup>

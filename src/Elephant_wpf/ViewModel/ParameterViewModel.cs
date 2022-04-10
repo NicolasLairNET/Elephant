@@ -3,9 +3,12 @@ using Elephant_Services.ApplicationConfiguration;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System.IO;
 using System.Windows.Forms;
+using MessageBox_wpf;
+using System.Windows;
 
-namespace Elephant.ViewModel;
+namespace Elephant_wpf.ViewModel;
 
 public class ParameterViewModel : ObservableRecipient, IViewModel
 {
@@ -18,10 +21,10 @@ public class ParameterViewModel : ObservableRecipient, IViewModel
 
     public ParameterViewModel(IConfigFileService config)
     {
+        ConfigService = config;
         UpdateViewCommand = new RelayCommand(SendMessage);
         SelectedDataFileCommand = new RelayCommand(SelectDataFile);
         SelectedExportFileCommand = new RelayCommand(SelectExportFolder);
-        ConfigService = config;
     }
 
     /// <summary>
@@ -65,16 +68,28 @@ public class ParameterViewModel : ObservableRecipient, IViewModel
             Filter = "Fichier json (*.json)|*.json"
         };
         FileDialog.ShowDialog();
+
         if (FileDialog.FileName != "")
         {
+            if (!File.Exists(FileDialog.FileName))
+            {
+                var response = MessageBox_wpf.CustomMessageBox.Show(
+                    "Le fichier n'existe pas voulez-vous le créer ?",
+                    MessageBox_wpf.MessageBoxType.ConfirmationWithYesNo);
+
+                if (response != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
             DataFilePath = FileDialog.FileName;
         }
     }
 
     public void SelectExportFolder()
     {
-        FolderBrowserDialog FolderBrowserDialog = new FolderBrowserDialog();
-        FolderBrowserDialog.ShowDialog();
-        ExportFilePath = FolderBrowserDialog.SelectedPath;
+        FolderBrowserDialog fbd = new();
+        fbd.ShowDialog();
+        ExportFilePath = fbd.SelectedPath;
     }
 }
