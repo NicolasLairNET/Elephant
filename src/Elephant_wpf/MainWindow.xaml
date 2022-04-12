@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Elephant" Height="600" Width="800" ResizeMode="CanResize" MinHeight="600" MinWidth="800">
+        Title="Elephant" Height="720" Width="1080" ResizeMode="CanResize" MinHeight="600" MinWidth="800" WindowStartupLocation="CenterScreen">
 
     <Grid>
         <ContentControl Grid.Row="0" Content="{Binding SelectedViewModel}"/>

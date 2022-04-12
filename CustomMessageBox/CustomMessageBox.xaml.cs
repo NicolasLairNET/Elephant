@@ -1,62 +1,76 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace MessageBox_wpf
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class CustomMessageBox : Window
     {
-        public CustomMessageBox()
+        private CustomMessageBox()
         {
             InitializeComponent();
         }
 
-        static CustomMessageBox _messageBox;
+        static CustomMessageBox? _messageBox;
         static MessageBoxResult _result = MessageBoxResult.No;
-        static MessageBoxResult Show(string caption, string msg, MessageBoxType type)
+        static MessageBoxResult Show(string windowTitle, string message, MessageBoxType boxType)
         {
-            return type switch
+            return boxType switch
             {
-                MessageBoxType.ConfirmationWithYesNo => Show(caption, msg, MessageBoxButton.YesNo, MessageBoxImage.Question),
-                MessageBoxType.ConfirmationWithYesNoCancel => Show(caption, msg, MessageBoxButton.YesNoCancel, MessageBoxImage.Question),
-                MessageBoxType.Information => Show(caption, msg, MessageBoxButton.OK, MessageBoxImage.Information),
-                MessageBoxType.Error => Show(caption, msg, MessageBoxButton.OK, MessageBoxImage.Error),
-                MessageBoxType.Warning => Show(caption, msg, MessageBoxButton.OK, MessageBoxImage.Warning),
+                MessageBoxType.ConfirmationWithYesNo => Show(windowTitle, message, MessageBoxButton.YesNo, null),
+                MessageBoxType.ConfirmationWithYesNoCancel => Show(windowTitle, message, MessageBoxButton.YesNoCancel, null),
+                MessageBoxType.Information => Show(windowTitle, message, MessageBoxButton.OK, null),
+                MessageBoxType.Error => Show(windowTitle, message, MessageBoxButton.OK, null),
+                MessageBoxType.Warning => Show(windowTitle, message, MessageBoxButton.OK, null),
                 _ => MessageBoxResult.No,
             };
         }
 
-        public static MessageBoxResult Show(string msg, MessageBoxType type)
+        public static MessageBoxResult Show(string message)
         {
-            return Show(string.Empty, msg, type);
+            return Show(string.Empty, message, MessageBoxButton.OK, null);
         }
 
-        public static MessageBoxResult Show(string msg)
+        public static MessageBoxResult Show(string message, MessageBoxType boxType)
         {
-            return Show(string.Empty, msg, MessageBoxButton.OK, MessageBoxImage.None);
+            return Show(string.Empty, message, boxType);
+        }
+
+
+        public static MessageBoxResult Show(string message, MessageBoxButton button, List<FileImportStatus> messageBoxDetails)
+        {
+            return Show(string.Empty, message, button, messageBoxDetails);
         }
 
         public static MessageBoxResult Show(string caption, string text)
         {
-            return Show(caption, text, MessageBoxButton.OK, MessageBoxImage.None);
+            return Show(caption, text, MessageBoxButton.OK, null);
         }
 
         public static MessageBoxResult Show(string caption, string text, MessageBoxButton button)
         {
-            return Show(caption, text, button, MessageBoxImage.None);
+            return Show(caption, text, button, null);
         }
 
-        public static MessageBoxResult Show(string caption, string text, MessageBoxButton button, MessageBoxImage image)
+        public static MessageBoxResult Show(
+            string caption,
+            string text,
+            MessageBoxButton button,
+            List<FileImportStatus>? importStatus)
         {
             _messageBox = new CustomMessageBox
             {
-                txtMsg = { Text = text }
+                txtMsg = { Text = text },
+                Title = caption,
             };
+
+            if (importStatus?.Count > 0)
+            {
+                _messageBox.ImportStatus.Visibility = Visibility.Visible;
+                _messageBox.ImportStatus.ItemsSource = importStatus.OrderBy(x => x.Status).ToList();
+            }
+
             SetVisibilityOfButtons(button);
-            SetImageOfMessageBox(image);
             _messageBox.ShowDialog();
             return _result;
         }
@@ -94,30 +108,10 @@ namespace MessageBox_wpf
             }
         }
 
-        private static void SetImageOfMessageBox(MessageBoxImage image)
-        {
-            switch (image)
-            {
-                case MessageBoxImage.Warning:
-                    _messageBox.SetImage("Warning.png");
-                    break;
-                case MessageBoxImage.Question:
-                    _messageBox.SetImage("Question.png");
-                    break;
-                case MessageBoxImage.Information:
-                    _messageBox.SetImage("Information.png");
-                    break;
-                case MessageBoxImage.Error:
-                    _messageBox.SetImage("Error.png");
-                    break;
-                default:
-                    //_messageBox.img.Visibility = Visibility.Collapsed;
-                    break;
-            }
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (_messageBox is null) return;
+
             if (sender == btnOk)
             {
                 _result = MessageBoxResult.OK;
@@ -142,11 +136,9 @@ namespace MessageBox_wpf
             _messageBox = null;
         }
 
-        private void SetImage(string imageName)
+        private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            string uri = string.Format("/Resources/images/{0}", imageName);
-            var uriSource = new Uri(uri, UriKind.RelativeOrAbsolute);
-            //img.Source = new BitmapImage(uriSource);
+            DragMove();
         }
     }
 
@@ -158,14 +150,4 @@ namespace MessageBox_wpf
         Error,
         Warning
     }
-
-    public enum MessageBoxImage
-    {
-        Warning = 0,
-        Question,
-        Information,
-        Error,
-        None
-    }
-
 }

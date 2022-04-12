@@ -3,7 +3,7 @@ using Elephant.Model;
 using Elephant_Services.ApplicationConfiguration;
 using Elephant_Services.Export;
 using Elephant_Services.TagDataFile;
-using Elephant_wpf.Views;
+using MessageBox_wpf;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace Elephant_wpf.ViewModel;
@@ -49,7 +50,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         this._configFileService = configFileService;
 
         _tagDataFile = this._tagDataFileService.ReadTagsFile(configFileService.DataFilePath);
-        _tagsDataGrid = _tagDataFile.TagList;
+        _tagsDataGrid = _tagDataFile.Tags;
         OnActivated();
     }
 
@@ -87,24 +88,39 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         }
     }
 
-    private async Task Import()
+    public async Task Import()
     {
         var filePathList = GetTagFilesToImport();
-        if (filePathList != null)
+        List<FileImportStatus> messageBoxDetail = new();
+        if (filePathList.Length > 0)
         {
             InitializeImportMessage(filePathList.Length);
 
             var tasks = new List<Task>();
             Progress<(string fileName, List<Tag>? tagList)> importProgress = new();
+
             importProgress.ProgressChanged += (_, args) =>
             {
+                var importDetail = new FileImportStatus();
+
                 if (args.tagList != null)
                 {
                     TagsDataGrid.AddRange(args.tagList);
                     _numberFilesImported++;
                     ImportMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
                     ImportFile = args.fileName;
+
+                    importDetail.Name = args.fileName;
+                    importDetail.Status = MessageBox_wpf.StatusMessage.Success;
                 }
+                else
+                {
+                    _totalFilesToImport--;
+                    importDetail.Name = args.fileName;
+                    importDetail.Status = MessageBox_wpf.StatusMessage.Error;
+                }
+
+                messageBoxDetail.Add(importDetail);
             };
 
             foreach (string filePath in filePathList)
@@ -116,14 +132,15 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
             TagsDataGrid = TagsDataGrid.Distinct().ToList();
             UpdateTagDataFile();
+            DisplayImportSummary(messageBoxDetail, _totalFilesToImport);
         }
     }
-    private async Task Search()
+    public async Task Search()
     {
         TagsDataGrid = await _tagDataFile.Search(TagToSearch).ConfigureAwait(false);
     }
 
-    private async Task Export()
+    public async Task Export()
     {
         string? pathDestination = SelectPathExport();
         if (!string.IsNullOrEmpty(pathDestination))
@@ -132,9 +149,19 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         }
     }
 
+    private void DisplayImportSummary(List<FileImportStatus> importStatus, int filesImported)
+    {
+        MessageBox_wpf.CustomMessageBox.Show(
+        "Résumé de l'import",
+        $"{filesImported} fichiers ont été importés",
+        MessageBoxButton.OK,
+        importStatus
+        );
+    }
+
     private void UpdateTagDataFile()
     {
-        _tagDataFile.TagList = TagsDataGrid;
+        _tagDataFile.Tags = TagsDataGrid;
         _tagDataFileService.WriteTagsToFile(_tagDataFile, _configFileService.DataFilePath);
     }
 
@@ -146,30 +173,11 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         ImportMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
     }
 
-    public void SendMessage()
-    {
-        Messenger.Send(new ViewModelChangedMessage("ParameterViewModel"));
-    }
-
-    /// <summary>
-    /// Activates the listening of the message which notifies the change of the data file.
-    /// When the file is changed the list of tags is updated.
-    /// </summary>
-    protected override void OnActivated()
-    {
-        Messenger.Register<TdcTagViewModel, DataFileChangedMessage>(this, (r, m) =>
-        {
-            var newTagDataFile = _tagDataFileService.ReadTagsFile(m.Value);
-            r._tagDataFile = newTagDataFile;
-            r.TagsDataGrid = newTagDataFile.TagList;
-        });
-    }
     private string[] GetTagFilesToImport()
     {
         var pathList = Array.Empty<string>();
         OpenFileDialog openFileDialog = new()
         {
-            InitialDirectory = "c:\\",
             RestoreDirectory = true,
             Multiselect = true
         };
@@ -193,5 +201,24 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         saveFileDialog.InitialDirectory = defaultPath;
 
         return saveFileDialog.ShowDialog() == DialogResult.OK ? saveFileDialog.FileName : null;
+    }
+
+    /// <summary>
+    /// Activates the listening of the message which notifies the change of the data file.
+    /// When the file is changed the list of tags is updated.
+    /// </summary>
+    protected override void OnActivated()
+    {
+        Messenger.Register<TdcTagViewModel, DataFileChangedMessage>(this, (r, m) =>
+        {
+            var newTagDataFile = _tagDataFileService.ReadTagsFile(m.Value);
+            r._tagDataFile = newTagDataFile;
+            r.TagsDataGrid = newTagDataFile.Tags;
+        });
+    }
+
+    public void SendMessage()
+    {
+        Messenger.Send(new ViewModelChangedMessage("ParameterViewModel"));
     }
 }

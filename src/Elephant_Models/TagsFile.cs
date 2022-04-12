@@ -7,13 +7,13 @@ public class TagsFile
 {
     public string Name { get; set; }
     public DateTime CreateAt { get; set; }
-    public List<Tag> TagList { get; set; }
+    public List<Tag> Tags { get; set; }
 
     public TagsFile()
     {
         Name = Environment.UserName;
         CreateAt = DateTime.Now;
-        TagList = new List<Tag>();
+        Tags = new List<Tag>();
     }
 
     /// <summary>
@@ -29,14 +29,14 @@ public class TagsFile
 
             if (value != "")
             {
-                return (from tdcTag in TagList.AsParallel()
+                return (from tdcTag in Tags.AsParallel()
                         let matchName = regex.Matches(tdcTag.Name)
                         let matchValue = regex.Matches(tdcTag.Value)
                         where matchName.Count > 0 || matchValue.Count > 0
                         select tdcTag).ToList();
             }
 
-            return TagList;
+            return Tags;
         });
     }
 }

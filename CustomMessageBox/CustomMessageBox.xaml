@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CustomMessageBox"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="160" Height="200"
+        Title="{Binding Path=windowTitle}" MinHeight="160" Height="200"
         MinWidth="420" MaxHeight="500" MaxWidth="750" 
-        SizeToContent="WidthAndHeight" >
+        SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowStyle="None" MouseDown="Window_MouseDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -22,14 +21,31 @@
 
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <TextBlock
-                Margin="10 5 10 5"
+                Margin="20"
                 TextWrapping="Wrap"
-                FontSize="14" 
-                HorizontalAlignment="Center"
+                FontSize="16"
+                FontWeight="SemiBold"
+                HorizontalAlignment="Left"
                 Name="txtMsg"></TextBlock>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="8">
+        <DataGrid Name="ImportStatus" Grid.Row="1" Grid.ColumnSpan="3" Margin="20 0 20 0" IsReadOnly="True" AutoGenerateColumns="False" Visibility="Collapsed">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Error">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Fichier" Width="*" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Status" Width="*" Binding="{Binding Status}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="8 8 18 8">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Name="btnOk" Click="Button_Click" MinWidth="70" Margin="2" Height="30" >D'accord</Button>
                 <Button Name="btnYes" Click="Button_Click" MinWidth="70" Margin="2" Height="30" >Oui</Button>
