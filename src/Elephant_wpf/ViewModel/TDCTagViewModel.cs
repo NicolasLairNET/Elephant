@@ -18,17 +18,17 @@ namespace Elephant_wpf.ViewModel;
 
 public class TdcTagViewModel : ObservableRecipient, IViewModel
 {
-    private readonly ITagDataFileService _tagDataFileService;
-    private readonly IExportService _exportService;
-    private readonly IConfigFileService _configFileService;
+    private readonly ITagDataFileService tagDataFileService;
+    private readonly IExportService exportService;
+    private readonly IConfigFileService configFileService;
 
-    private List<Tag> _tagsDataGrid;
-    private int _numberFilesImported = 0;
-    private int _totalFilesToImport = 0;
-    private string _tagToSearch = "";
-    private string _importMessage = "";
-    private string _importFile = "";
-    private TagsFile _tagDataFile;
+    private List<Tag> tagsDataGrid;
+    private int numberFilesImported = 0;
+    private int totalFilesToImport = 0;
+    private string tagToSearch = "";
+    private string importMessage = "";
+    private string importFile = "";
+    private TagsFile tagDataFile;
 
     public IAsyncRelayCommand ImportCommand { get; }
     public IAsyncRelayCommand ExportCommand { get; }
@@ -45,46 +45,46 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         SearchCommand = new AsyncRelayCommand(Search);
         UpdateViewCommand = new RelayCommand(SendMessage);
 
-        this._tagDataFileService = tagDataFileService;
-        this._exportService = exportService;
-        this._configFileService = configFileService;
+        this.tagDataFileService = tagDataFileService;
+        this.exportService = exportService;
+        this.configFileService = configFileService;
 
-        _tagDataFile = this._tagDataFileService.ReadTagsFile(configFileService.DataFilePath);
-        _tagsDataGrid = _tagDataFile.Tags;
+        tagDataFile = this.tagDataFileService.ReadTagsFile(configFileService.DataFilePath);
+        tagsDataGrid = tagDataFile.Tags;
         OnActivated();
     }
 
     public List<Tag> TagsDataGrid
     {
-        get => _tagsDataGrid;
-        set => SetProperty(ref _tagsDataGrid, value);
+        get => tagsDataGrid;
+        set => SetProperty(ref tagsDataGrid, value);
     }
 
     public string TagToSearch
     {
-        get => _tagToSearch;
+        get => tagToSearch;
         set
         {
-            _tagToSearch = value;
+            tagToSearch = value;
             SearchCommand.Execute(null);
         }
     }
 
     public string ImportMessage
     {
-        get => _importMessage;
+        get => importMessage;
         set
         {
-            SetProperty<string>(ref _importMessage, value);
+            SetProperty<string>(ref importMessage, value);
         }
     }
 
     public string ImportFile
     {
-        get => _importFile;
+        get => importFile;
         set
         {
-            SetProperty(ref _importFile, value);
+            SetProperty(ref importFile, value);
         }
     }
 
@@ -94,6 +94,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         List<FileImportStatus> messageBoxDetail = new();
         if (filePathList.Length > 0)
         {
+            ClearDataChoice();
             InitializeImportMessage(filePathList.Length);
 
             var tasks = new List<Task>();
@@ -106,18 +107,18 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
                 if (args.tagList != null)
                 {
                     TagsDataGrid.AddRange(args.tagList);
-                    _numberFilesImported++;
-                    ImportMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
+                    numberFilesImported++;
+                    ImportMessage = $"Import en cours {numberFilesImported} / {totalFilesToImport} fichiers";
                     ImportFile = args.fileName;
 
                     importDetail.Name = args.fileName;
-                    importDetail.Status = MessageBox_wpf.StatusMessage.Success;
+                    importDetail.Status = StatusMessage.Success;
                 }
                 else
                 {
-                    _totalFilesToImport--;
+                    totalFilesToImport--;
                     importDetail.Name = args.fileName;
-                    importDetail.Status = MessageBox_wpf.StatusMessage.Error;
+                    importDetail.Status = StatusMessage.Error;
                 }
 
                 messageBoxDetail.Add(importDetail);
@@ -125,19 +126,19 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
 
             foreach (string filePath in filePathList)
             {
-                tasks.Add(_tagDataFileService.GetTagsAsync(filePath, importProgress!));
+                tasks.Add(tagDataFileService.GetTagsAsync(filePath, importProgress!));
             }
 
             await Task.WhenAll(tasks);
 
             TagsDataGrid = TagsDataGrid.Distinct().ToList();
             UpdateTagDataFile();
-            DisplayImportSummary(messageBoxDetail, _totalFilesToImport);
+            DisplayImportSummary(messageBoxDetail, totalFilesToImport);
         }
     }
     public async Task Search()
     {
-        TagsDataGrid = await _tagDataFile.Search(TagToSearch).ConfigureAwait(false);
+        TagsDataGrid = await tagDataFile.Search(TagToSearch).ConfigureAwait(false);
     }
 
     public async Task Export()
@@ -145,7 +146,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         string? pathDestination = SelectPathExport();
         if (!string.IsNullOrEmpty(pathDestination))
         {
-            await _exportService.Export(TagsDataGrid.ToList(), pathDestination).ConfigureAwait(false);
+            await exportService.Export(TagsDataGrid.ToList(), pathDestination).ConfigureAwait(false);
         }
     }
 
@@ -159,18 +160,37 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         );
     }
 
+    /// <summary>
+    /// Open a messageBox for ask to user if he wants delete data with a new import.
+    /// If the user respond yes Datagrid is cleared.
+    /// </summary>
+    private void ClearDataChoice()
+    {
+        if (TagsDataGrid.Count > 0)
+        {
+            var userChoice = MessageBox_wpf.CustomMessageBox.Show(
+                "Mise à jour des données",
+                "Nouvel import, voulez-vous supprimer les données existantes ?",
+                MessageBoxButton.YesNo);
+
+            if (userChoice == MessageBoxResult.Yes)
+            {
+                TagsDataGrid.Clear();
+            }
+        }
+    }
+
     private void UpdateTagDataFile()
     {
-        _tagDataFile.Tags = TagsDataGrid;
-        _tagDataFileService.WriteTagsToFile(_tagDataFile, _configFileService.DataFilePath);
+        tagDataFile.Tags = TagsDataGrid;
+        tagDataFileService.WriteTagsToFile(tagDataFile, configFileService.DataFilePath);
     }
 
     private void InitializeImportMessage(int numberFileToImport)
     {
-        TagsDataGrid.Clear();
-        _numberFilesImported = 0;
-        _totalFilesToImport = numberFileToImport;
-        ImportMessage = $"Import en cours {_numberFilesImported} / {_totalFilesToImport} fichiers";
+        numberFilesImported = 0;
+        totalFilesToImport = numberFileToImport;
+        ImportMessage = $"Import en cours {numberFilesImported} / {totalFilesToImport} fichiers";
     }
 
     private string[] GetTagFilesToImport()
@@ -193,7 +213,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     private string? SelectPathExport()
     {
         var defaultFileName = $"export{DateTime.Now:ddMMyyyyHmmss}.csv";
-        var defaultPath = _configFileService.ExportFilePath;
+        var defaultPath = configFileService.ExportFilePath;
 
         SaveFileDialog saveFileDialog = new();
         saveFileDialog.FileName = defaultFileName;
@@ -211,8 +231,8 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
     {
         Messenger.Register<TdcTagViewModel, DataFileChangedMessage>(this, (r, m) =>
         {
-            var newTagDataFile = _tagDataFileService.ReadTagsFile(m.Value);
-            r._tagDataFile = newTagDataFile;
+            var newTagDataFile = tagDataFileService.ReadTagsFile(m.Value);
+            r.tagDataFile = newTagDataFile;
             r.TagsDataGrid = newTagDataFile.Tags;
         });
     }

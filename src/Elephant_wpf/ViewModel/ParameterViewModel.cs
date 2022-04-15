@@ -16,8 +16,8 @@ public class ParameterViewModel : ObservableRecipient, IViewModel
     public IRelayCommand SelectedDataFileCommand { get; }
     public IRelayCommand SelectedExportFileCommand { get; }
     public IConfigFileService ConfigService { get; }
-    private string? _dataFilePath;
-    private string? _exportFilePath;
+    private string? dataFilePath;
+    private string? exportFilePath;
 
     public ParameterViewModel(IConfigFileService config)
     {
@@ -44,7 +44,7 @@ public class ParameterViewModel : ObservableRecipient, IViewModel
             {
                 // Sending TDCTagViewModel that the data file has been changed
                 Messenger.Send(new DataFileChangedMessage(value));
-                SetProperty(ref _dataFilePath, value);
+                SetProperty(ref dataFilePath, value);
             }
         }
     }
@@ -55,7 +55,7 @@ public class ParameterViewModel : ObservableRecipient, IViewModel
         set
         {
             ConfigService.UpdateExportFilePath(value);
-            SetProperty(ref _exportFilePath, value);
+            SetProperty(ref exportFilePath, value);
         }
     }
 
@@ -75,7 +75,7 @@ public class ParameterViewModel : ObservableRecipient, IViewModel
             {
                 var response = MessageBox_wpf.CustomMessageBox.Show(
                     "Le fichier n'existe pas voulez-vous le créer ?",
-                    MessageBox_wpf.MessageBoxType.ConfirmationWithYesNo);
+                    MessageBoxType.ConfirmationWithYesNo);
 
                 if (response != MessageBoxResult.Yes)
                 {

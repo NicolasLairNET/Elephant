@@ -11,8 +11,8 @@ namespace MessageBox_wpf
             InitializeComponent();
         }
 
-        static CustomMessageBox? _messageBox;
-        static MessageBoxResult _result = MessageBoxResult.No;
+        static CustomMessageBox? messageBox;
+        static MessageBoxResult result = MessageBoxResult.No;
         static MessageBoxResult Show(string windowTitle, string message, MessageBoxType boxType)
         {
             return boxType switch
@@ -58,7 +58,7 @@ namespace MessageBox_wpf
             MessageBoxButton button,
             List<FileImportStatus>? importStatus)
         {
-            _messageBox = new CustomMessageBox
+            messageBox = new CustomMessageBox
             {
                 txtMsg = { Text = text },
                 Title = caption,
@@ -66,42 +66,42 @@ namespace MessageBox_wpf
 
             if (importStatus?.Count > 0)
             {
-                _messageBox.ImportStatus.Visibility = Visibility.Visible;
-                _messageBox.ImportStatus.ItemsSource = importStatus.OrderBy(x => x.Status).ToList();
+                messageBox.ImportStatus.Visibility = Visibility.Visible;
+                messageBox.ImportStatus.ItemsSource = importStatus.OrderBy(x => x.Status).ToList();
             }
 
             SetVisibilityOfButtons(button);
-            _messageBox.ShowDialog();
-            return _result;
+            messageBox.ShowDialog();
+            return result;
         }
 
         private static void SetVisibilityOfButtons(MessageBoxButton button)
         {
-            if (_messageBox == null)
+            if (messageBox == null)
             {
                 return;
             }
             switch (button)
             {
                 case MessageBoxButton.OK:
-                    _messageBox.btnCancel.Visibility = Visibility.Collapsed;
-                    _messageBox.btnNo.Visibility = Visibility.Collapsed;
-                    _messageBox.btnYes.Visibility = Visibility.Collapsed;
-                    _messageBox.btnOk.Focus();
+                    messageBox.btnCancel.Visibility = Visibility.Collapsed;
+                    messageBox.btnNo.Visibility = Visibility.Collapsed;
+                    messageBox.btnYes.Visibility = Visibility.Collapsed;
+                    messageBox.btnOk.Focus();
                     break;
                 case MessageBoxButton.OKCancel:
-                    _messageBox.btnNo.Visibility = Visibility.Collapsed;
-                    _messageBox.btnYes.Visibility = Visibility.Collapsed;
-                    _messageBox.btnCancel.Focus();
+                    messageBox.btnNo.Visibility = Visibility.Collapsed;
+                    messageBox.btnYes.Visibility = Visibility.Collapsed;
+                    messageBox.btnCancel.Focus();
                     break;
                 case MessageBoxButton.YesNo:
-                    _messageBox.btnOk.Visibility = Visibility.Collapsed;
-                    _messageBox.btnCancel.Visibility = Visibility.Collapsed;
-                    _messageBox.btnNo.Focus();
+                    messageBox.btnOk.Visibility = Visibility.Collapsed;
+                    messageBox.btnCancel.Visibility = Visibility.Collapsed;
+                    messageBox.btnNo.Focus();
                     break;
                 case MessageBoxButton.YesNoCancel:
-                    _messageBox.btnOk.Visibility = Visibility.Collapsed;
-                    _messageBox.btnCancel.Focus();
+                    messageBox.btnOk.Visibility = Visibility.Collapsed;
+                    messageBox.btnCancel.Focus();
                     break;
                 default:
                     break;
@@ -110,30 +110,30 @@ namespace MessageBox_wpf
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (_messageBox is null) return;
+            if (messageBox is null) return;
 
             if (sender == btnOk)
             {
-                _result = MessageBoxResult.OK;
+                result = MessageBoxResult.OK;
             }
             else if (sender == btnYes)
             {
-                _result = MessageBoxResult.Yes;
+                result = MessageBoxResult.Yes;
             }
             else if (sender == btnNo)
             {
-                _result = MessageBoxResult.No;
+                result = MessageBoxResult.No;
             }
             else if (sender == btnCancel)
             {
-                _result = MessageBoxResult.Cancel;
+                result = MessageBoxResult.Cancel;
             }
             else
             {
-                _result = MessageBoxResult.None;
+                result = MessageBoxResult.None;
             }
-            _messageBox.Close();
-            _messageBox = null;
+            messageBox.Close();
+            messageBox = null;
         }
 
         private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

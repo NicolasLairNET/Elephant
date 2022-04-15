@@ -20,7 +20,7 @@
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\CustomMessageBox\MessageBox_wpf.csproj" />
+	  <ProjectReference Include="..\CustomMessageBox\MessageBox_wpf.csproj" />
 	  <ProjectReference Include="..\Elephant_Services\Elephant_Services.csproj" />
 	</ItemGroup>
 	<ItemGroup>

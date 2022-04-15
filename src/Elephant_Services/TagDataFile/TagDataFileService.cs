@@ -18,7 +18,6 @@ public class TagDataFileService : ITagDataFileService
             var tdcFile = new TagFileFactory(filePath).Create();
             var TagsList = tdcFile?.GetTagsList();
 
-
             p?.Report((filePath, TagsList));
         });
     }
