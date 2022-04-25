@@ -6,31 +6,21 @@ namespace Elephant_Services.TagDataFile.FileType;
 public abstract class XXFile
 {
     public List<TagFileColumn>? ColumnInfos { get; set; }
-    public string FilePath { get; set; }
-    public string FileName { get; set; }
-    public string[] FileContent { get; set; }
+
     public int LineSize { get; set; } = 0;
     public const string LineRegex = @"(?-im)\ANET>.*";
-
-    public XXFile(string filePath)
-    {
-        FilePath = filePath;
-        FileName = Path.GetFileName(filePath);
-        FileContent = File.ReadAllLines(filePath);
-        ColumnInfos = GetColumnsInformations();
-    }
 
     /// <summary>
     /// Create a list with the informations for each columns
     /// </summary>
     /// <returns></returns>
-    public List<TagFileColumn>? GetColumnsInformations()
+    public List<TagFileColumn>? GetColumnsInformations(string[] fileContent)
     {
         //(string names, string sizes) = GetHeaderLines() ?? default;
         var lineInfos = new List<TagFileColumn>();
 
-        string? headerNames = GetHeaderNames();
-        string? headerSizes = GetHeaderSizes();
+        string? headerNames = GetHeaderNames(fileContent);
+        string? headerSizes = GetHeaderSizes(fileContent);
 
         if (headerNames != null && headerSizes != null)
         {
@@ -73,10 +63,13 @@ public abstract class XXFile
         return line;
     }
 
-    private string? GetHeaderNames()
+    private string? GetHeaderNames(string[] fileContent)
     {
+        if (fileContent == null)
+            return null;
+
         const string regexHeaderName = @"(?-im)\A\s{1,}MEDIA\b\s{1,}";
-        foreach (string line in FileContent)
+        foreach (string line in fileContent)
         {
             if (Regex.IsMatch(line, regexHeaderName))
             {
@@ -87,10 +80,10 @@ public abstract class XXFile
         return null;
     }
 
-    private string? GetHeaderSizes()
+    private string? GetHeaderSizes(string[] fileContent)
     {
         const string regexHeaderSizes = @"\A-{2,}[\s-]*";
-        foreach (string line in FileContent)
+        foreach (string line in fileContent)
         {
             if (Regex.IsMatch(line, regexHeaderSizes))
             {

@@ -1,4 +1,5 @@
 ﻿using Elephant.Model;
+using Elephant_Services.TagDataFile.FileType;
 using System.Text.Json;
 
 namespace Elephant_Services.TagDataFile;
@@ -11,14 +12,15 @@ public class TagDataFileService : ITagDataFileService
     /// <param name="filePath">path to tdc file</param>
     /// <param name="p">Task progress management, allows to know when the task is finished</param>
     /// <returns>list of tags or an empty list if the file isn't a tdc file</returns>
-    public async Task GetTagsAsync(string filePath, IProgress<(string, List<Tag>?)> p)
+    public async Task GetTagsAsync(string filePath, IProgress<ITDCFile> p)
     {
         await Task.Run(() =>
         {
-            var tdcFile = new TagFileFactory(filePath).Create();
-            var TagsList = tdcFile?.GetTagsList();
-
-            p?.Report((filePath, TagsList));
+            var tdcFile = new TagFileFactory().Create(filePath);
+            if (tdcFile != null)
+            {
+                p?.Report(tdcFile);
+            }
         });
     }
 

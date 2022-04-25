@@ -4,57 +4,56 @@ using System.Text.RegularExpressions;
 namespace Elephant_Services.TagDataFile.FileType;
 public class CLAMFile : XXFile, ITDCFile
 {
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public string[] FileContent { get; set; }
+    public List<Tag> Tags { get; set; } = new List<Tag>();
+
     private const string PatternCommand = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s.*\sCL.*\sENT_REF\s.*";
     public static Regex RegexCommand = new(PatternCommand, RegexOptions.Compiled);
-    public CLAMFile(string filePath) : base(filePath) { }
-
-    public List<Tag>? GetTagsList()
+    public CLAMFile(string filePath)
     {
-        List<Tag> tags = new();
+        FileName = Path.GetFileName(filePath);
+        FilePath = filePath;
+        FileContent = File.ReadAllLines(filePath);
+        ColumnInfos = GetColumnsInformations(FileContent);
+        GetTagsList();
+    }
 
+    public void GetTagsList()
+    {
         if (ColumnInfos == null)
-        {
-            return null;
-        }
+            return;
 
         foreach (string line in FileContent)
         {
-            try
+            if (Regex.IsMatch(line, LineRegex))
             {
-                if (Regex.IsMatch(line, LineRegex))
+                var name = ColumnInfos.First(column => column.Name == "ENTITY");
+                var value = ColumnInfos.First(column => column.Name == "ENT_REF");
+                var valueCl = ColumnInfos.First(column => column.Name == "CL");
+
+                string lineCorrected = CorrectLineSize(line);
+
+                var tagCl = new Tag()
                 {
-                    var name = ColumnInfos.First(column => column.Name == "ENTITY");
-                    var value = ColumnInfos.First(column => column.Name == "ENT_REF");
-                    var valueCl = ColumnInfos.First(column => column.Name == "CL");
+                    Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                    Value = lineCorrected.Substring(valueCl.StartIndex, valueCl.Length).Trim(),
+                    Parameter = "CL",
+                    Origin = "CLAM"
+                };
 
-                    string lineCorrected = CorrectLineSize(line);
+                var tag = new Tag()
+                {
+                    Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                    Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
+                    Parameter = "ENT_REF",
+                    Origin = "CLAM"
+                };
 
-                    var tagCl = new Tag()
-                    {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
-                        Value = lineCorrected.Substring(valueCl.StartIndex, valueCl.Length).Trim(),
-                        Parameter = "CL",
-                        Origin = "CLAM"
-                    };
-
-                    var tag = new Tag()
-                    {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
-                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
-                        Parameter = "ENT_REF",
-                        Origin = "CLAM"
-                    };
-
-                    tags.Add(tagCl);
-                    tags.Add(tag);
-                }
-            }
-            catch (Exception)
-            {
-                return null;
+                Tags.Add(tagCl);
+                Tags.Add(tag);
             }
         }
-
-        return tags;
     }
 }

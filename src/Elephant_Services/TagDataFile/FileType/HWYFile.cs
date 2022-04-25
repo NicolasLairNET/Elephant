@@ -5,18 +5,27 @@ namespace Elephant_Services.TagDataFile.FileType;
 
 public class HWYFile : XXFile, ITDCFile
 {
-    private const string _patternCommand = @"(?-im)\AFN\s+HWY_CP\s.*\sENTITY\s.*\sENT_REF\s.*";
-    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
-    public HWYFile(string filePath) : base(filePath) { }
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public string[] FileContent { get; set; }
+    public List<Tag> Tags { get; set; } = new List<Tag>();
+    private const string patternCommand = @"(?-im)\AFN\s+HWY_CP\s.*\sENTITY\s.*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(patternCommand, RegexOptions.Compiled);
+    public HWYFile(string filePath)
+    {
+        FileName = Path.GetFileName(filePath);
+        FilePath = filePath;
+        FileContent = File.ReadAllLines(filePath);
+        ColumnInfos = GetColumnsInformations(FileContent);
+        GetTagsList();
+    }
 
-    public List<Tag>? GetTagsList()
+    public void GetTagsList()
     {
         List<Tag> tags = new();
 
         if (ColumnInfos == null)
-        {
-            return null;
-        }
+            return;
 
         foreach (string line in FileContent)
         {
@@ -36,15 +45,13 @@ public class HWYFile : XXFile, ITDCFile
                         Parameter = "ENT_REF",
                         Origin = "HIWAY"
                     };
-                    tags.Add(tag);
+                    Tags.Add(tag);
                 }
             }
             catch (Exception)
             {
-                return null;
+                return;
             }
         }
-
-        return tags;
     }
 }

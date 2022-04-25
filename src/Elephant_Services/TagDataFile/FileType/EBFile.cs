@@ -4,16 +4,21 @@ namespace Elephant_Services.TagDataFile.FileType;
 
 class EBFile : ITDCFile
 {
-    public string[] FileContent { get; }
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public string[] FileContent { get; set; }
+    public List<Tag> Tags { get; set; } = new List<Tag>();
 
     public EBFile(string filePath)
     {
+        FileName = Path.GetFileName(filePath);
+        FilePath = filePath;
         FileContent = File.ReadAllLines(filePath);
+        GetTagsList();
     }
 
-    public List<Tag> GetTagsList()
+    public void GetTagsList()
     {
-        List<Tag> tagsList = new();
         string? point = null;
         string? value = null;
 
@@ -40,7 +45,7 @@ class EBFile : ITDCFile
                         var tag = ReadParameter(parameter, point);
                         if (tag != null)
                         {
-                            tagsList.Add(tag);
+                            Tags.Add(tag);
                         }
                     }
                 }
@@ -57,7 +62,7 @@ class EBFile : ITDCFile
                         Value = value,
                         Origin = "EB"
                     };
-                    tagsList.Add(tag);
+                    Tags.Add(tag);
                 }
             }
             else
@@ -67,13 +72,11 @@ class EBFile : ITDCFile
                     var tag = ReadParameter(line, point);
                     if (tag != null)
                     {
-                        tagsList.Add(tag);
+                        Tags.Add(tag);
                     }
                 }
             }
         }
-
-        return tagsList;
     }
 
     private Tag? ReadParameter(string line, string point)
@@ -94,4 +97,3 @@ class EBFile : ITDCFile
         return null;
     }
 }
-

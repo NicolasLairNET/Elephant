@@ -5,20 +5,28 @@ namespace Elephant_Services.TagDataFile.FileType;
 
 public class PEFile : XXFile, ITDCFile
 {
-    private const string _patternCommand = @"(?-im)\AFN\s+PE\s.*\sENT_REF\s.*";
-    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
-    public PEFile(string filePath) : base(filePath) { }
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public string[] FileContent { get; set; }
+    public List<Tag> Tags { get; set; } = new List<Tag>();
+    private const string patternCommand = @"(?-im)\AFN\s+PE\s.*\sENT_REF\s.*";
+    public static Regex RegexCommand = new(patternCommand, RegexOptions.Compiled);
 
-    public List<Tag>? GetTagsList()
+    public PEFile(string filePath)
+    {
+        FileName = Path.GetFileName(filePath);
+        FilePath = filePath;
+        FileContent = File.ReadAllLines(filePath);
+        ColumnInfos = GetColumnsInformations(FileContent);
+        GetTagsList();
+    }
+
+    public void GetTagsList()
     {
         try
         {
-            List<Tag> tags = new();
-
             if (ColumnInfos == null)
-            {
-                return null;
-            }
+                return;
 
             foreach (string line in FileContent)
             {
@@ -37,15 +45,13 @@ public class PEFile : XXFile, ITDCFile
                         Origin = "PE"
                     };
 
-                    tags.Add(tag);
+                    Tags.Add(tag);
                 }
             }
-
-            return tags;
         }
         catch (Exception)
         {
-            return null;
+            return;
         }
     }
 }

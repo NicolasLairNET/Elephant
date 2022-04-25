@@ -3,6 +3,7 @@ using Elephant.Model;
 using Elephant_Services.ApplicationConfiguration;
 using Elephant_Services.Export;
 using Elephant_Services.TagDataFile;
+using Elephant_Services.TagDataFile.FileType;
 using MessageBox_wpf;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -98,26 +99,26 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
             InitializeImportMessage(filePathList.Length);
 
             var tasks = new List<Task>();
-            Progress<(string fileName, List<Tag>? tagList)> importProgress = new();
+            Progress<ITDCFile> importProgress = new();
 
-            importProgress.ProgressChanged += (_, args) =>
+            importProgress.ProgressChanged += (_, tdcFile) =>
             {
                 var importDetail = new FileImportStatus();
 
-                if (args.tagList != null)
+                if (tdcFile.Tags.Count > 0)
                 {
-                    TagsDataGrid.AddRange(args.tagList);
+                    TagsDataGrid.AddRange(tdcFile.Tags);
                     numberFilesImported++;
                     ImportMessage = $"Import en cours {numberFilesImported} / {totalFilesToImport} fichiers";
-                    ImportFile = args.fileName;
+                    ImportFile = tdcFile.FileName;
 
-                    importDetail.Name = args.fileName;
+                    importDetail.Name = tdcFile.FileName;
                     importDetail.Status = StatusMessage.Success;
                 }
                 else
                 {
                     totalFilesToImport--;
-                    importDetail.Name = args.fileName;
+                    importDetail.Name = tdcFile.FileName;
                     importDetail.Status = StatusMessage.Error;
                 }
 
@@ -170,7 +171,7 @@ public class TdcTagViewModel : ObservableRecipient, IViewModel
         {
             var userChoice = MessageBox_wpf.CustomMessageBox.Show(
                 "Mise à jour des données",
-                "Nouvel import, voulez-vous supprimer les données existantes ?",
+                "Nouvel import, voulez-vous supprimer les données existantes ?\nSi vous cliquez sur Non les données seront ajoutées à celles déjà existantes",
                 MessageBoxButton.YesNo);
 
             if (userChoice == MessageBoxResult.Yes)

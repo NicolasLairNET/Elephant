@@ -7,8 +7,5 @@ public record Tag
     public string Parameter { get; init; } = "";
     public string Value { get; init; } = "";
     public string Origin { get; init; } = "";
-
-    public override string ToString() => JsonSerializer.Serialize<Tag>(this);
-
     public List<string> ToList() => new() { Name, Parameter, Value, Origin, Environment.NewLine };
 }

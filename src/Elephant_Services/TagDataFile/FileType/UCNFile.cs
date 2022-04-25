@@ -5,20 +5,28 @@ namespace Elephant_Services.TagDataFile.FileType;
 
 public class UCNFile : XXFile, ITDCFile
 {
-    private const string _patternCommand = @"(?-im)\AFN\sUCN_CP\s.*\sNODE_CP\s.*\sMODULE\s.*\sSLOT\s.\sENTITY\s.*\sENT_REF\s.*\sRN\s.*\sREF_MOD\s.*\sREF_SL\s.*";
-    public static Regex RegexCommand = new(_patternCommand, RegexOptions.Compiled);
-    public UCNFile(string filePath) : base(filePath) { }
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public string[] FileContent { get; set; }
+    public List<Tag> Tags { get; set; } = new List<Tag>();
+    private const string patternCommand = @"(?-im)\AFN\sUCN_CP\s.*\sNODE_CP\s.*\sMODULE\s.*\sSLOT\s.\sENTITY\s.*\sENT_REF\s.*\sRN\s.*\sREF_MOD\s.*\sREF_SL\s.*";
+    public static Regex RegexCommand = new(patternCommand, RegexOptions.Compiled);
 
-    public List<Tag>? GetTagsList()
+    public UCNFile(string filePath)
+    {
+        FileName = Path.GetFileName(filePath);
+        FilePath = filePath;
+        FileContent = File.ReadAllLines(filePath);
+        ColumnInfos = GetColumnsInformations(FileContent);
+        GetTagsList();
+    }
+
+    public void GetTagsList()
     {
         try
         {
-            List<Tag> tags = new();
-
             if (ColumnInfos == null)
-            {
-                return tags;
-            }
+                return;
 
             foreach (var line in FileContent)
             {
@@ -36,15 +44,13 @@ public class UCNFile : XXFile, ITDCFile
                         Parameter = "ENT_REF",
                         Origin = "UCN"
                     };
-                    tags.Add(tag);
+                    Tags.Add(tag);
                 }
             }
-
-            return tags;
         }
         catch (Exception)
         {
-            return null;
+            return;
         }
     }
 }

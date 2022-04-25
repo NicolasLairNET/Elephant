@@ -5,46 +5,48 @@ namespace Elephant_Services.TagDataFile.FileType;
 
 public class CdsFile : XXFile, ITDCFile
 {
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public string[] FileContent { get; set; }
+    public List<Tag> Tags { get; set; } = new List<Tag>();
+
     private const string PatternCommand = @"(?-im)\AFN\s+AM_CP\s.*\sENTITY\s(?:(?!\bCL\b).)*\sENT_REF\s.*";
     public static Regex RegexCommand = new(PatternCommand, RegexOptions.Compiled);
-    public CdsFile(string filePath) : base(filePath) { }
 
-    public List<Tag>? GetTagsList()
+    public CdsFile(string filePath)
     {
-        try
+        FileName = Path.GetFileName(filePath);
+        FilePath = filePath;
+        FileContent = File.ReadAllLines(filePath);
+        ColumnInfos = GetColumnsInformations(FileContent);
+        GetTagsList();
+    }
+
+    public void GetTagsList()
+    {
+        if (ColumnInfos == null)
         {
-            List<Tag> tags = new();
-
-            if (ColumnInfos == null)
-            {
-                return null;
-            }
-
-            foreach (var line in FileContent)
-            {
-                if (Regex.IsMatch(line, LineRegex))
-                {
-                    var name = ColumnInfos.First(column => column.Name == "ENTITY");
-                    var value = ColumnInfos.First(column => column.Name == "ENT_REF");
-
-                    string lineCorrected = CorrectLineSize(line);
-
-                    var tag = new Tag()
-                    {
-                        Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
-                        Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
-                        Parameter = "ENT_REF",
-                        Origin = "CDS"
-                    };
-                    tags.Add(tag);
-                }
-            }
-
-            return tags;
+            return;
         }
-        catch (Exception)
+
+        foreach (var line in FileContent)
         {
-            return null;
+            if (Regex.IsMatch(line, LineRegex))
+            {
+                var name = ColumnInfos.First(column => column.Name == "ENTITY");
+                var value = ColumnInfos.First(column => column.Name == "ENT_REF");
+
+                string lineCorrected = CorrectLineSize(line);
+
+                var tag = new Tag()
+                {
+                    Name = lineCorrected.Substring(name.StartIndex, name.Length).Trim(),
+                    Value = lineCorrected.Substring(value.StartIndex, value.Length).Trim(),
+                    Parameter = "ENT_REF",
+                    Origin = "CDS"
+                };
+                Tags.Add(tag);
+            }
         }
     }
 }
